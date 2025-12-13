@@ -26,12 +26,7 @@ import { AuthGuard } from './auth/auth.guard';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [
-        User,
-        Role,
-        UserRole,
-        UsersSessions,
-      ],
+      models: [User, Role, UserRole, UsersSessions],
       autoLoadModels: true,
     }),
     UsersModule,

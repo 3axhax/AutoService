@@ -1,4 +1,4 @@
-import {Cog6ToothIcon} from "@heroicons/react/24/outline";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
 export const Logo = () => {

@@ -9,7 +9,6 @@ type ModalButtons = {
 }[];
 
 export const InfoModal = () => {
-
   const { open, closeModal, onAccess, title, type, body, hasButtons } =
     useInfoModalData();
 

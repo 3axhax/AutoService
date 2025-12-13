@@ -90,12 +90,12 @@ class RestAPI {
     return this._send();
   };
 
-  post<T = SendingData> (url: string = "", data: T): Promise<AxiosResponse> {
+  post<T = SendingData>(url: string = "", data: T): Promise<AxiosResponse> {
     this.method = "POST";
     this._setTarget(url);
     this.data = data as SendingData;
     return this._send();
-  };
+  }
 
   _buildGetQueryString(params: QueryParams): string {
     const searchParams = new URLSearchParams();

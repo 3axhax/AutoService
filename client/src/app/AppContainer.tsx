@@ -5,8 +5,8 @@ import { InfoModal } from "@features/infoModal";
 import { Navigation } from "@widgets/navigation";
 import { MainPage } from "@pages/main";
 import { checkLSUser } from "@entities/user";
-import {LogoutPage} from "@pages/logout";
-import {NotFoundPage} from "@pages/404";
+import { LogoutPage } from "@pages/logout";
+import { NotFoundPage } from "@pages/404";
 
 function AppContainer() {
   const dispatch = useAppDispatch();
@@ -20,8 +20,8 @@ function AppContainer() {
       <Navigation />
       <Routes>
         <Route path="/" element={<MainPage />} />
-          <Route path="/logout" element={<LogoutPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+        <Route path="/logout" element={<LogoutPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <InfoModal />
     </div>

@@ -13,7 +13,7 @@ import { userInitialData } from './users.initialData';
 export interface UserCreationAttrs {
   email: string;
   name?: string;
-  company?: number
+  company?: number;
   password: string;
 }
 @Table({
