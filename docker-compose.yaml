@@ -1,0 +1,48 @@
+services:
+  server_auto_service:
+    container_name: serverAutoService
+    build:
+      context: ./server
+      dockerfile: DockerfileServer
+    env_file:
+      - ./server/.development.env
+    volumes:
+      - ./server:/app/server
+      - /app/server/node_modules
+    ports:
+      - "5050:5050"
+      - "9229:9229"
+    depends_on:
+      postgres_auto_service:
+        condition: service_healthy
+
+  postgres_auto_service:
+    container_name: postgresAutoService
+    image: postgres:12
+    env_file:
+      - ./server/.postgres.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  client_auto_service:
+    container_name: clientAutoService
+    build:
+      context: ./client
+      dockerfile: DockerfileClient
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app/client
+      - /app/client/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+volumes:
+  pgdata:
