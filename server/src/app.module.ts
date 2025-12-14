@@ -13,6 +13,8 @@ import { UsersSessionsModule } from './users/usersSessions/usersSessions.module'
 import { UserRole } from './roles/users-roles.model';
 import { UsersSessions } from './users/usersSessions/usersSessions.model';
 import { AuthGuard } from './auth/auth.guard';
+import { OrderParametersModule } from './orderParameters/orderParameters.module';
+import { OrderParameters } from './orderParameters/orderParameters.model';
 
 @Module({
   imports: [
@@ -26,13 +28,14 @@ import { AuthGuard } from './auth/auth.guard';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Role, UserRole, UsersSessions],
+      models: [User, Role, UserRole, UsersSessions, OrderParameters],
       autoLoadModels: true,
     }),
     UsersModule,
     RolesModule,
     AuthModule,
     UsersSessionsModule,
+    OrderParametersModule,
   ],
   controllers: [AppController],
   providers: [

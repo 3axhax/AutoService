@@ -62,8 +62,8 @@ export class RolesGuard implements CanActivate {
         this.unauthorizedError();
         return false;
       }
-      req.user = userDB;
       const plainUserDB = userDB.get({ plain: true });
+      req.user = plainUserDB;
       return plainUserDB.roles.some((role) =>
         requiredRoles.includes(role.value),
       );

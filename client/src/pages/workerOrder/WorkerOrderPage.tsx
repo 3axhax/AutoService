@@ -1,11 +1,11 @@
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
+import { useEffect } from "react";
 import {
   getOrderParametersList,
   selectErrorOrderParameters,
 } from "@entities/orderParameters";
-import { useEffect } from "react";
 
-export const MainPage = () => {
+export const WorkerOrderPage = () => {
   const dispatch = useAppDispatch();
 
   const error = useAppSelector(selectErrorOrderParameters);
@@ -18,7 +18,7 @@ export const MainPage = () => {
     <div className="app">
       <div className="container">
         <h1 className="text-4xl font-sans  text-gray-900 dark:text-white mb-4">
-          MainPage
+          WorkerOrderPage
         </h1>
         {error !== "" ? (
           <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>
