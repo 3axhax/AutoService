@@ -7,11 +7,13 @@ import { User as UserModel } from '../users/users.model';
 
 @Controller('orderParameters')
 export class OrderParametersController {
-  constructor(private agesService: OrderParametersService) {}
+  constructor(private orderParametersService: OrderParametersService) {}
   @Get()
   @Roles('ADMIN', 'WORKER')
   @UseGuards(RolesGuard)
   getAll(@User() user: UserModel | undefined) {
-    return this.agesService.getAll({ roles: user ? user.roles : [] });
+    return this.orderParametersService.getAll({
+      roles: user ? user.roles : [],
+    });
   }
 }

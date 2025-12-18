@@ -15,6 +15,8 @@ import { UsersSessions } from './users/usersSessions/usersSessions.model';
 import { AuthGuard } from './auth/auth.guard';
 import { OrderParametersModule } from './orderParameters/orderParameters.module';
 import { OrderParameters } from './orderParameters/orderParameters.model';
+import { Companies } from './companies/companies.model';
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ import { OrderParameters } from './orderParameters/orderParameters.model';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Role, UserRole, UsersSessions, OrderParameters],
+      models: [User, Role, UserRole, UsersSessions, OrderParameters, Companies],
       autoLoadModels: true,
     }),
     UsersModule,
@@ -36,6 +38,7 @@ import { OrderParameters } from './orderParameters/orderParameters.model';
     AuthModule,
     UsersSessionsModule,
     OrderParametersModule,
+    CompaniesModule,
   ],
   controllers: [AppController],
   providers: [

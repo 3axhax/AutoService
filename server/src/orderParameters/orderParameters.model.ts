@@ -7,10 +7,12 @@ import {
 } from 'sequelize-typescript';
 
 import { orderParametersInitialData } from './orderParameters.initialData';
+import { ParametersType } from './orderParametersType.enum';
 
 export interface OrderParametersCreationAttrs {
   id?: number;
   name: string;
+  type: ParametersType;
   translationRu: string;
 }
 @Table({
@@ -37,6 +39,12 @@ export class OrderParameters extends Model<
   declare name: string;
 
   @Column({
+    type: DataType.ENUM(...Object.values(ParametersType)),
+    allowNull: false,
+  })
+  declare type: ParametersType;
+
+  @Column({
     type: DataType.STRING,
     unique: true,
     allowNull: false,
@@ -52,7 +60,7 @@ export class OrderParameters extends Model<
       }
       await this.updateSequence();
     } catch (error) {
-      console.error('Error in Age.addInitialData:', error);
+      console.error('Error in orderParameters.addInitialData:', error);
     }
   }
 
