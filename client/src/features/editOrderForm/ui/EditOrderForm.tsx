@@ -1,24 +1,22 @@
-import { useAppSelector } from "@shared/store/hooks.ts";
-import { selectOrderParametersList } from "@entities/orderParameters";
+import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
+import {
+  formatedOrderParametersList,
+  setOrdersValue,
+} from "@entities/orderParameters";
 import { InputWithLabel } from "@shared/ui/InputWithLabel.tsx";
 import SelectUI from "@shared/ui/SelectUI.tsx";
 import RadioGroup from "@shared/ui/RadioGroup.tsx";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent } from "react";
+import { selectOrderParametersOrdersValue } from "@entities/orderParameters/model/selectors.ts";
 
 export const EditOrderForm = () => {
-  const parametersList = useAppSelector(selectOrderParametersList);
-  const [values, setValues] = useState<Record<string, string | number>>({});
-
-  useEffect(() => {
-    if (parametersList && parametersList.length > 0) {
-      setValues(
-        parametersList.reduce(
-          (acc, parameter) => ({ ...acc, [parameter.name]: "" }),
-          {},
-        ),
-      );
-    }
-  }, [parametersList]);
+  const dispatch = useAppDispatch();
+  const parametersList = useAppSelector((state) =>
+    formatedOrderParametersList(state, 0),
+  );
+  const values = useAppSelector((state) =>
+    selectOrderParametersOrdersValue(state, 0),
+  );
 
   const setValue = ({
     name,
@@ -27,7 +25,7 @@ export const EditOrderForm = () => {
     name: string;
     value: string | number;
   }) => {
-    setValues({ ...values, [name]: value });
+    dispatch(setOrdersValue({ orderId: 0, name, value }));
   };
 
   const handlerOnSubmit = (e: FormEvent<HTMLFormElement>) => {

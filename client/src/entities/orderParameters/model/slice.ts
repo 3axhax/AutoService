@@ -8,7 +8,7 @@ import { HandlerAxiosError } from "@shared/transport/RequestHandlersError.ts";
 import type { WritableDraft } from "immer";
 import { RootState } from "@shared/store";
 import { ErrorActionType } from "@shared/types";
-import { OrderParametersState, ParametersItem } from "./types.ts";
+import { OrderParametersResponse, OrderParametersState } from "./types.ts";
 
 export const getOrderParametersList = createAsyncThunk(
   "orderParameters/getList",
@@ -32,6 +32,9 @@ const initialState: OrderParametersState = {
   pending: false,
   error: "",
   parametersList: [],
+  parameterOptionDependence: {},
+  optionOptionDependence: {},
+  ordersValue: {},
 };
 
 export const orderParametersSlice = createSlice({
@@ -47,17 +50,46 @@ export const orderParametersSlice = createSlice({
     ) => {
       state.pending = action.payload;
     },
+    setOrdersValue: (
+      state: WritableDraft<OrderParametersState>,
+      action: PayloadAction<{
+        orderId: number;
+        name: string;
+        value: string | number;
+      }>,
+    ) => {
+      if (!state.ordersValue[action.payload.orderId]) {
+        state.ordersValue[action.payload.orderId] = {};
+      }
+      state.ordersValue[action.payload.orderId][action.payload.name] =
+        action.payload.value;
+    },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(
         getOrderParametersList.fulfilled,
         (
           state: WritableDraft<OrderParametersState>,
-          action: PayloadAction<ParametersItem[]>,
+          action: PayloadAction<OrderParametersResponse>,
         ) => {
           state.pending = false;
-          state.parametersList = action.payload;
+          if (action.payload) {
+            state.parametersList = action.payload.parameters;
+            const parameterOptionDependence = JSON.parse(
+              action.payload.options.parameterOptionDependence,
+            );
+            if (parameterOptionDependence) {
+              state.parameterOptionDependence = parameterOptionDependence;
+            }
+            const optionOptionDependence = JSON.parse(
+              action.payload.options.optionOptionDependence,
+            );
+            if (optionOptionDependence) {
+              state.optionOptionDependence = optionOptionDependence;
+            }
+          }
         },
       )
       .addMatcher(
@@ -82,14 +114,7 @@ export const orderParametersSlice = createSlice({
   },
 });
 
-export const { resetError, setPending } = orderParametersSlice.actions;
-
-export const selectPendingOrderParameters = (state: RootState) =>
-  state.orderParameters.pending;
-export const selectErrorOrderParameters = (state: RootState) =>
-  state.orderParameters.error;
-
-export const selectOrderParametersList = (state: RootState) =>
-  state.orderParameters.parametersList;
+export const { resetError, setPending, setOrdersValue } =
+  orderParametersSlice.actions;
 
 export default orderParametersSlice.reducer;

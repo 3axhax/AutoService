@@ -15,6 +15,8 @@ export interface CompaniesParametersOptionsCreationAttrs {
   companyId: number;
   parametersList?: string;
   optionsList?: string;
+  parameterOptionDependence?: string;
+  optionOptionDependence?: string;
 }
 @Table({
   tableName: 'companiesParametersOptions',
@@ -50,6 +52,18 @@ export class CompaniesParametersOptions extends Model<
     allowNull: true,
   })
   declare optionsList: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  declare parameterOptionDependence: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  declare optionOptionDependence: string;
 
   @AfterSync
   static async addInitialData() {

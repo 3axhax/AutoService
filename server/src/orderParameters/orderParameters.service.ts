@@ -5,6 +5,7 @@ import { FindOptions } from 'sequelize';
 import { User } from '../users/users.model';
 import { CompaniesParametersOptionsService } from '../companiesParametersOptions/companiesParametersOptions.service';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
+import { ResponseParametersWithOptions } from './orderParameters.controller';
 
 @Injectable()
 export class OrderParametersService {
@@ -18,22 +19,31 @@ export class OrderParametersService {
     user,
   }: {
     user: User | null;
-  }): Promise<OrderParameters[] | null> {
+  }): Promise<ResponseParametersWithOptions> {
     if (user && user.roles.length === 1 && user.roles[0].value === 'WORKER') {
       return this.getParametersForWorker({ user });
     }
     const params: FindOptions<OrderParameters> = {
       include: { all: true },
     };
-    return this.orderParametersRepository.findAll(params);
+    return {
+      parameters: await this.orderParametersRepository.findAll(params),
+      options: {
+        parameterOptionDependence: '',
+        optionOptionDependence: '',
+      },
+    };
   }
 
-  async getParametersForWorker({ user }: { user: User }) {
+  async getParametersForWorker({
+    user,
+  }: {
+    user: User;
+  }): Promise<ResponseParametersWithOptions> {
     const options =
       await this.companiesParametersOptionsService.getOptionsByCompany(
         user.companyId,
       );
-    console.log(options?.parametersList);
     if (options) {
       const parametersList =
         this.companiesParametersOptionsService.formatStringList(
@@ -43,7 +53,7 @@ export class OrderParametersService {
         this.companiesParametersOptionsService.formatStringList(
           options.optionsList,
         );
-      return this.orderParametersRepository.findAll({
+      const parameters = await this.orderParametersRepository.findAll({
         where: {
           id: parametersList,
         },
@@ -59,7 +69,21 @@ export class OrderParametersService {
           },
         ],
       });
+
+      return {
+        parameters,
+        options: {
+          parameterOptionDependence: options.parameterOptionDependence,
+          optionOptionDependence: options.optionOptionDependence,
+        },
+      };
     }
-    return null;
+    return {
+      parameters: null,
+      options: {
+        parameterOptionDependence: '',
+        optionOptionDependence: '',
+      },
+    };
   }
 }

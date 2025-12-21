@@ -3,5 +3,6 @@ export {
   getOrderParametersList,
   selectPendingOrderParameters,
   selectErrorOrderParameters,
-  selectOrderParametersList,
+  formatedOrderParametersList,
+  setOrdersValue,
 } from "./model";

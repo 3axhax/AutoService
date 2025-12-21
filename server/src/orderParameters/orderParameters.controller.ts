@@ -4,6 +4,15 @@ import { Roles } from '../auth/roles-auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { User } from '../decorators/user.decorator';
 import { User as UserModel } from '../users/users.model';
+import { OrderParameters } from './orderParameters.model';
+
+export interface ResponseParametersWithOptions {
+  parameters: OrderParameters[] | null;
+  options: {
+    parameterOptionDependence: string;
+    optionOptionDependence: string;
+  };
+}
 
 @Controller('orderParameters')
 export class OrderParametersController {
@@ -11,7 +20,9 @@ export class OrderParametersController {
   @Get()
   @Roles('ADMIN', 'WORKER')
   @UseGuards(RolesGuard)
-  getAll(@User() user: UserModel | undefined) {
+  getAll(
+    @User() user: UserModel | undefined,
+  ): Promise<ResponseParametersWithOptions> {
     return this.orderParametersService.getAll({
       user: user ? user : null,
     });

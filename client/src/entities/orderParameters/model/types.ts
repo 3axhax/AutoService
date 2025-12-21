@@ -15,4 +15,15 @@ export interface OrderParametersState {
   pending: boolean;
   error: string;
   parametersList: ParametersItem[];
+  parameterOptionDependence: Record<string, number[]>;
+  optionOptionDependence: Record<string, Record<string, number[]>>;
+  ordersValue: Record<number, Record<string, number | string>>;
+}
+
+export interface OrderParametersResponse {
+  parameters: ParametersItem[];
+  options: {
+    parameterOptionDependence: string;
+    optionOptionDependence: string;
+  };
 }
