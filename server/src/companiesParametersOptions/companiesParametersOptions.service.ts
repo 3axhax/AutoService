@@ -12,4 +12,21 @@ export class CompaniesParametersOptionsService {
   async getAll(): Promise<CompaniesParametersOptions[] | null> {
     return this.companiesParametersOptionsRepository.findAll();
   }
+
+  async getOptionsByCompany(
+    companyId: number,
+  ): Promise<CompaniesParametersOptions | null> {
+    return this.companiesParametersOptionsRepository.findOne({
+      where: { companyId },
+    });
+  }
+
+  formatStringList(string: string): number[] {
+    return string
+      ? string
+          .split(',')
+          .map((item) => parseInt(item.trim()))
+          .filter((item) => item > 0)
+      : [];
+  }
 }

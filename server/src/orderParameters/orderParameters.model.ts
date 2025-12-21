@@ -2,12 +2,14 @@ import {
   AfterSync,
   Column,
   DataType,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 
 import { orderParametersInitialData } from './orderParameters.initialData';
 import { ParametersType } from './orderParametersType.enum';
+import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
 
 export interface OrderParametersCreationAttrs {
   id?: number;
@@ -48,6 +50,9 @@ export class OrderParameters extends Model<
     allowNull: false,
   })
   declare translationRu: string;
+
+  @HasMany(() => OrderParametersOptions)
+  options: OrderParametersOptions[];
 
   @AfterSync
   static async addInitialData() {

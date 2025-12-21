@@ -13,7 +13,7 @@ export class OrderParametersController {
   @UseGuards(RolesGuard)
   getAll(@User() user: UserModel | undefined) {
     return this.orderParametersService.getAll({
-      roles: user ? user.roles : [],
+      user: user ? user : null,
     });
   }
 }
