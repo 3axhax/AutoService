@@ -1,19 +1,22 @@
 import {
   AfterSync,
+  BelongsTo,
   BelongsToMany,
   Column,
   DataType,
+  ForeignKey,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Role } from '../roles/roles.model';
 import { UserRole } from '../roles/users-roles.model';
 import { userInitialData } from './users.initialData';
+import { Companies } from '../companies/companies.model';
 
 export interface UserCreationAttrs {
   email: string;
   name?: string;
-  company?: number;
+  companyId?: number;
   password: string;
 }
 @Table({
@@ -45,10 +48,11 @@ export class User extends Model<User, UserCreationAttrs> {
   })
   declare name: string;
 
+  @ForeignKey(() => Companies)
   @Column({
     type: DataType.INTEGER,
   })
-  declare company: number;
+  declare companyId: number;
 
   @BelongsToMany(() => Role, () => UserRole)
   roles: Role[];
@@ -88,4 +92,7 @@ export class User extends Model<User, UserCreationAttrs> {
       console.error('Error updating sequence:', error);
     }
   }
+
+  @BelongsTo(() => Companies)
+  Company: Companies;
 }

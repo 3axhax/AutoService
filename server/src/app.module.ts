@@ -17,6 +17,10 @@ import { OrderParametersModule } from './orderParameters/orderParameters.module'
 import { OrderParameters } from './orderParameters/orderParameters.model';
 import { Companies } from './companies/companies.model';
 import { CompaniesModule } from './companies/companies.module';
+import { OrderParametersOptions } from './orderParametersOptions/orderParametersOptions.model';
+import { OrderParametersOptionsModule } from './orderParametersOptions/orderParametersOptions.module';
+import { CompaniesParametersOptions } from './companiesParametersOptions/companiesParametersOptions.model';
+import { CompaniesParametersOptionsModule } from './companiesParametersOptions/companiesParametersOptions.module';
 
 @Module({
   imports: [
@@ -30,7 +34,16 @@ import { CompaniesModule } from './companies/companies.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Role, UserRole, UsersSessions, OrderParameters, Companies],
+      models: [
+        User,
+        Role,
+        UserRole,
+        UsersSessions,
+        OrderParameters,
+        Companies,
+        OrderParametersOptions,
+        CompaniesParametersOptions,
+      ],
       autoLoadModels: true,
     }),
     UsersModule,
@@ -39,6 +52,8 @@ import { CompaniesModule } from './companies/companies.module';
     UsersSessionsModule,
     OrderParametersModule,
     CompaniesModule,
+    OrderParametersOptionsModule,
+    CompaniesParametersOptionsModule,
   ],
   controllers: [AppController],
   providers: [

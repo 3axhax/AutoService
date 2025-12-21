@@ -27,7 +27,6 @@ export class Companies extends Model<Companies, CompaniesCreationAttrs> {
 
   @Column({
     type: DataType.STRING,
-    unique: true,
     allowNull: false,
   })
   declare fullName: string;

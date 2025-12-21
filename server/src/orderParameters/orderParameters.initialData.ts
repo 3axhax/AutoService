@@ -74,4 +74,10 @@ export const orderParametersInitialData: OrderParametersCreationAttrs[] = [
     type: ParametersType.SELECT,
     translationRu: 'Скидка',
   },
+  {
+    id: 13,
+    name: 'payment_method',
+    type: ParametersType.SELECT,
+    translationRu: 'Способ оплаты',
+  },
 ];
