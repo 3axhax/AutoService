@@ -8,6 +8,7 @@ import { HandlerAxiosError } from "@shared/transport/RequestHandlersError.ts";
 import type { WritableDraft } from "immer";
 import { RootState } from "@shared/store";
 import { ErrorActionType } from "@shared/types";
+import { OrderParametersState, ParametersItem } from "./types.ts";
 
 export const getOrderParametersList = createAsyncThunk(
   "orderParameters/getList",
@@ -27,14 +28,10 @@ export const getOrderParametersList = createAsyncThunk(
   },
 );
 
-interface OrderParametersState {
-  pending: boolean;
-  error: string;
-}
-
 const initialState: OrderParametersState = {
   pending: false,
   error: "",
+  parametersList: [],
 };
 
 export const orderParametersSlice = createSlice({
@@ -57,10 +54,10 @@ export const orderParametersSlice = createSlice({
         getOrderParametersList.fulfilled,
         (
           state: WritableDraft<OrderParametersState>,
-          action: PayloadAction<any>,
+          action: PayloadAction<ParametersItem[]>,
         ) => {
-          console.log(action.payload);
           state.pending = false;
+          state.parametersList = action.payload;
         },
       )
       .addMatcher(
@@ -91,5 +88,8 @@ export const selectPendingOrderParameters = (state: RootState) =>
   state.orderParameters.pending;
 export const selectErrorOrderParameters = (state: RootState) =>
   state.orderParameters.error;
+
+export const selectOrderParametersList = (state: RootState) =>
+  state.orderParameters.parametersList;
 
 export default orderParametersSlice.reducer;

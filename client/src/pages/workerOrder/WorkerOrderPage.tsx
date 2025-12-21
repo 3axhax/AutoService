@@ -4,6 +4,7 @@ import {
   getOrderParametersList,
   selectErrorOrderParameters,
 } from "@entities/orderParameters";
+import { EditOrderForm } from "@features/editOrderForm";
 
 export const WorkerOrderPage = () => {
   const dispatch = useAppDispatch();
@@ -23,6 +24,7 @@ export const WorkerOrderPage = () => {
         {error !== "" ? (
           <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>
         ) : null}
+        <EditOrderForm />
       </div>
     </div>
   );

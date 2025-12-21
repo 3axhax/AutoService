@@ -3,4 +3,5 @@ export {
   getOrderParametersList,
   selectPendingOrderParameters,
   selectErrorOrderParameters,
+  selectOrderParametersList,
 } from "./slice";
