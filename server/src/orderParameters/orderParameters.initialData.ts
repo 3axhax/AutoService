@@ -29,7 +29,7 @@ export const orderParametersInitialData: OrderParametersCreationAttrs[] = [
   {
     id: 5,
     name: 'car_type',
-    type: ParametersType.RADIO,
+    type: ParametersType.SELECT,
     translationRu: 'Тип автомобиля',
   },
   {
