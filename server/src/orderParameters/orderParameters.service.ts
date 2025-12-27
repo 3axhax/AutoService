@@ -57,7 +57,7 @@ export class OrderParametersService {
         where: {
           id: parametersList,
         },
-        attributes: ['id', 'name', 'translationRu', 'type'],
+        attributes: ['id', 'name', 'translationRu', 'type', 'order'],
         include: [
           {
             model: OrderParametersOptions,

@@ -34,7 +34,6 @@ const SelectUI = <T extends string | number = string>({
     }
   };
 
-  // Находим текущее значение в формате react-select
   const selectedValue =
     options.find((option) => option.value === value) || null;
 

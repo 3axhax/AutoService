@@ -5,4 +5,5 @@ export {
   selectErrorOrderParameters,
   formatedOrderParametersList,
   setOrdersValue,
+  ParametersType,
 } from "./model";

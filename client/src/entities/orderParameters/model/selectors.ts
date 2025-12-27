@@ -69,6 +69,7 @@ export const formatedOrderParametersList = createSelector(
           };
         }
         return parameter;
-      });
+      })
+      .sort((a, b) => ((a.order ?? 0) > (b.order ?? 0) ? 1 : -1));
   },
 );

@@ -15,6 +15,7 @@ export interface OrderParametersCreationAttrs {
   id?: number;
   name: string;
   type: ParametersType;
+  order?: number;
   translationRu: string;
 }
 @Table({
@@ -44,6 +45,12 @@ export class OrderParameters extends Model<
     allowNull: false,
   })
   declare type: ParametersType;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+  })
+  declare order: number;
 
   @Column({
     type: DataType.STRING,

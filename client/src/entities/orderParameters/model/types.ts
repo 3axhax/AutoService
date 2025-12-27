@@ -1,3 +1,11 @@
+export enum ParametersType {
+  SELECT = "SELECT",
+  SELECT_LIST = "SELECT_LIST",
+  INPUT = "INPUT",
+  RADIO = "RADIO",
+  GRAPH_INPUT = "GRAPH_INPUT",
+}
+
 export interface ParametersItemOption {
   id: number;
   translationRu: string;
@@ -7,7 +15,8 @@ export interface ParametersItem {
   id: number;
   name: string;
   translationRu: string;
-  type: "SELECT" | "SELECT_LIST" | "INPUT" | "RADIO" | "GRAPH_INPUT";
+  type: ParametersType;
+  order: number | null;
   options: ParametersItemOption[];
 }
 
@@ -17,7 +26,10 @@ export interface OrderParametersState {
   parametersList: ParametersItem[];
   parameterOptionDependence: Record<string, number[]>;
   optionOptionDependence: Record<string, Record<string, number[]>>;
-  ordersValue: Record<number, Record<string, number | string>>;
+  ordersValue: Record<
+    number,
+    Record<string, number | string | Record<number | string, number>>
+  >;
 }
 
 export interface OrderParametersResponse {

@@ -9,3 +9,5 @@ export {
   selectErrorOrderParameters,
   formatedOrderParametersList,
 } from "./selectors";
+
+export { ParametersType } from "./types";

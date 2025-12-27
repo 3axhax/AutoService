@@ -55,7 +55,7 @@ export const orderParametersSlice = createSlice({
       action: PayloadAction<{
         orderId: number;
         name: string;
-        value: string | number;
+        value: string | number | Record<string | number, number>;
       }>,
     ) => {
       if (!state.ordersValue[action.payload.orderId]) {
