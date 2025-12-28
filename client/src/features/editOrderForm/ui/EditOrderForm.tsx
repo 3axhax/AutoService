@@ -10,6 +10,7 @@ import RadioGroup from "@shared/ui/RadioGroup.tsx";
 import { FormEvent } from "react";
 import { selectOrderParametersOrdersValue } from "@entities/orderParameters/model/selectors.ts";
 import { SelectList } from "@shared/ui/SelectList";
+import { GraphInput } from "./GraphInput";
 
 export const EditOrderForm = () => {
   const dispatch = useAppDispatch();
@@ -105,6 +106,18 @@ export const EditOrderForm = () => {
                     onChange={(value) =>
                       setValue({ name: parameter.name, value })
                     }
+                  />
+                );
+              case ParametersType.GRAPH_INPUT:
+                return (
+                  <GraphInput
+                    key={parameter.id}
+                    label={parameter.translationRu}
+                    className={"self-end"}
+                    value={(values[parameter.name] as string) ?? ""}
+                    onChange={(value) => {
+                      setValue({ name: parameter.name, value });
+                    }}
                   />
                 );
             }
