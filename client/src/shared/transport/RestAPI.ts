@@ -68,8 +68,8 @@ class RestAPI {
       data: object;
       headers?: object;
     } = {
-      url: this.baseUrl + this.target,
-      //url: window.location.protocol + '//' + window.location.hostname + ':5050' + this.target,
+      //url: this.baseUrl + this.target,
+      url: window.location.protocol + '//' + window.location.hostname + ':5050' + this.target,
       method: this.method,
       data: this.data,
     };
