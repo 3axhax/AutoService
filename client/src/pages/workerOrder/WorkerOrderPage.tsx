@@ -18,9 +18,6 @@ export const WorkerOrderPage = () => {
   return (
     <div className="app">
       <div className="container">
-        <h1 className="text-4xl font-sans  text-gray-900 dark:text-white mb-4">
-          WorkerOrderPage
-        </h1>
         {error !== "" ? (
           <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>
         ) : null}

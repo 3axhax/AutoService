@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { JSX, useState } from "react";
+import {JSX, useEffect, useState} from "react";
 import { Logo } from "@widgets/logo";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
@@ -14,13 +14,27 @@ export interface NavItem {
   items?: { path: string; label?: string }[];
 }
 
-export const NavigationUI = ({ navItems }: { navItems: NavItem[] }) => {
+interface NavigationUIProps {
+  navItems: NavItem[],
+  collapse?: boolean
+}
+
+export const NavigationUI = ({ navItems, collapse = false }: NavigationUIProps) => {
+
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState<string>("");
+  const [collapsed, setCollapsed] = useState<boolean>(collapse);
+
+  console.log('collapse', collapse)
+  console.log('collapsed', collapsed)
+
+  useEffect(() => {
+    setCollapsed(collapse);
+  }, [collapse]);
 
   return (
-    <header className="header">
-      <div className={"container flex"}>
+    <header className={`header${collapsed && collapse ? " h-[5px] p-0 mb-[5px] border-b-1" : ""}`}>
+      <div className={`container flex${collapsed && collapse ? " hidden" : ''}`}>
         <Logo />
         <nav className="navigation ml-auto">
           <ul className="inline-flex space-x-6 justify-center">
@@ -105,6 +119,13 @@ export const NavigationUI = ({ navItems }: { navItems: NavItem[] }) => {
           )}
         </nav>
       </div>
+      {collapse &&
+        <button className={"w-[40px] h-[20px] cursor-pointer border-[1px] absolute right-[5px] bottom-[-20px] flex justify-center border-t-0 rounded-b-[5px]"} onClick={() => setCollapsed(!collapsed)}>
+          <ChevronDownIcon
+              className={`inline-flex h-4 w-4 text-gray-600 transition-transform group-hover:text-green-800 duration-200 ${!collapsed ? "rotate-180" : ""}`}
+          />
+        </button>
+      }
     </header>
   );
 };

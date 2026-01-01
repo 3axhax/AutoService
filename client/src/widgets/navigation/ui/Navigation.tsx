@@ -70,5 +70,5 @@ export const Navigation = () => {
     });
   }
 
-  return <NavigationUI navItems={navItems} />;
+  return <NavigationUI navItems={navItems} collapse={isUserWorker}/>;
 };
