@@ -21,6 +21,9 @@ import { OrderParametersOptions } from './orderParametersOptions/orderParameters
 import { OrderParametersOptionsModule } from './orderParametersOptions/orderParametersOptions.module';
 import { CompaniesParametersOptions } from './companiesParametersOptions/companiesParametersOptions.model';
 import { CompaniesParametersOptionsModule } from './companiesParametersOptions/companiesParametersOptions.module';
+import { Price } from './price/price.model';
+import { PriceModule } from './price/price.module';
+import { PriceParametersOptionConditions } from './price/priceParametersOptionConditions.model';
 
 @Module({
   imports: [
@@ -43,6 +46,8 @@ import { CompaniesParametersOptionsModule } from './companiesParametersOptions/c
         Companies,
         OrderParametersOptions,
         CompaniesParametersOptions,
+        Price,
+        PriceParametersOptionConditions,
       ],
       autoLoadModels: true,
     }),
@@ -54,6 +59,7 @@ import { CompaniesParametersOptionsModule } from './companiesParametersOptions/c
     CompaniesModule,
     OrderParametersOptionsModule,
     CompaniesParametersOptionsModule,
+    PriceModule,
   ],
   controllers: [AppController],
   providers: [
