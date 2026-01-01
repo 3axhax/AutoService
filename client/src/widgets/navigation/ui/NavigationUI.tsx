@@ -27,9 +27,6 @@ export const NavigationUI = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState<string>("");
   const [collapsed, setCollapsed] = useState<boolean>(collapse);
 
-  console.log("collapse", collapse);
-  console.log("collapsed", collapsed);
-
   useEffect(() => {
     setCollapsed(collapse);
   }, [collapse]);

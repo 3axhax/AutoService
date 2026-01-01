@@ -5,6 +5,7 @@ import {
   selectErrorOrderParameters,
 } from "@entities/orderParameters";
 import { EditOrderForm } from "@features/editOrderForm";
+import { getPriceList } from "@entities/price/model/slice.ts";
 
 export const WorkerOrderPage = () => {
   const dispatch = useAppDispatch();
@@ -13,6 +14,7 @@ export const WorkerOrderPage = () => {
 
   useEffect(() => {
     dispatch(getOrderParametersList());
+    dispatch(getPriceList());
   }, [dispatch]);
 
   return (
