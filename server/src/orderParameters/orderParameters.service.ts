@@ -86,4 +86,8 @@ export class OrderParametersService {
       },
     };
   }
+
+  async getParameterByName(name: string) {
+    return await this.orderParametersRepository.findOne({ where: { name } });
+  }
 }

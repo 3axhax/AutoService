@@ -42,14 +42,14 @@ export const orderSlice = createSlice({
     builder
       .addMatcher(
         (action) =>
-          action.type.endsWith("/rejected") && action.type.startsWith("order"),
+          action.type.endsWith("/rejected") && action.type.startsWith("orders"),
         (state: WritableDraft<OrderState>, action: ErrorActionType) => {
           state.error = action.error.message ? action.error.message : "";
         },
       )
       .addMatcher(
         (action) =>
-          action.type.endsWith("/pending") && action.type.startsWith("order"),
+          action.type.endsWith("/pending") && action.type.startsWith("orders"),
         (state: WritableDraft<OrderState>) => {
           state.error = "";
         },
