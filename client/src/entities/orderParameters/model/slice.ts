@@ -34,7 +34,6 @@ const initialState: OrderParametersState = {
   parametersList: [],
   parameterOptionDependence: {},
   optionOptionDependence: {},
-  ordersValue: {},
 };
 
 export const orderParametersSlice = createSlice({
@@ -49,20 +48,6 @@ export const orderParametersSlice = createSlice({
       action: PayloadAction<boolean>,
     ) => {
       state.pending = action.payload;
-    },
-    setOrdersValue: (
-      state: WritableDraft<OrderParametersState>,
-      action: PayloadAction<{
-        orderId: number;
-        name: string;
-        value: string | number | Record<string | number, number>;
-      }>,
-    ) => {
-      if (!state.ordersValue[action.payload.orderId]) {
-        state.ordersValue[action.payload.orderId] = {};
-      }
-      state.ordersValue[action.payload.orderId][action.payload.name] =
-        action.payload.value;
     },
   },
 
@@ -114,7 +99,6 @@ export const orderParametersSlice = createSlice({
   },
 });
 
-export const { resetError, setPending, setOrdersValue } =
-  orderParametersSlice.actions;
+export const { resetError, setPending } = orderParametersSlice.actions;
 
 export default orderParametersSlice.reducer;

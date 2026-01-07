@@ -26,10 +26,6 @@ export interface OrderParametersState {
   parametersList: ParametersItem[];
   parameterOptionDependence: Record<string, number[]>;
   optionOptionDependence: Record<string, Record<string, number[]>>;
-  ordersValue: Record<
-    number,
-    Record<string, number | string | Record<number | string, number>>
-  >;
 }
 
 export interface OrderParametersResponse {

@@ -8,7 +8,7 @@ import { HandlerAxiosError } from "@shared/transport/RequestHandlersError.ts";
 import type { WritableDraft } from "immer";
 import { RootState } from "@shared/store";
 import { ErrorActionType } from "@shared/types";
-import { PriceState, PriceResponse } from "./types";
+import { PriceState, PriceItem } from "./types";
 
 export const getPriceList = createAsyncThunk(
   "price/getList",
@@ -55,11 +55,11 @@ export const priceSlice = createSlice({
         getPriceList.fulfilled,
         (
           state: WritableDraft<PriceState>,
-          action: PayloadAction<PriceResponse>,
+          action: PayloadAction<PriceItem[]>,
         ) => {
           state.pending = false;
           if (action.payload) {
-            state.priceList = action.payload.list;
+            state.priceList = action.payload;
           }
         },
       )

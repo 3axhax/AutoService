@@ -17,7 +17,7 @@ interface SelectUIProps<T = string> {
   className?: string;
 }
 
-const SelectUI = <T extends string | number = string>({
+export const SelectUI = <T extends string | number = string>({
   label,
   name,
   options,

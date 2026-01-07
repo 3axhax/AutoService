@@ -4,6 +4,7 @@ export {
   selectPendingOrderParameters,
   selectErrorOrderParameters,
   formatedOrderParametersList,
-  setOrdersValue,
   ParametersType,
+  orderTotalValue,
+  selectOrderParametersOrdersValue,
 } from "./model";

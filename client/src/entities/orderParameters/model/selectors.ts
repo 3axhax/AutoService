@@ -11,9 +11,9 @@ export const selectErrorOrderParameters = (state: RootState) =>
 export const selectOrderParametersOrdersValue = (
   state: RootState,
   orderId: number,
-) => state.orderParameters.ordersValue[orderId] ?? EMPTY_OBJECT;
+) => state.order.ordersValue[orderId] ?? EMPTY_OBJECT;
 
-const selectOrderParametersList = (state: RootState) =>
+export const selectOrderParametersList = (state: RootState) =>
   state.orderParameters.parametersList;
 
 const selectParameterOptionDependence = (state: RootState) =>

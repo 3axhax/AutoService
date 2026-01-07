@@ -1,25 +1,27 @@
+import { FormEvent } from "react";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
+import { InputWithLabel, RadioGroup, SelectList, SelectUI } from "@shared/ui";
+import { GraphInput } from "./GraphInput";
+import { OrderTotalValue } from "./OrderTotalValue";
 import {
   formatedOrderParametersList,
   ParametersType,
-  setOrdersValue,
+  selectOrderParametersOrdersValue,
 } from "@entities/orderParameters";
-import { InputWithLabel } from "@shared/ui/InputWithLabel.tsx";
-import SelectUI from "@shared/ui/SelectUI.tsx";
-import RadioGroup from "@shared/ui/RadioGroup.tsx";
-import { FormEvent } from "react";
-import { selectOrderParametersOrdersValue } from "@entities/orderParameters/model/selectors.ts";
-import { SelectList } from "@shared/ui/SelectList";
-import { GraphInput } from "./GraphInput";
+import { addOrder, orderErrorSelect, setOrdersValue } from "@entities/order";
 
 export const EditOrderForm = () => {
+  const orderId = 0;
+
   const dispatch = useAppDispatch();
   const parametersList = useAppSelector((state) =>
-    formatedOrderParametersList(state, 0),
+    formatedOrderParametersList(state, orderId),
   );
   const values = useAppSelector((state) =>
-    selectOrderParametersOrdersValue(state, 0),
+    selectOrderParametersOrdersValue(state, orderId),
   );
+
+  const orderError = useAppSelector(orderErrorSelect);
 
   const setValue = ({
     name,
@@ -28,12 +30,13 @@ export const EditOrderForm = () => {
     name: string;
     value: string | number | Record<string, number>;
   }) => {
-    dispatch(setOrdersValue({ orderId: 0, name, value }));
+    dispatch(setOrdersValue({ orderId: orderId, name, value }));
   };
 
   const handlerOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(values);
+    dispatch(addOrder(orderId));
   };
 
   return (
@@ -122,8 +125,16 @@ export const EditOrderForm = () => {
                 );
             }
           })}
+        <OrderTotalValue orderId={orderId} />
+        {orderError && (
+          <div
+            className={"bg-red-200 border-1 rounded-md px-4 py-2 col-span-full"}
+          >
+            {orderError}
+          </div>
+        )}
         <button className={"btn col-span-full"} type={"submit"}>
-          Закрыть
+          Завершить
         </button>
       </form>
     </div>
