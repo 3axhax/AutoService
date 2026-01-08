@@ -6,10 +6,13 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Companies } from '../companies/companies.model';
+import { User } from '../users/users.model';
 
 export interface ShiftsCreationAttrs {
   id?: number;
   companyId: number;
+  userId: number;
+  active: boolean;
 }
 @Table({
   tableName: 'shifts',
@@ -29,4 +32,17 @@ export class Shifts extends Model<Shifts, ShiftsCreationAttrs> {
     type: DataType.INTEGER,
   })
   declare companyId: number;
+
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  declare userId: number;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
+  })
+  declare active: number;
 }

@@ -9,6 +9,7 @@ import {
 } from './ordersOptionValues.model';
 import { isObject } from 'class-validator';
 import { OrderParameters } from '../orderParameters/orderParameters.model';
+import { ShiftsService } from '../shifts/shifts.service';
 
 @Injectable()
 export class OrdersService {
@@ -16,6 +17,7 @@ export class OrdersService {
     @InjectModel(Orders)
     private ordersRepository: typeof Orders,
     private orderParametersService: OrderParametersService,
+    private shiftsService: ShiftsService,
   ) {}
 
   async addNew({
@@ -26,9 +28,15 @@ export class OrdersService {
     param: Record<string, string | Record<number | string, number>>;
   }): Promise<Orders | null> {
     if (param && user) {
+      const shift =
+        await this.shiftsService.getOrCreateActiveShiftByUserCompany({
+          userId: user.id,
+          companyId: user.companyId,
+        });
+
       const order = this.ordersRepository.build({
         companyId: user.companyId,
-        shiftId: 1,
+        shiftId: shift.id,
       });
 
       const parametersOptions = [] as Omit<

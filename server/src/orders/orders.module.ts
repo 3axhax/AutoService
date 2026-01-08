@@ -5,6 +5,7 @@ import { OrdersService } from './orders.service';
 import { Orders } from './orders.model';
 import { OrdersOptionValues } from './ordersOptionValues.model';
 import { OrderParametersModule } from '../orderParameters/orderParameters.module';
+import { ShiftsModule } from '../shifts/shifts.module';
 
 @Module({
   providers: [OrdersService],
@@ -12,6 +13,7 @@ import { OrderParametersModule } from '../orderParameters/orderParameters.module
   imports: [
     SequelizeModule.forFeature([Orders, OrdersOptionValues]),
     OrderParametersModule,
+    ShiftsModule,
   ],
   exports: [OrdersService],
 })
