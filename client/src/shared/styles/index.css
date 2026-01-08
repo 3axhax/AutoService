@@ -145,7 +145,7 @@
   }
 
   .btn {
-    @apply relative overflow-hidden text-white text-lg/5 transition-all duration-400 font-medium rounded-md px-5 py-4 cursor-pointer
+    @apply relative overflow-hidden text-white text-lg/5 transition-all duration-400 font-medium rounded-md px-3 py-2 cursor-pointer
     bg-gradient-to-r
     from-green-800
     via-green-500

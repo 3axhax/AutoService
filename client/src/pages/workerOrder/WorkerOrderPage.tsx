@@ -4,8 +4,8 @@ import {
   getOrderParametersList,
   selectErrorOrderParameters,
 } from "@entities/orderParameters";
-import { EditOrderForm } from "@features/editOrderForm";
 import { getPriceList } from "@entities/price/model/slice.ts";
+import { WorkerShift } from "@widgets/workerShift";
 
 export const WorkerOrderPage = () => {
   const dispatch = useAppDispatch();
@@ -18,13 +18,12 @@ export const WorkerOrderPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="app">
-      <div className="container">
-        {error !== "" ? (
-          <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>
-        ) : null}
-        <EditOrderForm />
-      </div>
+    <div className="container">
+      {error !== "" ? (
+        <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>
+      ) : null}
+      <WorkerShift />
+      {/*<EditOrderForm />*/}
     </div>
   );
 };
