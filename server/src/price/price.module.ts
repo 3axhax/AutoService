@@ -5,6 +5,7 @@ import { Price } from './price.model';
 import { PriceService } from './price.service';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
 import { PriceParametersOptionConditions } from './priceParametersOptionConditions.model';
+import { OrderParametersModule } from '../orderParameters/orderParameters.module';
 
 @Module({
   providers: [PriceService],
@@ -15,6 +16,7 @@ import { PriceParametersOptionConditions } from './priceParametersOptionConditio
       OrderParametersOptions,
       PriceParametersOptionConditions,
     ]),
+    OrderParametersModule,
   ],
   exports: [PriceService],
 })

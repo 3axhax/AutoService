@@ -18,6 +18,7 @@ export interface OrdersCreationAttrs {
   id?: number;
   companyId: number;
   shiftId: number;
+  totalValue?: number;
 }
 
 @Table({
@@ -44,6 +45,12 @@ export class Orders extends Model<Orders, OrdersCreationAttrs> {
     type: DataType.INTEGER,
   })
   declare shiftId: number;
+
+  @Column({
+    type: DataType.FLOAT,
+    defaultValue: 0,
+  })
+  declare totalValue: number;
 
   @HasMany(() => OrdersOptionValues)
   declare optionValues: OrdersOptionValues[];

@@ -10,6 +10,7 @@ import {
 import { isObject } from 'class-validator';
 import { OrderParameters } from '../orderParameters/orderParameters.model';
 import { ShiftsService } from '../shifts/shifts.service';
+import { PriceService } from '../price/price.service';
 
 @Injectable()
 export class OrdersService {
@@ -18,6 +19,7 @@ export class OrdersService {
     private ordersRepository: typeof Orders,
     private orderParametersService: OrderParametersService,
     private shiftsService: ShiftsService,
+    private priceService: PriceService,
   ) {}
 
   async addNew({
@@ -37,6 +39,10 @@ export class OrdersService {
       const order = this.ordersRepository.build({
         companyId: user.companyId,
         shiftId: shift.id,
+        totalValue: await this.priceService.calculateTotalValue({
+          user,
+          param,
+        }),
       });
 
       const parametersOptions = [] as Omit<
@@ -48,7 +54,6 @@ export class OrdersService {
         const parameters =
           await this.orderParametersService.getParameterByName(k);
         if (parameters) {
-          console.log(parameters.name, parameters.id, param[k]);
           if (param[k]) {
             if (isObject(param[k])) {
               for (const n in param[k]) {
