@@ -11,11 +11,14 @@ export const addOrder = createAsyncThunk(
     if (!state.order.pending && state.order.ordersValue[orderId]) {
       dispatch(setPending(true));
       try {
-        const response = await Request.post(
-          "/orders/add",
-          state.order.ordersValue[orderId],
-        );
-        return response.data;
+        const {
+          id: _id,
+          active: _active,
+          ...usefulValues
+        } = state.order.ordersValue[orderId];
+        const response = await Request.post("/orders/add", usefulValues);
+        console.log(response.data);
+        return { internalId: orderId, ...response.data };
       } catch (e) {
         HandlerAxiosError(e);
       } finally {

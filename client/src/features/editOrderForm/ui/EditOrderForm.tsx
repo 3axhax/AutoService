@@ -10,9 +10,7 @@ import {
 } from "@entities/orderParameters";
 import { addOrder, orderErrorSelect, setOrdersValue } from "@entities/order";
 
-export const EditOrderForm = () => {
-  const orderId = 0;
-
+export const EditOrderForm = ({ orderId }: { orderId: number }) => {
   const dispatch = useAppDispatch();
   const parametersList = useAppSelector((state) =>
     formatedOrderParametersList(state, orderId),
@@ -38,6 +36,8 @@ export const EditOrderForm = () => {
     console.log(values);
     dispatch(addOrder(orderId));
   };
+
+  console.log(parametersList);
 
   return (
     <div>

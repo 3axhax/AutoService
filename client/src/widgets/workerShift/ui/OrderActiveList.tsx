@@ -8,7 +8,9 @@ export const OrderActiveList = () => {
   return (
     <>
       {orderList.length > 0
-        ? orderList.map((order) => <EditOrderForm key={order.id} />)
+        ? orderList.map((order) => (
+            <EditOrderForm key={order.id} orderId={order.id} />
+          ))
         : null}
     </>
   );

@@ -35,10 +35,13 @@ export const formatedOrderParametersList = createSelector(
     optionOptionDependence,
     ordersValue,
   ) => {
-    const values = Object.values(ordersValue).map((value) => +value);
+    const { id: _id, active: _active, ...usefulOrderValues } = ordersValue;
+
+    const values = Object.values(usefulOrderValues).map((value) => +value);
     const parameterDependenceIds = Object.keys(parameterOptionDependence).map(
       (id) => parseInt(id),
     );
+
     const optionDependenceIds = Object.keys(optionOptionDependence)
       .map((id) => parseInt(id))
       .filter((id) => values.includes(id));

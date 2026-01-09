@@ -4,9 +4,10 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import type { WritableDraft } from "immer";
-import { OrderState } from "./types";
+import { OrderState, OrderValue } from "./types";
 import { RootState } from "@shared/store";
 import { ErrorActionType } from "@shared/types";
+import { addOrder } from "@entities/order";
 
 const initialState: OrderState = {
   pending: false,
@@ -36,23 +37,43 @@ export const orderSlice = createSlice({
       }>,
     ) => {
       if (!state.ordersValue[action.payload.orderId]) {
-        state.ordersValue[action.payload.orderId] = {};
+        state.ordersValue[action.payload.orderId] = {
+          id: action.payload.orderId,
+        };
       }
       state.ordersValue[action.payload.orderId][action.payload.name] =
         action.payload.value;
     },
     addNewActiveOrder: (state: WritableDraft<OrderState>) => {
-      state.ordersValue[
-        Math.min(
-          ...Object.keys(state.ordersValue).map((key) => parseInt(key)),
-        ) - 1
-      ] = {
+      const id =
+        Object.values(state.ordersValue).length > 0
+          ? Math.min(
+              ...Object.keys(state.ordersValue).map((key) => parseInt(key)),
+            ) - 1
+          : -1;
+      state.ordersValue[id] = {
+        id,
         active: true,
       };
     },
   },
   extraReducers: (builder) => {
     builder
+      .addCase(
+        addOrder.fulfilled,
+        (
+          state: WritableDraft<OrderState>,
+          action: PayloadAction<OrderValue & { internalId: number }>,
+        ) => {
+          state.pending = false;
+          if (
+            action.payload.internalId &&
+            state.ordersValue[action.payload.internalId]
+          ) {
+            state.ordersValue[action.payload.internalId].active = false;
+          }
+        },
+      )
       .addMatcher(
         (action) =>
           action.type.endsWith("/rejected") && action.type.startsWith("orders"),
