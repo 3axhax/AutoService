@@ -32,7 +32,7 @@ export const SelectList = <T extends string = string>({
     if (selectedOption.length > 0) {
       onChange(
         selectedOption.reduce((acc, item) => {
-          return { ...acc, [item.value]: value[item.value] ?? 0 };
+          return { ...acc, [item.value]: value[item.value] ?? 1 };
         }, {}),
       );
     } else {

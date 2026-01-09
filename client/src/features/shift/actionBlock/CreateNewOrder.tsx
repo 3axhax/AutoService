@@ -5,7 +5,6 @@ export const CreateNewOrder = () => {
   const dispatch = useAppDispatch();
 
   const clickHandler = () => {
-    console.log("Новый заказ");
     dispatch(addNewActiveOrder());
   };
 

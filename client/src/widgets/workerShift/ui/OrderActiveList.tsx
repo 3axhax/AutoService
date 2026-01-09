@@ -4,7 +4,6 @@ import { EditOrderForm } from "@features/editOrderForm";
 
 export const OrderActiveList = () => {
   const orderList = useAppSelector(activeOrdersListSelect);
-  console.log(orderList);
   return (
     <>
       {orderList.length > 0

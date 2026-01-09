@@ -37,8 +37,6 @@ export const EditOrderForm = ({ orderId }: { orderId: number }) => {
     dispatch(addOrder(orderId));
   };
 
-  console.log(parametersList);
-
   return (
     <div>
       <form onSubmit={handlerOnSubmit} className={"grid gap-5 grid-cols-4"}>
