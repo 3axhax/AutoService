@@ -1,5 +1,6 @@
 import { useAppSelector } from "@shared/store/hooks.ts";
 import { SelectWorkerActiveShift } from "@entities/shifts";
+import { CloseShift, CreateNewOrder, CreateNewShift } from "@features/shift";
 
 export const ActionBlock = () => {
   const isActiveShift = useAppSelector(SelectWorkerActiveShift);
@@ -8,17 +9,17 @@ export const ActionBlock = () => {
       <div className={"flex justify-start gap-3"}>
         {!isActiveShift ? (
           <>
-            <button className={"btn"}>Начать смену</button>
+            <CreateNewShift />
           </>
         ) : (
           <>
-            <button className={"btn"}>Новый заказ</button>
+            <CreateNewOrder />
             <button className={"btn"}>Дополнительные работы</button>
           </>
         )}
       </div>
       <div className={"flex justify-end gap-3"}>
-        {isActiveShift && <button className={"btn"}>Закончить смену</button>}
+        {isActiveShift && <CloseShift />}
       </div>
     </div>
   );

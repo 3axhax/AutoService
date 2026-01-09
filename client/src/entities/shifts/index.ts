@@ -1,1 +1,8 @@
-export { shiftsSlice, SelectWorkerActiveShift, getActiveShift } from "./model";
+export {
+  shiftsSlice,
+  SelectWorkerActiveShift,
+  getActiveShift,
+  createActiveShift,
+  closeActiveShift,
+  clearShiftsList,
+} from "./model";

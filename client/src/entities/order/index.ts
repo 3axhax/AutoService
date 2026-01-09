@@ -3,4 +3,6 @@ export {
   setOrdersValue,
   addOrder,
   orderErrorSelect,
+  activeOrdersListSelect,
+  addNewActiveOrder,
 } from "./model";

@@ -44,5 +44,5 @@ export class Shifts extends Model<Shifts, ShiftsCreationAttrs> {
     allowNull: false,
     defaultValue: true,
   })
-  declare active: number;
+  declare active: boolean;
 }

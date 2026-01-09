@@ -1,3 +1,7 @@
-export { shiftsSlice } from "./slice";
+export { shiftsSlice, clearShiftsList } from "./slice";
 export { SelectWorkerActiveShift } from "./selectors";
-export { getActiveShift } from "./extraReducers";
+export {
+  getActiveShift,
+  createActiveShift,
+  closeActiveShift,
+} from "./extraReducers";

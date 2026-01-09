@@ -1,4 +1,8 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSelector,
+  createSlice,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import type { WritableDraft } from "immer";
 import { OrderState } from "./types";
 import { RootState } from "@shared/store";
@@ -37,6 +41,15 @@ export const orderSlice = createSlice({
       state.ordersValue[action.payload.orderId][action.payload.name] =
         action.payload.value;
     },
+    addNewActiveOrder: (state: WritableDraft<OrderState>) => {
+      state.ordersValue[
+        Math.min(
+          ...Object.keys(state.ordersValue).map((key) => parseInt(key)),
+        ) - 1
+      ] = {
+        active: true,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -57,8 +70,18 @@ export const orderSlice = createSlice({
   },
 });
 
-export const { resetError, setPending, setOrdersValue } = orderSlice.actions;
+export const { resetError, setPending, setOrdersValue, addNewActiveOrder } =
+  orderSlice.actions;
 
 export default orderSlice.reducer;
 
 export const orderErrorSelect = (state: RootState) => state.order.error;
+
+const ordersValuesSelect = (state: RootState) => state.order.ordersValue;
+
+export const activeOrdersListSelect = createSelector(
+  [ordersValuesSelect],
+  (ordersValue) => {
+    return Object.values(ordersValue).filter((order) => order.active);
+  },
+);

@@ -21,3 +21,39 @@ export const getActiveShift = createAsyncThunk(
     }
   },
 );
+
+export const createActiveShift = createAsyncThunk(
+  "shifts/createActive",
+  async (_, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.shifts.pending) {
+      dispatch(setPending(true));
+      try {
+        const response = await Request.get("/shifts/createActive");
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);
+
+export const closeActiveShift = createAsyncThunk(
+  "shifts/closeActive",
+  async (_, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.shifts.pending) {
+      dispatch(setPending(true));
+      try {
+        const response = await Request.get("/shifts/closeAllActive");
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);

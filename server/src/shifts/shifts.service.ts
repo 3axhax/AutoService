@@ -52,4 +52,31 @@ export class ShiftsService {
     }
     return null;
   }
+
+  async closeAllActiveShiftByUser({ user }: { user: User | undefined }) {
+    if (user) {
+      return await this.shiftsRepository.update(
+        { active: false },
+        {
+          where: {
+            companyId: user.companyId,
+            userId: user.id,
+            active: true,
+          },
+        },
+      );
+    }
+    return null;
+  }
+
+  async createActiveShiftByUser({ user }: { user: User | undefined }) {
+    if (user) {
+      await this.getOrCreateActiveShiftByUserCompany({
+        userId: user.id,
+        companyId: user.companyId,
+      });
+      return await this.getActiveShiftByUser({ user });
+    }
+    return null;
+  }
 }

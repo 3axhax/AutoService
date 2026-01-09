@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { WritableDraft } from "immer";
 import { ShiftItem, ShiftsState } from "./types.ts";
 import { ErrorActionType } from "@shared/types";
-import { getActiveShift } from "@entities/shifts";
+import { createActiveShift, getActiveShift } from "@entities/shifts";
 
 const initialState: ShiftsState = {
   pending: false,
@@ -23,11 +23,26 @@ export const shiftsSlice = createSlice({
     ) => {
       state.pending = action.payload;
     },
+    clearShiftsList: (state: WritableDraft<ShiftsState>) => {
+      state.shiftsList = {};
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(
         getActiveShift.fulfilled,
+        (
+          state: WritableDraft<ShiftsState>,
+          action: PayloadAction<ShiftItem>,
+        ) => {
+          state.pending = false;
+          if (action.payload) {
+            state.shiftsList[action.payload.id] = action.payload;
+          }
+        },
+      )
+      .addCase(
+        createActiveShift.fulfilled,
         (
           state: WritableDraft<ShiftsState>,
           action: PayloadAction<ShiftItem>,
@@ -55,6 +70,6 @@ export const shiftsSlice = createSlice({
   },
 });
 
-export const { resetError, setPending } = shiftsSlice.actions;
+export const { resetError, setPending, clearShiftsList } = shiftsSlice.actions;
 
 export default shiftsSlice.reducer;

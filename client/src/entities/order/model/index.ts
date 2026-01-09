@@ -1,3 +1,9 @@
-export { orderSlice, setOrdersValue, orderErrorSelect } from "./slice";
+export {
+  orderSlice,
+  setOrdersValue,
+  orderErrorSelect,
+  activeOrdersListSelect,
+  addNewActiveOrder,
+} from "./slice";
 
 export { addOrder } from "./extraReducers";
