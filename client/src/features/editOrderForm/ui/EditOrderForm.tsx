@@ -15,6 +15,7 @@ import {
   setOrdersValue,
 } from "@entities/order";
 import { TrashIcon } from "@heroicons/react/16/solid";
+import { getActiveShift } from "@entities/shifts";
 
 export const EditOrderForm = ({ orderId }: { orderId: number }) => {
   const dispatch = useAppDispatch();
@@ -39,7 +40,7 @@ export const EditOrderForm = ({ orderId }: { orderId: number }) => {
 
   const handlerOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addOrder(orderId));
+    dispatch(addOrder(orderId)).then(() => dispatch(getActiveShift()));
   };
 
   return (

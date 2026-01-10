@@ -1,6 +1,13 @@
+interface ShiftOrderItem {
+  id: number;
+  totalValue: number;
+  createdAt: string;
+}
+
 export interface ShiftItem {
   id: number;
   active: boolean;
+  orders: ShiftOrderItem[];
 }
 
 export interface ShiftsState {

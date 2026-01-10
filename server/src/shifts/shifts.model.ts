@@ -2,11 +2,13 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
 import { Companies } from '../companies/companies.model';
 import { User } from '../users/users.model';
+import { Orders } from '../orders/orders.model';
 
 export interface ShiftsCreationAttrs {
   id?: number;
@@ -45,4 +47,7 @@ export class Shifts extends Model<Shifts, ShiftsCreationAttrs> {
     defaultValue: true,
   })
   declare active: boolean;
+
+  @HasMany(() => Orders, { foreignKey: 'shiftId' })
+  declare orders: Orders[];
 }

@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Shifts } from './shifts.model';
 import { User } from '../users/users.model';
+import { Orders } from '../orders/orders.model';
+import { OrdersOptionValues } from '../orders/ordersOptionValues.model';
 
 @Injectable()
 export class ShiftsService {
@@ -40,6 +42,17 @@ export class ShiftsService {
     return await this.shiftsRepository.findOne({
       where: { companyId, userId, active: true },
       attributes: ['id', 'active'],
+      include: [
+        {
+          model: Orders,
+          attributes: ['id', 'totalValue', 'createdAt'],
+          include: [
+            {
+              model: OrdersOptionValues,
+            },
+          ],
+        },
+      ],
     });
   }
 

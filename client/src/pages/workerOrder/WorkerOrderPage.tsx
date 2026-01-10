@@ -23,7 +23,6 @@ export const WorkerOrderPage = () => {
         <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>
       ) : null}
       <WorkerShift />
-      {/*<EditOrderForm />*/}
     </div>
   );
 };
