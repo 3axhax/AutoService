@@ -8,7 +8,13 @@ import {
   ParametersType,
   selectOrderParametersOrdersValue,
 } from "@entities/orderParameters";
-import { addOrder, orderErrorSelect, setOrdersValue } from "@entities/order";
+import {
+  addOrder,
+  deleteActiveOrder,
+  orderErrorSelect,
+  setOrdersValue,
+} from "@entities/order";
+import { TrashIcon } from "@heroicons/react/16/solid";
 
 export const EditOrderForm = ({ orderId }: { orderId: number }) => {
   const dispatch = useAppDispatch();
@@ -33,7 +39,6 @@ export const EditOrderForm = ({ orderId }: { orderId: number }) => {
 
   const handlerOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(values);
     dispatch(addOrder(orderId));
   };
 
@@ -131,9 +136,20 @@ export const EditOrderForm = ({ orderId }: { orderId: number }) => {
             {orderError}
           </div>
         )}
-        <button className={"btn col-span-full"} type={"submit"}>
-          Завершить
-        </button>
+        <div className={"col-span-full flex gap-2"}>
+          <button className={"btn w-[calc(100%-46px)]"} type={"submit"}>
+            Завершить
+          </button>
+          <button
+            type={"button"}
+            className={
+              "w-[36px] h-[36px] text-red-600 hover:text-red-700 transition-colors cursor-pointer"
+            }
+            onClick={() => dispatch(deleteActiveOrder(orderId))}
+          >
+            <TrashIcon className="w-[36px] h-[36px]" />
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -5,4 +5,5 @@ export {
   orderErrorSelect,
   activeOrdersListSelect,
   addNewActiveOrder,
+  deleteActiveOrder,
 } from "./model";

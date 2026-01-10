@@ -56,6 +56,14 @@ export const orderSlice = createSlice({
         active: true,
       };
     },
+    deleteActiveOrder: (
+      state: WritableDraft<OrderState>,
+      action: PayloadAction<number>,
+    ) => {
+      if (state.ordersValue[action.payload]) {
+        delete state.ordersValue[action.payload];
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -91,8 +99,13 @@ export const orderSlice = createSlice({
   },
 });
 
-export const { resetError, setPending, setOrdersValue, addNewActiveOrder } =
-  orderSlice.actions;
+export const {
+  resetError,
+  setPending,
+  setOrdersValue,
+  addNewActiveOrder,
+  deleteActiveOrder,
+} = orderSlice.actions;
 
 export default orderSlice.reducer;
 
