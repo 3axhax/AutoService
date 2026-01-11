@@ -15,9 +15,13 @@ import {
   setOrdersValue,
 } from "@entities/order";
 import { TrashIcon } from "@heroicons/react/16/solid";
-import { getActiveShift } from "@entities/shifts";
 
-export const EditOrderForm = ({ orderId }: { orderId: number }) => {
+interface EditOrderFormProps {
+  orderId: number;
+  onSuccess?: () => void;
+}
+
+export const EditOrderForm = ({ orderId, onSuccess }: EditOrderFormProps) => {
   const dispatch = useAppDispatch();
   const parametersList = useAppSelector((state) =>
     formatedOrderParametersList(state, orderId),
@@ -40,7 +44,11 @@ export const EditOrderForm = ({ orderId }: { orderId: number }) => {
 
   const handlerOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addOrder(orderId)).then(() => dispatch(getActiveShift()));
+    dispatch(addOrder(orderId)).then(() => {
+      if (onSuccess) {
+        onSuccess();
+      }
+    });
   };
 
   return (

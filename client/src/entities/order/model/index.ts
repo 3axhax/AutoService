@@ -1,10 +1,16 @@
 export {
   orderSlice,
   setOrdersValue,
-  orderErrorSelect,
-  activeOrdersListSelect,
   addNewActiveOrder,
   deleteActiveOrder,
+  clearOrdersList,
 } from "./slice";
 
-export { addOrder } from "./extraReducers";
+export { addOrder, getOrdersFromActiveShift } from "./extraReducers";
+
+export {
+  orderErrorSelect,
+  activeOrdersListSelect,
+  workerActiveShiftClosedOrdersListSelect,
+  workerActiveShiftClosedOrdersTotalValueSelect,
+} from "./selectors.ts";

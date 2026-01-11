@@ -92,4 +92,26 @@ export class OrdersService {
     }
     return null;
   }
+
+  async fromActiveShift({
+    user,
+  }: {
+    user: User | undefined;
+  }): Promise<Orders[] | null> {
+    if (user) {
+      const shift = await this.shiftsService.getActiveShiftByUser({ user });
+      if (shift) {
+        return await this.ordersRepository.findAll({
+          where: { shiftId: shift.id },
+          attributes: ['id', 'totalValue', 'createdAt'],
+          include: [
+            {
+              model: OrdersOptionValues,
+            },
+          ],
+        });
+      }
+    }
+    return null;
+  }
 }

@@ -1,14 +1,14 @@
 import { useAppSelector } from "@shared/store/hooks.ts";
-import {
-  SelectWorkerActiveShiftClosedOrdersList,
-  SelectWorkerActiveShiftClosedOrdersTotalValue,
-} from "@entities/shifts";
 import { Table, TableData, TableDataRow } from "@shared/ui";
+import {
+  workerActiveShiftClosedOrdersListSelect,
+  workerActiveShiftClosedOrdersTotalValueSelect,
+} from "@entities/order";
 
 export const ClosedOrdersList = () => {
-  const ordersList = useAppSelector(SelectWorkerActiveShiftClosedOrdersList);
+  const ordersList = useAppSelector(workerActiveShiftClosedOrdersListSelect);
   const shiftTotalValue = useAppSelector(
-    SelectWorkerActiveShiftClosedOrdersTotalValue,
+    workerActiveShiftClosedOrdersTotalValueSelect,
   );
   const tableData: TableData = {
     header: [

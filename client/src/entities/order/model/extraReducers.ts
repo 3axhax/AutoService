@@ -4,6 +4,24 @@ import Request from "@shared/transport/RestAPI.ts";
 import { HandlerAxiosError } from "@shared/transport/RequestHandlersError.ts";
 import { setPending } from "./slice";
 
+export const getOrdersFromActiveShift = createAsyncThunk(
+  "orders/fromActiveShift",
+  async (_, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.order.pending) {
+      dispatch(setPending(true));
+      try {
+        const response = await Request.get("/orders/fromActiveShift");
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);
+
 export const addOrder = createAsyncThunk(
   "orders/add",
   async (orderId: number, { getState, dispatch }) => {
@@ -17,7 +35,6 @@ export const addOrder = createAsyncThunk(
           ...usefulValues
         } = state.order.ordersValue[orderId];
         const response = await Request.post("/orders/add", usefulValues);
-        console.log(response.data);
         return { internalId: orderId, ...response.data };
       } catch (e) {
         HandlerAxiosError(e);

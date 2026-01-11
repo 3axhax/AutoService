@@ -1,18 +1,14 @@
-import {
-  createSelector,
-  createSlice,
-  type PayloadAction,
-} from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { WritableDraft } from "immer";
-import { OrderState, OrderValue } from "./types";
-import { RootState } from "@shared/store";
+import { OrderItem, OrderState, OrderValue } from "./types";
 import { ErrorActionType } from "@shared/types";
-import { addOrder } from "@entities/order";
+import { addOrder, getOrdersFromActiveShift } from "@entities/order";
 
 const initialState: OrderState = {
   pending: false,
   error: "",
   ordersValue: {},
+  ordersList: {},
 };
 
 export const orderSlice = createSlice({
@@ -64,6 +60,9 @@ export const orderSlice = createSlice({
         delete state.ordersValue[action.payload];
       }
     },
+    clearOrdersList: (state: WritableDraft<OrderState>) => {
+      state.ordersList = {};
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -79,6 +78,21 @@ export const orderSlice = createSlice({
             state.ordersValue[action.payload.internalId]
           ) {
             state.ordersValue[action.payload.internalId].active = false;
+          }
+        },
+      )
+      .addCase(
+        getOrdersFromActiveShift.fulfilled,
+        (
+          state: WritableDraft<OrderState>,
+          action: PayloadAction<OrderItem[]>,
+        ) => {
+          state.pending = false;
+          if (action.payload) {
+            state.ordersList = action.payload.reduce(
+              (acc, order) => ({ ...acc, [order.id]: order }),
+              {},
+            );
           }
         },
       )
@@ -105,17 +119,7 @@ export const {
   setOrdersValue,
   addNewActiveOrder,
   deleteActiveOrder,
+  clearOrdersList,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;
-
-export const orderErrorSelect = (state: RootState) => state.order.error;
-
-const ordersValuesSelect = (state: RootState) => state.order.ordersValue;
-
-export const activeOrdersListSelect = createSelector(
-  [ordersValuesSelect],
-  (ordersValue) => {
-    return Object.values(ordersValue).filter((order) => order.active);
-  },
-);
