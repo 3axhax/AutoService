@@ -1,18 +1,11 @@
-import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
+import { useAppSelector } from "@shared/store/hooks.ts";
 import {
-  getOrderParametersList,
   selectErrorOrderParameters,
 } from "@entities/orderParameters";
-import { useEffect } from "react";
 
 export const MainPage = () => {
-  const dispatch = useAppDispatch();
 
   const error = useAppSelector(selectErrorOrderParameters);
-
-  useEffect(() => {
-    dispatch(getOrderParametersList());
-  }, [dispatch]);
 
   return (
     <div className="app">

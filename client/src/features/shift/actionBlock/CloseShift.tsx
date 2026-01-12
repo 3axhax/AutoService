@@ -2,6 +2,7 @@ import { useAppDispatch } from "@shared/store/hooks.ts";
 import { clearShiftsList, closeActiveShift } from "@entities/shifts";
 import { useInfoModalData } from "@app/providers/infoModalProvider";
 import { clearOrdersList } from "@entities/order";
+import {clearAdditionalWorksList} from "@entities/additionalWorks";
 
 export const CloseShift = () => {
   const dispatch = useAppDispatch();
@@ -15,6 +16,7 @@ export const CloseShift = () => {
           if (res.payload) {
             dispatch(clearShiftsList());
             dispatch(clearOrdersList());
+            dispatch(clearAdditionalWorksList());
           }
         });
       },
