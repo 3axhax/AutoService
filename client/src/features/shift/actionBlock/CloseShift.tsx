@@ -1,8 +1,8 @@
 import { useAppDispatch } from "@shared/store/hooks.ts";
 import { clearShiftsList, closeActiveShift } from "@entities/shifts";
-import { useInfoModalData } from "@app/providers/infoModalProvider";
 import { clearOrdersList } from "@entities/order";
-import {clearAdditionalWorksList} from "@entities/additionalWorks";
+import { clearAdditionalWorksList } from "@entities/additionalWorks";
+import { useInfoModalData } from "@app/providers/infoModalProvider";
 
 export const CloseShift = () => {
   const dispatch = useAppDispatch();

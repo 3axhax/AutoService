@@ -1,10 +1,7 @@
 import { useAppSelector } from "@shared/store/hooks.ts";
-import {
-  selectErrorOrderParameters,
-} from "@entities/orderParameters";
+import { selectErrorOrderParameters } from "@entities/orderParameters";
 
 export const MainPage = () => {
-
   const error = useAppSelector(selectErrorOrderParameters);
 
   return (
