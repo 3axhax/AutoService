@@ -5,7 +5,6 @@ export const CreateNewAdditionalWork = () => {
   const dispatch = useAppDispatch();
 
   const clickHandler = () => {
-    console.log("add work");
     dispatch(addNewActiveAdditionalWork());
   };
 

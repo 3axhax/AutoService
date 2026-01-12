@@ -8,7 +8,7 @@ export class AddNewAdditionalWorkDto {
 
   @Transform(({ value }: TransformFnParams) => {
     const num = value ? parseInt(value as string, 10) : 0;
-    return isNaN(num) || num < 1 ? 0 : num;
+    return isNaN(num) ? 0 : num;
   })
   @IsNumber()
   @IsOptional()
