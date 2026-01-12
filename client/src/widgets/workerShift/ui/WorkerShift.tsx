@@ -1,11 +1,13 @@
+import { useEffect } from "react";
 import { ActionBlock } from "./ActionBlock";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
-import { useEffect } from "react";
 import { getActiveShift, SelectWorkerActiveShift } from "@entities/shifts";
-import { OrderActiveList } from "@widgets/workerShift/ui/OrderActiveList.tsx";
-import { ClosedOrdersList } from "@widgets/workerShift/ui/ClosedOrdersList.tsx";
+import { getAdditionalWorksFromActiveShift } from "@entities/additionalWorks";
 import { getOrdersFromActiveShift } from "@entities/order";
-import { AdditionalWorksActiveList } from "@widgets/workerShift/ui/AdditionalWorksActiveList.tsx";
+import { OrderActiveList } from "./OrderActiveList.tsx";
+import { ClosedOrdersList } from "./ClosedOrdersList.tsx";
+import { AdditionalWorksActiveList } from "./AdditionalWorksActiveList.tsx";
+import { ClosedAdditionalWorksList } from "@widgets/workerShift/ui/ClosedAdditionalWorksList.tsx";
 
 export const WorkerShift = () => {
   const isActiveShift = useAppSelector(SelectWorkerActiveShift);
@@ -15,6 +17,7 @@ export const WorkerShift = () => {
   useEffect(() => {
     dispatch(getActiveShift());
     dispatch(getOrdersFromActiveShift());
+    dispatch(getAdditionalWorksFromActiveShift());
   }, [dispatch]);
 
   return (
@@ -25,6 +28,7 @@ export const WorkerShift = () => {
           <OrderActiveList />
           <AdditionalWorksActiveList />
           <ClosedOrdersList />
+          <ClosedAdditionalWorksList />
         </>
       ) : null}
     </div>

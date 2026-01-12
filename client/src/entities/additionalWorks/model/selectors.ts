@@ -10,12 +10,10 @@ const additionalWorksValuesSelect = (state: RootState) =>
 
 export const activeAdditionalWorksListSelect = createSelector(
   [additionalWorksValuesSelect],
-  (additionalWorksValue) => {
-    console.log(Object.values(additionalWorksValue));
-    return Object.values(additionalWorksValue).filter(
+  (additionalWorksValue) =>
+    Object.values(additionalWorksValue).filter(
       (additionalWork) => additionalWork.active,
-    );
-  },
+    ),
 );
 
 export const selectAdditionalWorkParametersAdditionalWorksValue = (
@@ -41,7 +39,7 @@ export const workerActiveShiftClosedAdditionalWorksTotalValueSelect =
     [workerActiveShiftClosedAdditionalWorksListSelect],
     (additionalWorksList) =>
       additionalWorksList.reduce(
-        (total, additionalWork) => total + additionalWork.totalValue,
+        (total, additionalWork) => total + (additionalWork.totalValue ?? 0),
         0,
       ),
   );

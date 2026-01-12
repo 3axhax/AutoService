@@ -28,6 +28,8 @@ import { Orders } from './orders/orders.model';
 import { OrdersOptionValues } from './orders/ordersOptionValues.model';
 import { Shifts } from './shifts/shifts.model';
 import { OrdersModule } from './orders/orders.module';
+import { AdditionalWorks } from './additopnalWorks/additionalWorks.model';
+import { AdditionalWorksModule } from './additopnalWorks/additionalWorks.module';
 
 @Module({
   imports: [
@@ -55,6 +57,7 @@ import { OrdersModule } from './orders/orders.module';
         Orders,
         OrdersOptionValues,
         Shifts,
+        AdditionalWorks,
       ],
       autoLoadModels: true,
     }),
@@ -68,6 +71,7 @@ import { OrdersModule } from './orders/orders.module';
     CompaniesParametersOptionsModule,
     PriceModule,
     OrdersModule,
+    AdditionalWorksModule,
   ],
   controllers: [AppController],
   providers: [
