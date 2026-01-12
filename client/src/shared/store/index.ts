@@ -4,6 +4,7 @@ import { orderParametersSlice } from "@entities/orderParameters";
 import { orderSlice } from "@entities/order";
 import { priceSlice } from "@entities/price";
 import { shiftsSlice } from "@entities/shifts";
+import { additionalWorksSlice } from "@entities/additionalWorks";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     order: orderSlice.reducer,
     price: priceSlice.reducer,
     shifts: shiftsSlice.reducer,
+    additionalWorks: additionalWorksSlice.reducer,
   },
 });
 

@@ -26,7 +26,7 @@ export const ClosedOrdersList = () => {
         name: "createdAt",
         data: new Date(row.createdAt).toLocaleString("ru-RU"),
       },
-      { name: "totalValue", data: row.totalValue.toString() },
+      { name: "totalValue", data: `${row.totalValue.toString()} ₽` },
     ]);
   }
 
@@ -36,7 +36,7 @@ export const ClosedOrdersList = () => {
         <>
           <Table tableData={tableData} className={"w-[100%] mt-3"} />
           <div className={"text-end text-xl mt-2"}>
-            Итого: {shiftTotalValue}
+            Итого по заказам: {shiftTotalValue} ₽
           </div>
         </>
       ) : null}

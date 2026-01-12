@@ -5,6 +5,7 @@ import { getActiveShift, SelectWorkerActiveShift } from "@entities/shifts";
 import { OrderActiveList } from "@widgets/workerShift/ui/OrderActiveList.tsx";
 import { ClosedOrdersList } from "@widgets/workerShift/ui/ClosedOrdersList.tsx";
 import { getOrdersFromActiveShift } from "@entities/order";
+import { AdditionalWorksActiveList } from "@widgets/workerShift/ui/AdditionalWorksActiveList.tsx";
 
 export const WorkerShift = () => {
   const isActiveShift = useAppSelector(SelectWorkerActiveShift);
@@ -22,7 +23,8 @@ export const WorkerShift = () => {
       {isActiveShift ? (
         <>
           <OrderActiveList />
-          <ClosedOrdersList />{" "}
+          <AdditionalWorksActiveList />
+          <ClosedOrdersList />
         </>
       ) : null}
     </div>
