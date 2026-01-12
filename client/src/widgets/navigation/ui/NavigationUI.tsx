@@ -2,6 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 import { JSX, useEffect, useState } from "react";
 import { Logo } from "@widgets/logo";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ChevronDoubleDownIcon } from "@heroicons/react/24/outline";
+
 
 export interface NavItem {
   key: string;
@@ -33,11 +35,12 @@ export const NavigationUI = ({
 
   return (
     <header
-      className={`header${collapsed && collapse ? " h-[5px] p-0 mb-[5px] border-b-1" : ""}`}
+      className={`header shadow-sm`}
     >
       <div
-        className={`container flex${collapsed && collapse ? " hidden" : ""}`}
+        className={`w-full relative bg-white dark:bg-gray-800 z-11 overflow-hidden transition-max-height duration-300 ease-linear ${collapsed && collapse ? "max-h-0" : "max-h-18"}`}
       >
+        <div className={'container flex py-4 ml-auto mr-auto'}>
         <Logo />
         <nav className="navigation ml-auto">
           <ul className="inline-flex space-x-6 justify-center">
@@ -122,16 +125,15 @@ export const NavigationUI = ({
           )}
         </nav>
       </div>
+        </div>
       {collapse && (
         <button
           className={
-            "w-[40px] h-[20px] cursor-pointer border-[1px] absolute right-[5px] bottom-[-20px] flex justify-center border-t-0 rounded-b-[5px]"
+            `bg-white dark:bg-gray-800 w-[40px] h-[22px] cursor-pointer shadow-sm z-10 absolute right-3 bottom-[-20px] flex justify-center rounded-b-[5px]`
           }
           onClick={() => setCollapsed(!collapsed)}
         >
-          <ChevronDownIcon
-            className={`inline-flex h-4 w-4 text-gray-600 transition-transform group-hover:text-green-800 duration-200 ${!collapsed ? "rotate-180" : ""}`}
-          />
+          <ChevronDoubleDownIcon className={`inline-flex h-4 w-4 text-green-800 dark:text-white translate-y-0.5 transition-transform group-hover:text-green-800 duration-200 ${!collapsed ? "rotate-180" : ""}`} />
         </button>
       )}
     </header>

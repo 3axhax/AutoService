@@ -85,7 +85,7 @@
   }
 
   .logo {
-    @apply flex items-center text-green-800 mr-8;
+    @apply flex items-center text-green-800 dark:text-white mr-8;
   }
 
   .logo__text {
@@ -105,7 +105,7 @@
   }
 
   .header {
-    @apply w-full bg-white dark:bg-gray-800 shadow-lg pt-4 pb-4 mb-8 sticky top-0 opacity-95 flex items-center justify-center z-10;
+    @apply w-full mb-8 sticky top-0 opacity-95 flex items-center justify-center z-10;
   }
 
   .form-control {
