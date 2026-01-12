@@ -76,7 +76,7 @@ export class PriceParametersOptionConditions extends Model<
         const maxIdNumber = Number(maxId);
         if (!isNaN(maxIdNumber)) {
           await PriceParametersOptionConditions.sequelize.query(
-            `SELECT setval('"parametersOptionConditions_id_seq"', ${maxIdNumber}, true)`,
+            `SELECT setval('"priceParametersOptionConditions_id_seq"', ${maxIdNumber}, true)`,
           );
           console.log(`Sequence updated to ${maxIdNumber}`);
         }
