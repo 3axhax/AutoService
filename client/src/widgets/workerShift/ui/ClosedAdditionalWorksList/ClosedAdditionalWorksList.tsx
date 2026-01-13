@@ -4,6 +4,7 @@ import {
   workerActiveShiftClosedAdditionalWorksListSelect,
   workerActiveShiftClosedAdditionalWorksTotalValueSelect,
 } from "@entities/additionalWorks";
+import { AdditionalWorksListActionButton } from "./AdditionalWorksListActionButton";
 
 export const ClosedAdditionalWorksList = () => {
   const additionalWorksList = useAppSelector(
@@ -18,6 +19,7 @@ export const ClosedAdditionalWorksList = () => {
       { name: "createdAt", label: "Дата создания" },
       { name: "description", label: "Описание" },
       { name: "totalValue", label: "Сумма" },
+      { name: "actions", label: "" },
     ],
     rows: [] as TableDataRow[][],
   };
@@ -36,6 +38,10 @@ export const ClosedAdditionalWorksList = () => {
       {
         name: "totalValue",
         data: `${row.totalValue ? row.totalValue.toString() : "0"} ₽`,
+      },
+      {
+        name: "action",
+        data: <AdditionalWorksListActionButton workId={row.id} />,
       },
     ]);
   }

@@ -1,8 +1,12 @@
 import { useAppSelector } from "@shared/store/hooks.ts";
 import { SelectWorkerActiveShift } from "@entities/shifts";
-import { CloseShift, CreateNewOrder, CreateNewShift } from "@features/shift";
-import { CreateNewAdditionalWork } from "@features/shift/actionBlock/CreateNewAdditionalWork.tsx";
-import { TotalShiftValue } from "@features/shift/actionBlock/TotalShiftValue.tsx";
+import {
+  CloseShift,
+  CreateNewAdditionalWork,
+  CreateNewOrder,
+  CreateNewShift,
+  TotalShiftValue,
+} from "@features/shift";
 
 export const ActionBlock = () => {
   const isActiveShift = useAppSelector(SelectWorkerActiveShift);

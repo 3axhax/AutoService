@@ -14,3 +14,13 @@ export class AddNewAdditionalWorkDto {
   @IsOptional()
   totalValue: number;
 }
+
+export class EditAdditionalWorkDto extends AddNewAdditionalWorkDto {
+  @Transform(({ value }: TransformFnParams) => {
+    const num = value ? parseInt(value as string, 10) : 0;
+    return isNaN(num) || num < 0 ? 0 : num;
+  })
+  @IsNumber()
+  @IsOptional()
+  id: number;
+}

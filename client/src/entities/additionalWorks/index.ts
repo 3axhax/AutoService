@@ -10,5 +10,7 @@ export {
   activeAdditionalWorksListSelect,
   workerActiveShiftClosedAdditionalWorksListSelect,
   workerActiveShiftClosedAdditionalWorksTotalValueSelect,
-  selectAdditionalWorkParametersAdditionalWorksValue,
+  selectAdditionalWorkValue,
+  deleteAdditionalWork,
+  editAdditionalWork,
 } from "./model";

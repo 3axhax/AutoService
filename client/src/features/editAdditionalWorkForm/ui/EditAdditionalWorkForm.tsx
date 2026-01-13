@@ -1,7 +1,10 @@
 import { FormEvent } from "react";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { InputWithLabel } from "@shared/ui";
-import { selectAdditionalWorkParametersAdditionalWorksValue } from "@entities/additionalWorks";
+import {
+  editAdditionalWork,
+  selectAdditionalWorkValue,
+} from "@entities/additionalWorks";
 import {
   addAdditionalWork,
   deleteActiveAdditionalWork,
@@ -13,15 +16,17 @@ import { TrashIcon } from "@heroicons/react/16/solid";
 interface EditAdditionalWorkFormProps {
   additionalWorkId: number;
   onSuccess?: () => void;
+  edit?: boolean;
 }
 
 export const EditAdditionalWorkForm = ({
   additionalWorkId,
   onSuccess,
+  edit,
 }: EditAdditionalWorkFormProps) => {
   const dispatch = useAppDispatch();
   const values = useAppSelector((state) =>
-    selectAdditionalWorkParametersAdditionalWorksValue(state, additionalWorkId),
+    selectAdditionalWorkValue(state, additionalWorkId),
   );
 
   const additionalWorkError = useAppSelector(additionalWorkErrorSelect);
@@ -44,7 +49,11 @@ export const EditAdditionalWorkForm = ({
 
   const handlerOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addAdditionalWork(additionalWorkId)).then(() => {
+    dispatch(
+      edit
+        ? editAdditionalWork(additionalWorkId)
+        : addAdditionalWork(additionalWorkId),
+    ).then(() => {
       if (onSuccess) {
         onSuccess();
       }
@@ -80,20 +89,22 @@ export const EditAdditionalWorkForm = ({
           </div>
         )}
         <div className={"col-span-full flex gap-2"}>
-          <button className={"btn w-[calc(100%-46px)]"} type={"submit"}>
+          <button className={`btn w-full`} type={"submit"}>
             Записать
           </button>
-          <button
-            type={"button"}
-            className={
-              "w-[36px] h-[36px] text-red-600 hover:text-red-700 transition-colors cursor-pointer"
-            }
-            onClick={() =>
-              dispatch(deleteActiveAdditionalWork(additionalWorkId))
-            }
-          >
-            <TrashIcon className="w-[36px] h-[36px]" />
-          </button>
+          {!edit ? (
+            <button
+              type={"button"}
+              className={
+                "w-[36px] h-[36px] text-red-600 hover:text-red-700 transition-colors cursor-pointer"
+              }
+              onClick={() =>
+                dispatch(deleteActiveAdditionalWork(additionalWorkId))
+              }
+            >
+              <TrashIcon className="w-[36px] h-[36px]" />
+            </button>
+          ) : null}
         </div>
       </form>
     </div>

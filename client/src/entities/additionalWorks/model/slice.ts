@@ -39,13 +39,20 @@ export const additionalWorksSlice = createSlice({
         value: string | number;
       }>,
     ) => {
-      if (
-        action.payload.name &&
-        state.additionalWorksValue[action.payload.additionalWorkId]
-      ) {
-        state.additionalWorksValue[action.payload.additionalWorkId][
-          action.payload.name
-        ] = action.payload.value;
+      if (action.payload.name) {
+        if (
+          !state.additionalWorksValue[action.payload.additionalWorkId] &&
+          state.additionalWorksList[action.payload.additionalWorkId]
+        ) {
+          state.additionalWorksValue[action.payload.additionalWorkId] = {
+            ...state.additionalWorksList[action.payload.additionalWorkId],
+          };
+        }
+        if (state.additionalWorksValue[action.payload.additionalWorkId]) {
+          state.additionalWorksValue[action.payload.additionalWorkId][
+            action.payload.name
+          ] = action.payload.value;
+        }
       }
     },
     addNewActiveAdditionalWork: (

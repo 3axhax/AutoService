@@ -1,5 +1,6 @@
 import { RootState } from "@shared/store";
 import { createSelector } from "@reduxjs/toolkit";
+import { AdditionalWorkValue } from "./types";
 
 const EMPTY_OBJECT = {};
 export const additionalWorkErrorSelect = (state: RootState) =>
@@ -16,10 +17,24 @@ export const activeAdditionalWorksListSelect = createSelector(
     ),
 );
 
-export const selectAdditionalWorkParametersAdditionalWorksValue = (
-  state: RootState,
-  workId: number,
-) => state.additionalWorks.additionalWorksValue[workId] ?? EMPTY_OBJECT;
+const selectAdditionalWorksListWork = (state: RootState, workId: number) =>
+  state.additionalWorks.additionalWorksList[workId] ?? EMPTY_OBJECT;
+
+const selectAdditionalWorksValue = (state: RootState, workId: number) =>
+  state.additionalWorks.additionalWorksValue[workId] ?? EMPTY_OBJECT;
+
+export const selectAdditionalWorkValue = createSelector(
+  [selectAdditionalWorksValue, selectAdditionalWorksListWork],
+  (valuesItem, listItem): AdditionalWorkValue => {
+    if (Object.keys(valuesItem).length > 0) {
+      return valuesItem;
+    }
+    if (Object.keys(listItem).length > 0) {
+      return listItem;
+    }
+    return EMPTY_OBJECT as AdditionalWorkValue;
+  },
+);
 
 const additionalWorkListSelect = (state: RootState) =>
   state.additionalWorks.additionalWorksList;

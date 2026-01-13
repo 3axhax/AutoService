@@ -9,6 +9,8 @@ export {
 export {
   getAdditionalWorksFromActiveShift,
   addAdditionalWork,
+  deleteAdditionalWork,
+  editAdditionalWork,
 } from "./extraReducers";
 
 export {
@@ -16,5 +18,5 @@ export {
   activeAdditionalWorksListSelect,
   workerActiveShiftClosedAdditionalWorksListSelect,
   workerActiveShiftClosedAdditionalWorksTotalValueSelect,
-  selectAdditionalWorkParametersAdditionalWorksValue,
+  selectAdditionalWorkValue,
 } from "./selectors";

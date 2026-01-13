@@ -50,3 +50,49 @@ export const addAdditionalWork = createAsyncThunk(
     }
   },
 );
+
+export const editAdditionalWork = createAsyncThunk(
+  "additionalWorks/edit",
+  async (additionalWorkId: number, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (
+      !state.additionalWorks.pending &&
+      state.additionalWorks.additionalWorksValue[additionalWorkId]
+    ) {
+      dispatch(setPending(true));
+      try {
+        const { active: _active, ...usefulValues } =
+          state.additionalWorks.additionalWorksValue[additionalWorkId];
+        const response = await Request.post(
+          "/additionalWorks/edit",
+          usefulValues,
+        );
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);
+
+export const deleteAdditionalWork = createAsyncThunk(
+  "additionalWorks/delete",
+  async (additionalWorkId: number, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.additionalWorks.pending) {
+      dispatch(setPending(true));
+      try {
+        const response = await Request.post("/additionalWorks/delete", {
+          id: additionalWorkId,
+        });
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);

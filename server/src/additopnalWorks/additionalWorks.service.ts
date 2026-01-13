@@ -3,7 +3,10 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../users/users.model';
 import { ShiftsService } from '../shifts/shifts.service';
 import { AdditionalWorks } from './additionalWorks.model';
-import { AddNewAdditionalWorkDto } from './dto/additionalWorks.dto';
+import {
+  AddNewAdditionalWorkDto,
+  EditAdditionalWorkDto,
+} from './dto/additionalWorks.dto';
 
 @Injectable()
 export class AdditionalWorksService {
@@ -37,6 +40,24 @@ export class AdditionalWorksService {
     return null;
   }
 
+  async edit({
+    user,
+    param,
+  }: {
+    user: User | undefined;
+    param: EditAdditionalWorkDto;
+  }): Promise<AdditionalWorks | null> {
+    const shift = await this.shiftsService.getActiveShiftByUser({ user });
+    const existingWork = await this.additionalWorksRepository.findOne({
+      where: { id: param.id, companyId: user?.companyId, shiftId: shift?.id },
+    });
+    if (existingWork) {
+      await existingWork?.update(param);
+      return existingWork;
+    }
+    return null;
+  }
+
   async fromActiveShift({
     user,
   }: {
@@ -52,5 +73,19 @@ export class AdditionalWorksService {
       }
     }
     return null;
+  }
+
+  async delete({
+    user,
+    id,
+  }: {
+    user: User | undefined;
+    id: number;
+  }): Promise<boolean> {
+    const shift = await this.shiftsService.getActiveShiftByUser({ user });
+    const deletedCount = await this.additionalWorksRepository.destroy({
+      where: { id, companyId: user?.companyId, shiftId: shift?.id },
+    });
+    return deletedCount > 0;
   }
 }
