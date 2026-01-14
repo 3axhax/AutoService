@@ -1,5 +1,6 @@
 import {
   AfterCreate,
+  BeforeDestroy,
   Column,
   DataType,
   ForeignKey,
@@ -71,5 +72,10 @@ export class Orders extends Model<Orders, OrdersCreationAttrs> {
 
       await OrdersOptionValues.bulkCreate(optionValues);
     }
+  }
+
+  @BeforeDestroy
+  static async destroyOptionValues(instance: Orders) {
+    await OrdersOptionValues.destroy({ where: { orderId: instance.id } });
   }
 }

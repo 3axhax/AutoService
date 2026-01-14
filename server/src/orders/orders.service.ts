@@ -114,4 +114,18 @@ export class OrdersService {
     }
     return null;
   }
+
+  async delete({
+    user,
+    id,
+  }: {
+    user: User | undefined;
+    id: number;
+  }): Promise<boolean> {
+    const shift = await this.shiftsService.getActiveShiftByUser({ user });
+    const deletedCount = await this.ordersRepository.destroy({
+      where: { id, companyId: user?.companyId, shiftId: shift?.id },
+    });
+    return deletedCount > 0;
+  }
 }

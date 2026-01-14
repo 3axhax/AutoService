@@ -28,4 +28,14 @@ export class OrdersController {
   ): Promise<Orders[] | null> {
     return this.orderService.fromActiveShift({ user });
   }
+
+  @Post('delete')
+  @Roles('ADMIN', 'WORKER')
+  @UseGuards(RolesGuard)
+  deleteOrder(
+    @User() user: UserModel | undefined,
+    @Body() param: { id: number },
+  ): Promise<boolean> {
+    return this.orderService.delete({ user, id: param.id });
+  }
 }

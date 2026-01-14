@@ -10,4 +10,6 @@ export {
   addNewActiveOrder,
   deleteActiveOrder,
   clearOrdersList,
+  editOrder,
+  deleteOrder,
 } from "./model";

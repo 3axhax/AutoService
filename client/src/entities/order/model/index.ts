@@ -6,7 +6,12 @@ export {
   clearOrdersList,
 } from "./slice";
 
-export { addOrder, getOrdersFromActiveShift } from "./extraReducers";
+export {
+  addOrder,
+  getOrdersFromActiveShift,
+  editOrder,
+  deleteOrder,
+} from "./extraReducers";
 
 export {
   orderErrorSelect,

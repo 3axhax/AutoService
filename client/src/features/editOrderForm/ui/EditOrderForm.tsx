@@ -19,6 +19,7 @@ import { TrashIcon } from "@heroicons/react/16/solid";
 interface EditOrderFormProps {
   orderId: number;
   onSuccess?: () => void;
+  edit?: boolean;
 }
 
 export const EditOrderForm = ({ orderId, onSuccess }: EditOrderFormProps) => {

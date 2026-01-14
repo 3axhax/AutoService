@@ -4,6 +4,7 @@ import {
   workerActiveShiftClosedOrdersListSelect,
   workerActiveShiftClosedOrdersTotalValueSelect,
 } from "@entities/order";
+import { OrdersListActionButton } from "@widgets/workerShift/ui/ClosedOrdersList/OrdersListActionButton.tsx";
 
 export const ClosedOrdersList = () => {
   const ordersList = useAppSelector(workerActiveShiftClosedOrdersListSelect);
@@ -15,6 +16,7 @@ export const ClosedOrdersList = () => {
       { name: "id", label: "ID" },
       { name: "createdAt", label: "Дата создания" },
       { name: "totalValue", label: "Сумма" },
+      { name: "actions", label: "" },
     ],
     rows: [] as TableDataRow[][],
   };
@@ -27,6 +29,7 @@ export const ClosedOrdersList = () => {
         data: new Date(row.createdAt).toLocaleString("ru-RU"),
       },
       { name: "totalValue", data: `${row.totalValue.toString()} ₽` },
+      { name: "action", data: <OrdersListActionButton orderId={row.id} /> },
     ]);
   }
 

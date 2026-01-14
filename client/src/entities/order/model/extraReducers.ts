@@ -44,3 +44,41 @@ export const addOrder = createAsyncThunk(
     }
   },
 );
+
+export const editOrder = createAsyncThunk(
+  "orders/edit",
+  async (orderId: number, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.order.pending && state.order.ordersValue[orderId]) {
+      dispatch(setPending(true));
+      try {
+        const { active: _active, ...usefulValues } =
+          state.order.ordersValue[orderId];
+        const response = await Request.post("/orders/edit", usefulValues);
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);
+
+export const deleteOrder = createAsyncThunk(
+  "orders/delete",
+  async (orderId: number, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.order.pending) {
+      dispatch(setPending(true));
+      try {
+        const response = await Request.post("/orders/delete", { id: orderId });
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);

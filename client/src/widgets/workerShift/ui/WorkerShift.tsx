@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { ActionBlock } from "./ActionBlock";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { getActiveShift, SelectWorkerActiveShift } from "@entities/shifts";
 import { getAdditionalWorksFromActiveShift } from "@entities/additionalWorks";
 import { getOrdersFromActiveShift } from "@entities/order";
-import { OrderActiveList } from "./OrderActiveList.tsx";
-import { ClosedOrdersList } from "./ClosedOrdersList.tsx";
-import { AdditionalWorksActiveList } from "./AdditionalWorksActiveList.tsx";
-import { ClosedAdditionalWorksList } from "@widgets/workerShift/ui/ClosedAdditionalWorksList/ClosedAdditionalWorksList.tsx";
+import { ActionBlock } from "./ActionBlock";
+import { OrderActiveList } from "./OrderActiveList";
+import { ClosedOrdersList } from "./ClosedOrdersList";
+import { AdditionalWorksActiveList } from "./AdditionalWorksActiveList";
+import { ClosedAdditionalWorksList } from "./ClosedAdditionalWorksList";
 
 export const WorkerShift = () => {
   const isActiveShift = useAppSelector(SelectWorkerActiveShift);
