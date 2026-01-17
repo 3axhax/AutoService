@@ -76,11 +76,9 @@ export class OrdersService {
   }): Promise<Orders | null> {
     const shift = await this.shiftsService.getActiveShiftByUser({ user });
     const existOrder = await this.ordersRepository.findOne({
-      where: { shiftId: shift?.id, companyId: user?.companyId },
+      where: { shiftId: shift?.id, companyId: user?.companyId, id: param.id },
     });
-    console.log('!!!CheckExistOrder!!!');
     if (existOrder && user) {
-      console.log('!!!ExistOrder!!!');
       await existOrder.deleteOptions();
       const parametersOptions = await this._formatParamToOptions(param);
       existOrder.setOptions(parametersOptions);
