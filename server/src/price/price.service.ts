@@ -41,7 +41,28 @@ export class PriceService {
     let total = 0;
     let discount = 1;
 
-    const selectedValues = Object.values(param).reduce(
+    const parametersList = await this.orderParametersService.getAll({ user });
+
+    const parametersListWithOptions = parametersList.parameters
+      ?.filter(
+        (parameter) => parameter.get({ plain: true }).options?.length > 0,
+      )
+      .map((parameter) => parameter.name);
+
+    const usefulParam = {} as Record<
+      string,
+      string | Record<number | string, number>
+    >;
+
+    if (parametersListWithOptions) {
+      Object.entries(param).forEach(([key, value]) => {
+        if (parametersListWithOptions.includes(key)) {
+          usefulParam[key] = value;
+        }
+      });
+    }
+
+    const selectedValues = Object.values(usefulParam).reduce(
       (acc: Record<number, number>, value) => {
         if (typeof value === 'object' && value !== null) {
           let values = {};
@@ -57,7 +78,7 @@ export class PriceService {
       {},
     );
 
-    const selectedParameters = Object.values(param).reduce(
+    const selectedParameters = Object.values(usefulParam).reduce(
       (acc: number[], value) => {
         if (typeof value === 'object' && value !== null) {
           const values: number[] = [];
@@ -72,8 +93,6 @@ export class PriceService {
       },
       [],
     );
-
-    const parametersList = await this.orderParametersService.getAll({ user });
 
     if (parametersList && parametersList.parameters) {
       const discountParameter = parametersList.parameters

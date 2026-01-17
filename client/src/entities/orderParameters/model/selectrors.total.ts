@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import {
   selectOrderParametersList,
-  selectOrderParametersOrdersValue,
+  usefulOrderValuesWithOptions,
 } from "./selectors";
 import { RootState } from "@shared/store";
 
@@ -14,7 +14,7 @@ interface PriceItem {
 const priceList = (state: RootState) => state.price.priceList;
 
 export const orderTotalValue = createSelector(
-  [selectOrderParametersOrdersValue, priceList, selectOrderParametersList],
+  [usefulOrderValuesWithOptions, priceList, selectOrderParametersList],
   (parametersValues, priceList, parametersList) => {
     let total = 0;
     let discount = 1;
@@ -92,7 +92,7 @@ export const orderTotalValue = createSelector(
       total +=
         price.value *
         price.conditions.reduce((acc: number, condition) => {
-          return acc * selectedValues[condition.id];
+          return acc * (selectedValues[condition.id] ?? 1);
         }, 1) *
         (price.discountImpact ? discount : 1);
     });

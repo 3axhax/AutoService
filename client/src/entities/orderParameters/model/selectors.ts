@@ -22,12 +22,29 @@ const selectParameterOptionDependence = (state: RootState) =>
 const selectOptionOptionDependence = (state: RootState) =>
   state.orderParameters.optionOptionDependence;
 
+export const usefulOrderValuesWithOptions = createSelector(
+  [selectOrderParametersOrdersValue, selectOrderParametersList],
+  (orderValues, parametersList) => {
+    const { id: _id, active: _active, ...usefulOrderValues } = orderValues;
+
+    const parametersListWithOptions = parametersList
+      .filter((parameter) => parameter.options.length > 0)
+      .map((parameter) => parameter.name);
+
+    const filteredEntries = Object.entries(usefulOrderValues).filter(([key]) =>
+      parametersListWithOptions.includes(key),
+    );
+
+    return Object.fromEntries(filteredEntries);
+  },
+);
+
 export const formatedOrderParametersList = createSelector(
   [
     selectOrderParametersList,
     selectParameterOptionDependence,
     selectOptionOptionDependence,
-    selectOrderParametersOrdersValue,
+    usefulOrderValuesWithOptions,
   ],
   (
     parametersList,
@@ -35,9 +52,7 @@ export const formatedOrderParametersList = createSelector(
     optionOptionDependence,
     ordersValue,
   ) => {
-    const { id: _id, active: _active, ...usefulOrderValues } = ordersValue;
-
-    const values = Object.values(usefulOrderValues).map((value) => +value);
+    const values = Object.values(ordersValue).map((value) => +value);
     const parameterDependenceIds = Object.keys(parameterOptionDependence).map(
       (id) => parseInt(id),
     );
