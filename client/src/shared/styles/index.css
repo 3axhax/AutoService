@@ -99,14 +99,6 @@
     dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[-webkit-text-fill-color:var(--color-gray-900)]
     dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[text-shadow:none]
   }
-
-/*  @supports (-webkit-text-stroke: 1px var(--color-green-800)) {
-    .outlined-heading {
-      -webkit-text-stroke: 1px var(--color-green-800);
-      -webkit-text-fill-color: var(--color-white);
-      text-shadow: none;
-    }
-  }*/
 }
 
 @layer components {

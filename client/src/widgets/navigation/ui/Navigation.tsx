@@ -7,13 +7,13 @@ import {
 } from "@entities/user";
 import { useInfoModalData } from "@app/providers/infoModalProvider";
 import { LoginForm } from "@features/loginForm";
-import { UserIcon } from "@heroicons/react/16/solid";
 import { NavigationUI, NavItem } from "./NavigationUI.tsx";
 import {
   ArchiveBoxIcon,
   ArrowRightEndOnRectangleIcon,
   HomeModernIcon,
 } from "@heroicons/react/24/outline";
+import {UserSimple} from "@shared/ui/Icons/UserSimple.tsx";
 
 export const Navigation = () => {
   const isUserAuthorized = useAppSelector(selectIsUserAuthorized);
@@ -44,11 +44,9 @@ export const Navigation = () => {
   if (isUserAuthorized) {
     navItems.push({
       key: "userMenu",
-      path: "#",
-      label: `${userName}`,
-      isDropdown: true,
-      iconLink: <UserIcon className="h-5 w-5 text-green-800 mr-2" />,
-      items: [{ path: "/logout", label: "Выход" }],
+      path: "/logout",
+      label: `${userName} (Выход)`,
+      iconLink: <UserSimple className="h-5 w-5 text-green-800 mr-1" />,
     });
   } else {
     navItems.push({

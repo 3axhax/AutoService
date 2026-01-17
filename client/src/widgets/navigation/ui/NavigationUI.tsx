@@ -46,7 +46,7 @@ export const NavigationUI = ({
                   {item.isDropdown ? (
                     <>
                       <div
-                        className={`relative flex items-center flex-gap-2 px-4 py-2 rounded-full transition-colors duration-200 border-1 border-green-800 hover:cursor-pointer text-gray-600 dark:text-gray-300 group hover:text-green-800 hover:bg-green-600/10 hover:text-green-800 dark:hover:bg-gray-700`}
+                        className={`relative flex items-center flex-gap-2 px-4 py-2 rounded-full transition-colors duration-200 border-1 border-green-800 hover:cursor-pointer text-gray-600 dark:text-gray-300 group hover:text-green-800 hover:bg-green-600/10 dark:hover:bg-gray-700`}
                         onClick={() => setIsDropdownOpen(item.key)}
                       >
                         {item.iconLink && item.iconLink}
@@ -100,7 +100,7 @@ export const NavigationUI = ({
                     </button>
                   ) : (
                     <Link
-                      to={item.key}
+                      to={item.path}
                       className={`flex items-center flex-gap-2 px-4 py-2 rounded-full transition-colors duration-200 border-1 border-white  ${
                         location.pathname === item.path
                           ? " bg-green-900 text-white"
