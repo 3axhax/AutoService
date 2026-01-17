@@ -16,7 +16,7 @@ export const OrdersPage = () => {
 
   return (
     <div className="app">
-      <div className="container">
+      <div className="container px-4 lg:px-8">
         <h1 className="text-4xl font-sans  text-gray-900 dark:text-white mb-4">
           OrdersPage
         </h1>
