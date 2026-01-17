@@ -60,6 +60,7 @@ export const SelectUI = <T extends string | number = string>({
         inputId={name}
         placeholder={placeholder}
         aria-required={required}
+
         classNames={{
           control: (state) =>
             `!min-h-10 !border !rounded-lg !bg-white !shadow-sm transition-all duration-200 outline-none text-left ${

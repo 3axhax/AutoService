@@ -164,7 +164,7 @@ export const EditOrderForm = ({
             parametersList.map((parameter) => (
               <div
                 className={
-                  "border-gray-400/50 border-1 px-4 py-4 rounded-lg h-full"
+                  "shadow-gray-800/10 shadow-xs border-gray-800/20 border-1 px-4 mx-2 py-4 rounded-lg h-full"
                 }
               >
                 {SwitchParameterType(parameter)}
