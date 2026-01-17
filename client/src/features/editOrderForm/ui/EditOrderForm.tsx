@@ -1,6 +1,6 @@
 import { FormEvent } from "react";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
-import { InputWithLabel, RadioGroup, SelectList, SelectUI } from "@shared/ui";
+import { InputWithLabel, RadioGroup, SelectList } from "@shared/ui";
 import { GraphInput } from "./GraphInput";
 import { OrderTotalValue } from "./OrderTotalValue";
 import {
@@ -15,6 +15,7 @@ import {
   setOrdersValue,
 } from "@entities/order";
 import { TrashIcon } from "@heroicons/react/16/solid";
+import { SelectOrRadio } from "@features/editOrderForm/ui/SelectOrRadio.tsx";
 
 interface EditOrderFormProps {
   orderId: number;
@@ -73,15 +74,9 @@ export const EditOrderForm = ({ orderId, onSuccess }: EditOrderFormProps) => {
                 );
               case ParametersType.SELECT:
                 return (
-                  <SelectUI
-                    className={"self-start"}
+                  <SelectOrRadio
                     key={parameter.id}
-                    label={parameter.translationRu}
-                    name={parameter.name}
-                    options={parameter.options.map((item) => ({
-                      value: item.id.toString(),
-                      label: item.translationRu,
-                    }))}
+                    parameter={parameter}
                     value={(values[parameter.name] as string) ?? ""}
                     onChange={(value) =>
                       setValue({ name: parameter.name, value })
@@ -138,7 +133,7 @@ export const EditOrderForm = ({ orderId, onSuccess }: EditOrderFormProps) => {
                 );
             }
           })}
-        <OrderTotalValue orderId={orderId} />
+
         {orderError && (
           <div
             className={"bg-red-200 border-1 rounded-md px-4 py-2 col-span-full"}
@@ -146,6 +141,10 @@ export const EditOrderForm = ({ orderId, onSuccess }: EditOrderFormProps) => {
             {orderError}
           </div>
         )}
+        <OrderTotalValue
+          orderId={orderId}
+          className={"col-span-full border-b-2 w-fit"}
+        />
         <div className={"col-span-full flex gap-2"}>
           <button className={"btn w-[calc(100%-46px)]"} type={"submit"}>
             Завершить

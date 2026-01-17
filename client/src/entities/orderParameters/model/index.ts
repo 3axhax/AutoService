@@ -10,3 +10,4 @@ export {
 export { orderTotalValue } from "./selectrors.total";
 
 export { ParametersType } from "./types";
+export type { ParametersItem } from "./types";

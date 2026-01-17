@@ -13,6 +13,7 @@ interface RadioGroupProps<T = string> {
   required?: boolean;
   className?: string;
   labelClassName?: string;
+  type?: "row" | "col";
 }
 
 export const RadioGroup = <T = string,>({
@@ -24,19 +25,20 @@ export const RadioGroup = <T = string,>({
   className,
   labelClassName,
   required = false,
+  type = "row",
 }: RadioGroupProps<T>) => {
   return (
     <fieldset
       className={`radio-group-container flex ${className ? " " + className : ""}`}
     >
       <p
-        className={`group-label inline-flex mr-5${labelClassName ? " " + labelClassName : ""}`}
+        className={`text-sm font-medium group-label inline-flex mr-5${labelClassName ? " " + labelClassName : ""}`}
       >
         {label}
         {required && <span className="required-asterisk">*</span>}
       </p>
       <div
-        className={`radio-options inline-flex gap-[15px] horizontal-layout`}
+        className={`radio-options flex horizontal-layout${type === "col" ? " flex-col gap-2" : "flex-row gap-[15px]"}`}
         role="radiogroup"
         aria-labelledby={`${name}-label`}
       >

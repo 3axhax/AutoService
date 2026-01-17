@@ -8,3 +8,4 @@ export {
   orderTotalValue,
   selectOrderParametersOrdersValue,
 } from "./model";
+export type { ParametersItem } from "./model";
