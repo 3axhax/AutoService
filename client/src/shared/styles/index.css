@@ -77,6 +77,23 @@
   .font-transition {
     transition: font-variation-settings 0.3s ease;
   }
+
+  .outlined-heading {
+    color: var(--color-white); /* Fallback color */
+    text-shadow:
+            -1px -1px 0 var(--color-green-800),
+            1px -1px 0 var(--color-green-800),
+            -1px  1px 0 var(--color-green-800),
+            1px  1px 0 var(--color-green-800); /* Basic fallback for all browsers */
+  }
+
+  @supports (-webkit-text-stroke: 1px black) {
+    .outlined-heading {
+      -webkit-text-stroke: 1px var(--color-green-800);
+      -webkit-text-fill-color: white;
+      text-shadow: none;
+    }
+  }
 }
 
 @layer components {
