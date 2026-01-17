@@ -20,6 +20,16 @@ export class OrdersController {
     return this.orderService.addNew({ user, param });
   }
 
+  @Post('edit')
+  @Roles('ADMIN', 'WORKER')
+  @UseGuards(RolesGuard)
+  editOrder(
+    @User() user: UserModel | undefined,
+    @Body() param: Record<string, string | Record<number | string, number>>,
+  ): Promise<Orders | null> {
+    return this.orderService.edit({ user, param });
+  }
+
   @Get('fromActiveShift')
   @Roles('ADMIN', 'WORKER')
   @UseGuards(RolesGuard)

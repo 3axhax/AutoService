@@ -45,33 +45,7 @@ export class OrdersService {
         }),
       });
 
-      const parametersOptions = [] as Omit<
-        OrdersOptionValuesCreationAttrs,
-        'orderId'
-      >[];
-
-      for (const k in param) {
-        const parameters =
-          await this.orderParametersService.getParameterByName(k);
-        if (parameters) {
-          if (param[k]) {
-            if (isObject(param[k])) {
-              for (const n in param[k]) {
-                parametersOptions.push({
-                  parameterId: parameters.id,
-                  value: n,
-                  count: param[k][n],
-                });
-              }
-            } else {
-              parametersOptions.push({
-                parameterId: parameters.id,
-                value: param[k],
-              });
-            }
-          }
-        }
-      }
+      const parametersOptions = await this._formatParamToOptions(param);
 
       order.setOptions(parametersOptions);
       await order.save();
@@ -93,6 +67,36 @@ export class OrdersService {
     return null;
   }
 
+  async edit({
+    user,
+    param,
+  }: {
+    user: User | undefined;
+    param: Record<string, string | Record<number | string, number>>;
+  }): Promise<Orders | null> {
+    const shift = await this.shiftsService.getActiveShiftByUser({ user });
+    const existOrder = await this.ordersRepository.findOne({
+      where: { shiftId: shift?.id, companyId: user?.companyId },
+    });
+    console.log('!!!CheckExistOrder!!!');
+    if (existOrder && user) {
+      console.log('!!!ExistOrder!!!');
+      await existOrder.deleteOptions();
+      const parametersOptions = await this._formatParamToOptions(param);
+      existOrder.setOptions(parametersOptions);
+      await existOrder.saveOptions();
+      await existOrder.update({
+        totalValue: await this.priceService.calculateTotalValue({
+          user,
+          param,
+        }),
+      });
+      await existOrder.save();
+      return existOrder;
+    }
+    return null;
+  }
+
   async fromActiveShift({
     user,
   }: {
@@ -107,6 +111,7 @@ export class OrdersService {
           include: [
             {
               model: OrdersOptionValues,
+              include: [OrderParameters],
             },
           ],
         });
@@ -127,5 +132,38 @@ export class OrdersService {
       where: { id, companyId: user?.companyId, shiftId: shift?.id },
     });
     return deletedCount > 0;
+  }
+
+  async _formatParamToOptions(
+    param: Record<string, string | Record<number | string, number>>,
+  ): Promise<Omit<OrdersOptionValuesCreationAttrs, 'orderId'>[]> {
+    const parametersOptions = [] as Omit<
+      OrdersOptionValuesCreationAttrs,
+      'orderId'
+    >[];
+
+    for (const k in param) {
+      const parameters =
+        await this.orderParametersService.getParameterByName(k);
+      if (parameters) {
+        if (param[k]) {
+          if (isObject(param[k])) {
+            for (const n in param[k]) {
+              parametersOptions.push({
+                parameterId: parameters.id,
+                value: n,
+                count: param[k][n],
+              });
+            }
+          } else {
+            parametersOptions.push({
+              parameterId: parameters.id,
+              value: param[k],
+            });
+          }
+        }
+      }
+    }
+    return parametersOptions;
   }
 }

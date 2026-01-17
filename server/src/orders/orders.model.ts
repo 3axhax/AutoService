@@ -62,16 +62,24 @@ export class Orders extends Model<Orders, OrdersCreationAttrs> {
     this._optionsData = options;
   }
 
-  @AfterCreate
-  static async createOptionValues(instance: Orders) {
-    if (instance._optionsData && instance._optionsData.length > 0) {
-      const optionValues = instance._optionsData.map((option) => ({
+  async deleteOptions() {
+    await OrdersOptionValues.destroy({ where: { orderId: this.id } });
+  }
+
+  async saveOptions() {
+    if (this._optionsData && this._optionsData.length > 0) {
+      const optionValues = this._optionsData.map((option) => ({
         ...option,
-        orderId: instance.id,
+        orderId: this.id,
       }));
 
       await OrdersOptionValues.bulkCreate(optionValues);
     }
+  }
+
+  @AfterCreate
+  static async createOptionValues(instance: Orders) {
+    await instance.saveOptions();
   }
 
   @BeforeDestroy

@@ -90,7 +90,7 @@ export const EditAdditionalWorkForm = ({
         )}
         <div className={"col-span-full flex gap-2"}>
           <button className={`btn w-full`} type={"submit"}>
-            Записать
+            {!edit ? "Записать" : "Изменить"}
           </button>
           {!edit ? (
             <button

@@ -1,20 +1,36 @@
 import { RootState } from "@shared/store";
 import { createSelector } from "@reduxjs/toolkit";
+import { OrderValue } from "@entities/order/model/types.ts";
+import { formatOrderValueFromOrderItemList } from "@entities/order/model/slice.ts";
 
-const EMPTY_OBJECT = {};
+const EMPTY_OBJECT = {} as OrderValue;
 
 export const selectPendingOrderParameters = (state: RootState) =>
   state.orderParameters.pending;
 export const selectErrorOrderParameters = (state: RootState) =>
   state.orderParameters.error;
 
-export const selectOrderParametersOrdersValue = (
-  state: RootState,
-  orderId: number,
-) => state.order.ordersValue[orderId] ?? EMPTY_OBJECT;
+const selectOrdersListValue = (state: RootState, orderId: number) =>
+  state.order.ordersList[orderId] ?? EMPTY_OBJECT;
+
+const selectOrderValue = (state: RootState, orderId: number) =>
+  state.order.ordersValue[orderId] ?? EMPTY_OBJECT;
 
 export const selectOrderParametersList = (state: RootState) =>
   state.orderParameters.parametersList;
+
+export const selectOrderParametersOrdersValue = createSelector(
+  [selectOrderValue, selectOrdersListValue],
+  (orderValue, listItem) => {
+    if (Object.keys(orderValue).length > 0) {
+      return orderValue;
+    }
+    if (Object.keys(listItem.optionValues).length > 0) {
+      return formatOrderValueFromOrderItemList(listItem);
+    }
+    return EMPTY_OBJECT;
+  },
+);
 
 const selectParameterOptionDependence = (state: RootState) =>
   state.orderParameters.parameterOptionDependence;

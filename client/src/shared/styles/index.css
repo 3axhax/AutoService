@@ -97,7 +97,7 @@
     dark:[text-shadow:-1px_-1px_0_var(--color-white),1px_-1px_0_var(--color-white),-1px_1px_0_var(--color-white),1px_1px_0_var(--color-white)]
     dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[-webkit-text-stroke:1px_var(--color-white)]
     dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[-webkit-text-fill-color:var(--color-gray-900)]
-    dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[text-shadow:none]
+    dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[text-shadow:none];
   }
 }
 

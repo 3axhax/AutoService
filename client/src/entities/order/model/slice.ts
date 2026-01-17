@@ -32,6 +32,17 @@ export const orderSlice = createSlice({
         value: string | number | Record<string | number, number>;
       }>,
     ) => {
+      if (
+        !state.ordersValue[action.payload.orderId] &&
+        state.ordersList[action.payload.orderId]
+      ) {
+        state.ordersValue[action.payload.orderId] = {
+          ...formatOrderValueFromOrderItemList(
+            state.ordersList[action.payload.orderId],
+          ),
+          id: action.payload.orderId,
+        };
+      }
       if (!state.ordersValue[action.payload.orderId]) {
         state.ordersValue[action.payload.orderId] = {
           id: action.payload.orderId,
@@ -123,3 +134,28 @@ export const {
 } = orderSlice.actions;
 
 export default orderSlice.reducer;
+
+export const formatOrderValueFromOrderItemList = (listItem: OrderItem) => {
+  const values = {} as OrderValue;
+  listItem.optionValues.forEach((item) => {
+    const parameter = item.parameter;
+    if (parameter) {
+      if (Object.prototype.hasOwnProperty.call(values, parameter.name)) {
+        if (typeof values[parameter.name] === "string") {
+          const valueId = values[parameter.name] as string;
+          values[parameter.name] = { [valueId]: 1, [item.value]: item.count };
+        } else if (typeof values[parameter.name] === "object") {
+          const valueObject = values[parameter.name] as object;
+          values[parameter.name] = { ...valueObject, [item.value]: item.count };
+        }
+      } else {
+        if (item.count > 1 || parameter.type === "SELECT_LIST") {
+          values[parameter.name] = { [item.value]: item.count };
+        } else {
+          values[parameter.name] = item.value;
+        }
+      }
+    }
+  });
+  return values;
+};

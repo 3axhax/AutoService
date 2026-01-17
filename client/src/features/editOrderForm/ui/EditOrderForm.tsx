@@ -11,6 +11,7 @@ import {
 import {
   addOrder,
   deleteActiveOrder,
+  editOrder,
   orderErrorSelect,
   setOrdersValue,
 } from "@entities/order";
@@ -21,9 +22,15 @@ interface EditOrderFormProps {
   orderId: number;
   onSuccess?: () => void;
   edit?: boolean;
+  col?: boolean;
 }
 
-export const EditOrderForm = ({ orderId, onSuccess }: EditOrderFormProps) => {
+export const EditOrderForm = ({
+  orderId,
+  onSuccess,
+  edit = false,
+  col = false,
+}: EditOrderFormProps) => {
   const dispatch = useAppDispatch();
   const parametersList = useAppSelector((state) =>
     formatedOrderParametersList(state, orderId),
@@ -46,7 +53,7 @@ export const EditOrderForm = ({ orderId, onSuccess }: EditOrderFormProps) => {
 
   const handlerOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addOrder(orderId)).then(() => {
+    dispatch(edit ? editOrder(orderId) : addOrder(orderId)).then(() => {
       if (onSuccess) {
         onSuccess();
       }
@@ -55,7 +62,10 @@ export const EditOrderForm = ({ orderId, onSuccess }: EditOrderFormProps) => {
 
   return (
     <div>
-      <form onSubmit={handlerOnSubmit} className={"grid gap-5 grid-cols-4"}>
+      <form
+        onSubmit={handlerOnSubmit}
+        className={`grid gap-5 ${col ? "grid-cols-1" : "grid-cols-4"}`}
+      >
         {parametersList &&
           parametersList.map((parameter) => {
             switch (parameter.type) {
@@ -147,17 +157,19 @@ export const EditOrderForm = ({ orderId, onSuccess }: EditOrderFormProps) => {
         />
         <div className={"col-span-full flex gap-2"}>
           <button className={"btn w-[calc(100%-46px)]"} type={"submit"}>
-            Завершить
+            {!edit ? "Завершить" : "Изменить"}
           </button>
-          <button
-            type={"button"}
-            className={
-              "w-[36px] h-[36px] text-red-600 hover:text-red-700 transition-colors cursor-pointer"
-            }
-            onClick={() => dispatch(deleteActiveOrder(orderId))}
-          >
-            <TrashIcon className="w-[36px] h-[36px]" />
-          </button>
+          {!edit ? (
+            <button
+              type={"button"}
+              className={
+                "w-[36px] h-[36px] text-red-600 hover:text-red-700 transition-colors cursor-pointer"
+              }
+              onClick={() => dispatch(deleteActiveOrder(orderId))}
+            >
+              <TrashIcon className="w-[36px] h-[36px]" />
+            </button>
+          ) : null}
         </div>
       </form>
     </div>

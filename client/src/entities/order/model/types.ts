@@ -3,9 +3,16 @@ export interface OrderValue {
   [key: string]: boolean | number | string | Record<number | string, number>;
 }
 
-export interface OrderItem extends OrderValue {
+export interface OrderItem {
+  id: number;
   totalValue: number;
   createdAt: string;
+  optionValues: {
+    parameterId: number;
+    value: string;
+    count: number;
+    parameter: { name: string; type: string };
+  }[];
 }
 
 export interface OrderState {

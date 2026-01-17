@@ -13,7 +13,7 @@ import {
   ArrowRightEndOnRectangleIcon,
   HomeModernIcon,
 } from "@heroicons/react/24/outline";
-import {UserSimple} from "@shared/ui/Icons/UserSimple.tsx";
+import { UserSimple } from "@shared/ui/Icons/UserSimple.tsx";
 
 export const Navigation = () => {
   const isUserAuthorized = useAppSelector(selectIsUserAuthorized);

@@ -32,6 +32,7 @@ export const OrdersListActionButton = ({ orderId }: { orderId: number }) => {
           onSuccess={() =>
             dispatch(getOrdersFromActiveShift()).then(() => closeModal())
           }
+          col={true}
         />
       ),
     });
