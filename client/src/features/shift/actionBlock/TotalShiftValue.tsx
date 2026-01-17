@@ -7,5 +7,5 @@ export const TotalShiftValue = () => {
     useAppSelector(workerActiveShiftClosedAdditionalWorksTotalValueSelect) +
     useAppSelector(workerActiveShiftClosedOrdersTotalValueSelect);
 
-  return <div className={"text-xl"}>Итого за смену: {total} ₽</div>;
-};
+  return <div className={"text-base"}>Итого за смену: <span className={'font-medium text-xl'}>{total}&nbsp;₽</span></div >;
+  };

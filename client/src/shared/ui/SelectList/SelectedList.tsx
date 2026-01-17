@@ -12,10 +12,10 @@ export const SelectedList = ({
   onDelete,
 }: SelectedListProps) => {
   return (
-    <ul className={"flex flex-col gap-2 pb-2"}>
+    <ul className={"flex flex-col mb-2"}>
       {list &&
         list.map((item) => (
-          <li key={item.id} className={"flex justify-between"}>
+          <li key={item.id} className={'flex justify-between border-b-1 border-gray-400 last:border-b-0 items-center p-2 even:bg-gray-300/20'}>
             <SelectedListItem
               item={item}
               onChange={(value) => {

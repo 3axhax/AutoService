@@ -26,20 +26,18 @@ export const SelectedListItem = ({
 
   return (
     <>
-      <div>
-        <span className={"underline"}>{item.label}</span>
-      </div>
-      <div>
+      <span className={""}>{item.label}</span>
+      <div className={'flex items-center'}>
         <input
           type={"number"}
-          className={"form-control w-15 p-2"}
+          className={"form-control w-15 px-2 py-1"}
           onChange={handlerOnChange}
           value={item.value}
         />
         <button
           type={"button"}
           className={
-            "w-5 h-5 text-red-600 hover:text-red-700 transition-colors cursor-pointer ml-[10px]"
+            "w-5 h-5 text-red-600 hover:text-red-700 transition-colors cursor-pointer ml-2.5 inline-flex"
           }
           onClick={() => handlerDeleteRecord(item.id)}
         >
