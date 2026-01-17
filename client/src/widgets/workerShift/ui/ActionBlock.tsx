@@ -11,7 +11,7 @@ import {
 export const ActionBlock = () => {
   const isActiveShift = useAppSelector(SelectWorkerActiveShift);
   return (
-    <div className={"flex justify-between"}>
+    <div className={"flex flex-col lg:flex-row justify-between"}>
       <div className={"flex justify-start gap-3"}>
         {!isActiveShift ? (
           <>

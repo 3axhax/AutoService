@@ -18,7 +18,7 @@ export const WorkerOrderPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="container">
+    <div className="container px-4 lg:px-8">
       {error !== "" ? (
         <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>
       ) : null}
