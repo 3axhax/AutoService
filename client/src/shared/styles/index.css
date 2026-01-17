@@ -50,6 +50,15 @@
   #root {
     @apply mx-auto text-center w-full;
   }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light) {
+    }
+  }
+
+  /* Manual override with .dark class */
+  :root.dark {
+  }
 }
 
 @layer utilities {
@@ -79,21 +88,25 @@
   }
 
   .outlined-heading {
-    color: var(--color-white); /* Fallback color */
-    text-shadow:
-            -1px -1px 0 var(--color-green-800),
-            1px -1px 0 var(--color-green-800),
-            -1px  1px 0 var(--color-green-800),
-            1px  1px 0 var(--color-green-800); /* Basic fallback for all browsers */
+    @apply text-white
+    [text-shadow:-1px_-1px_0_var(--color-green-800),1px_-1px_0_var(--color-green-800),-1px_1px_0_var(--color-green-800),1px_1px_0_var(--color-green-800)]
+  supports-[-webkit-text-stroke:1px_var(--color-green-800)]:[-webkit-text-stroke:1px_var(--color-green-800)]
+  supports-[-webkit-text-stroke:1px_var(--color-green-800)]:[-webkit-text-fill-color:var(--color-white)]
+  supports-[-webkit-text-stroke:1px_var(--color-green-800)]:[text-shadow:none]
+    dark:text-gray-900
+    dark:[text-shadow:-1px_-1px_0_var(--color-white),1px_-1px_0_var(--color-white),-1px_1px_0_var(--color-white),1px_1px_0_var(--color-white)]
+    dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[-webkit-text-stroke:1px_var(--color-white)]
+    dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[-webkit-text-fill-color:var(--color-gray-900)]
+    dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[text-shadow:none]
   }
 
-  @supports (-webkit-text-stroke: 1px black) {
+/*  @supports (-webkit-text-stroke: 1px var(--color-green-800)) {
     .outlined-heading {
       -webkit-text-stroke: 1px var(--color-green-800);
-      -webkit-text-fill-color: white;
+      -webkit-text-fill-color: var(--color-white);
       text-shadow: none;
     }
-  }
+  }*/
 }
 
 @layer components {
