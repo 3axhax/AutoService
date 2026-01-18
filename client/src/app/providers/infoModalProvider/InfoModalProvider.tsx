@@ -12,6 +12,7 @@ export const InfoModalProvider = ({ children }: { children: ReactNode }) => {
   const [type, setType] = useState<InfoModalType>("standard");
   const [body, setBody] = useState<JSX.Element | string>("");
   const [hasButtons, setHasButtons] = useState<boolean>(true);
+  const [className, setClassName] = useState<string>("");
 
   const openModal = ({
     onAccess: onAccessProps,
@@ -19,12 +20,14 @@ export const InfoModalProvider = ({ children }: { children: ReactNode }) => {
     type: typeProps,
     body: bodyProps,
     hasButtons: hasButtonsProps,
+    className: classNameProps,
   }: InfoModalConstructor) => {
     setOnAccess(() => onAccessProps || null);
     setTitle(titleProps || "");
     setType(typeProps || "standard");
     setBody(bodyProps || "");
     setHasButtons(hasButtonsProps !== false);
+    setClassName(classNameProps || "");
     setOpen(true);
   };
 
@@ -44,6 +47,7 @@ export const InfoModalProvider = ({ children }: { children: ReactNode }) => {
         type,
         body,
         hasButtons,
+        className,
       }}
     >
       {children}

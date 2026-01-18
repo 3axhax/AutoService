@@ -9,8 +9,16 @@ type ModalButtons = {
 }[];
 
 export const InfoModal = () => {
-  const { open, closeModal, onAccess, title, type, body, hasButtons } =
-    useInfoModalData();
+  const {
+    open,
+    closeModal,
+    onAccess,
+    title,
+    type,
+    body,
+    hasButtons,
+    className,
+  } = useInfoModalData();
 
   const [buttons, setButtons] = useState<ModalButtons>([]);
 
@@ -40,6 +48,7 @@ export const InfoModal = () => {
       body={body}
       hasButtons={hasButtons}
       buttons={buttons}
+      className={className}
     />
   );
 };

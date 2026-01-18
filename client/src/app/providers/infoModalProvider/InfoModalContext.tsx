@@ -8,6 +8,7 @@ export interface InfoModalConstructor {
   type?: InfoModalType;
   body?: JSX.Element | string;
   hasButtons?: boolean;
+  className?: string;
 }
 
 interface InfoModalContextType {
@@ -19,6 +20,7 @@ interface InfoModalContextType {
   type: InfoModalType;
   body: JSX.Element | string;
   hasButtons: boolean;
+  className: string;
 }
 
 export const InfoModalContext = createContext<InfoModalContextType | undefined>(

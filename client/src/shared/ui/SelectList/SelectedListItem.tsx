@@ -27,7 +27,7 @@ export const SelectedListItem = ({
   return (
     <>
       <span className={""}>{item.label}</span>
-      <div className={'flex items-center'}>
+      <div className={"flex items-center"}>
         <input
           type={"number"}
           className={"form-control w-15 px-2 py-1"}

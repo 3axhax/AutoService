@@ -32,9 +32,10 @@ export const OrdersListActionButton = ({ orderId }: { orderId: number }) => {
           onSuccess={() =>
             dispatch(getOrdersFromActiveShift()).then(() => closeModal())
           }
-          col={true}
+          carouselMaxItems={3}
         />
       ),
+      className: "min-w-auto md:min-w-[90%]",
     });
   };
   return (
