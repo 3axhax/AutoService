@@ -267,6 +267,10 @@
   .react-multiple-carousel__arrow--left {
     left: 0 !important;
   }
+
+  .custom-select__menu-portal {
+    z-index: 10 !important;
+  }
 }
 
 .font-sans {

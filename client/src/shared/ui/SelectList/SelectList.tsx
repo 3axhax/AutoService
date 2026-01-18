@@ -85,6 +85,7 @@ export const SelectList = <T extends string = string>({
       <Select
         ref={selectRef}
         menuPosition="absolute"
+        classNamePrefix="custom-select"
         menuPortalTarget={document.body}
         className={className}
         value={selectedValue}
