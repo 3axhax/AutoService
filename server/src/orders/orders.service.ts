@@ -11,6 +11,7 @@ import { isObject } from 'class-validator';
 import { OrderParameters } from '../orderParameters/orderParameters.model';
 import { ShiftsService } from '../shifts/shifts.service';
 import { PriceService } from '../price/price.service';
+import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
 
 @Injectable()
 export class OrdersService {
@@ -109,7 +110,16 @@ export class OrdersService {
           include: [
             {
               model: OrdersOptionValues,
-              include: [OrderParameters],
+              include: [
+                {
+                  model: OrderParameters,
+                  attributes: ['name', 'type'],
+                },
+                {
+                  model: OrderParametersOptions,
+                  attributes: ['translationRu'],
+                },
+              ],
             },
           ],
         });

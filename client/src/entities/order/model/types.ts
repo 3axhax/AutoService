@@ -12,6 +12,7 @@ export interface OrderItem {
     value: string;
     count: number;
     parameter: { name: string; type: string };
+    option?: { translationRu: string };
   }[];
 }
 

@@ -13,3 +13,5 @@ export {
   editOrder,
   deleteOrder,
 } from "./model";
+
+export type { OrderItem } from "./model";

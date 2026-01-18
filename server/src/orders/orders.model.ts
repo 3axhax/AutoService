@@ -14,6 +14,7 @@ import {
   OrdersOptionValues,
   OrdersOptionValuesCreationAttrs,
 } from './ordersOptionValues.model';
+import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
 
 export interface OrdersCreationAttrs {
   id?: number;
@@ -56,9 +57,14 @@ export class Orders extends Model<Orders, OrdersCreationAttrs> {
   @HasMany(() => OrdersOptionValues)
   declare optionValues: OrdersOptionValues[];
 
-  declare _optionsData?: Omit<OrdersOptionValuesCreationAttrs, 'orderId'>[];
+  declare _optionsData?: Omit<
+    OrdersOptionValuesCreationAttrs,
+    'orderId' | 'optionId'
+  >[];
 
-  setOptions(options: Omit<OrdersOptionValuesCreationAttrs, 'orderId'>[]) {
+  setOptions(
+    options: Omit<OrdersOptionValuesCreationAttrs, 'orderId' | 'optionId'>[],
+  ) {
     this._optionsData = options;
   }
 
@@ -68,10 +74,20 @@ export class Orders extends Model<Orders, OrdersCreationAttrs> {
 
   async saveOptions() {
     if (this._optionsData && this._optionsData.length > 0) {
-      const optionValues = this._optionsData.map((option) => ({
-        ...option,
-        orderId: this.id,
-      }));
+      const optionValuesPromises = this._optionsData.map(async (option) => {
+        const parametersOptions = !isNaN(+option.value)
+          ? await OrderParametersOptions.findOne({
+              where: { id: +option.value },
+            })
+          : null;
+        return {
+          ...option,
+          optionId: parametersOptions ? parametersOptions.id : undefined,
+          orderId: this.id,
+        };
+      });
+
+      const optionValues = await Promise.all(optionValuesPromises);
 
       await OrdersOptionValues.bulkCreate(optionValues);
     }

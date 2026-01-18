@@ -19,3 +19,5 @@ export {
   workerActiveShiftClosedOrdersListSelect,
   workerActiveShiftClosedOrdersTotalValueSelect,
 } from "./selectors.ts";
+
+export type { OrderItem } from "./types";

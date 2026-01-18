@@ -8,12 +8,14 @@ import {
 } from 'sequelize-typescript';
 import { Orders } from './orders.model';
 import { OrderParameters } from '../orderParameters/orderParameters.model';
+import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
 
 export interface OrdersOptionValuesCreationAttrs {
   orderId: number;
   parameterId: number;
   count?: number;
   value: string;
+  optionId?: number;
 }
 @Table({
   tableName: 'ordersOptionValues',
@@ -58,6 +60,19 @@ export class OrdersOptionValues extends Model<
   })
   declare value: string;
 
+  @ForeignKey(() => OrderParametersOptions)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+  })
+  declare optionId?: number;
+
   @BelongsTo(() => OrderParameters, { foreignKey: 'parameterId' })
   declare parameter: OrderParameters;
+
+  @BelongsTo(() => OrderParametersOptions, {
+    foreignKey: 'optionId',
+    constraints: false,
+  })
+  declare option?: OrderParametersOptions;
 }
