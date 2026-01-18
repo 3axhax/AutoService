@@ -65,13 +65,14 @@ export const EditOrderForm = ({
     return (
       <li
         data-index={index}
-        className={`react-multi-carousel-dot${active ? " react-multi-carousel-dot--active" : ""}`}
+        className={'dot-carousel'}
       >
         <button
           aria-label={`Go to slide ${index}`}
           type={"button"}
           onClick={onClick}
-        ></button>
+          className={`shadow-sm hover:scale-110 transition-transform duration-200 cursor-pointer shadow-gray-800/10 h-6 w-6 rounded-full bg-gray-300 mr-2 ${active ? "bg-green-800/40 text-w" : ""}`}
+        >{index ? (index + 1) : '1'}</button>
       </li>
     );
   };
