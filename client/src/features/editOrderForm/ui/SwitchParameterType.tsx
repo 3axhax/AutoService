@@ -8,15 +8,18 @@ import { SelectOrRadio } from "@features/editOrderForm/ui/SelectOrRadio.tsx";
 import { GraphInput } from "@features/editOrderForm/ui/GraphInput.tsx";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { setOrdersValue } from "@entities/order";
+import Carousel from "react-multi-carousel";
 
 interface SwitchParameterTypeProps {
   parameter: ParametersItem;
   orderId: number;
+  carousel?: Carousel;
 }
 
 export const SwitchParameterType = ({
   parameter,
   orderId,
+  carousel,
 }: SwitchParameterTypeProps) => {
   const dispatch = useAppDispatch();
 
@@ -31,6 +34,13 @@ export const SwitchParameterType = ({
     name: string;
     value: string | number | Record<string, number>;
   }) => {
+    if (
+      carousel &&
+      [ParametersType.SELECT, ParametersType.INPUT].includes(parameter.type) &&
+      !values[parameter.name]
+    ) {
+      carousel.next(1);
+    }
     dispatch(setOrdersValue({ orderId: orderId, name, value }));
   };
 

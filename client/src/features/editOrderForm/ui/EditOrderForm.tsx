@@ -1,4 +1,4 @@
-import { FormEvent } from "react";
+import { FormEvent, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { OrderTotalValue } from "./OrderTotalValue";
 import { formatedOrderParametersList } from "@entities/orderParameters";
@@ -30,8 +30,9 @@ export const EditOrderForm = ({
   const parametersList = useAppSelector((state) =>
     formatedOrderParametersList(state, orderId),
   );
-
   const orderError = useAppSelector(orderErrorSelect);
+
+  const carouselRef = useRef<Carousel>(null);
 
   const responsive = {
     superLargeDesktop: {
@@ -63,16 +64,15 @@ export const EditOrderForm = ({
 
   const CustomDot = ({ index, onClick, active }: DotProps) => {
     return (
-      <li
-        data-index={index}
-        className={'dot-carousel'}
-      >
+      <li data-index={index} className={"dot-carousel"}>
         <button
           aria-label={`Go to slide ${index}`}
           type={"button"}
           onClick={onClick}
           className={`shadow-sm hover:scale-110 transition-transform duration-200 cursor-pointer shadow-gray-800/10 h-6 w-6 rounded-full bg-gray-300 mr-2 ${active ? "bg-green-800/40 text-w" : ""}`}
-        >{index ? (index + 1) : '1'}</button>
+        >
+          {index ? index + 1 : "1"}
+        </button>
       </li>
     );
   };
@@ -81,6 +81,7 @@ export const EditOrderForm = ({
     <div>
       <form onSubmit={handlerOnSubmit} className={"w-full pt-12 pb-8 relative"}>
         <Carousel
+          ref={carouselRef}
           responsive={responsive}
           showDots={true}
           removeArrowOnDeviceType={["tablet", "mobile"]}
@@ -97,7 +98,11 @@ export const EditOrderForm = ({
                   "shadow-gray-800/10 shadow-xs border-gray-800/20 border-1 px-4 mx-2 py-4 rounded-lg h-full"
                 }
               >
-                <SwitchParameterType parameter={parameter} orderId={orderId} />
+                <SwitchParameterType
+                  parameter={parameter}
+                  orderId={orderId}
+                  carousel={carouselRef.current ?? undefined}
+                />
               </div>
             ))}
         </Carousel>
