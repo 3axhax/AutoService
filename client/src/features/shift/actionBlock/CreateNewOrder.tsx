@@ -9,7 +9,7 @@ export const CreateNewOrder = () => {
   };
 
   return (
-    <button className={"btn"} onClick={clickHandler}>
+    <button className={"btn btn-purple"} onClick={clickHandler}>
       Новый заказ
     </button>
   );

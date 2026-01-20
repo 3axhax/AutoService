@@ -1,6 +1,22 @@
 @import "tailwindcss";
 
 @font-face {
+  font-family: "Roboto";
+  src: url("./fonts/Roboto.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("./fonts/Roboto-Italic.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Sofia Sans";
   src: url("./fonts/SofiaSans_v.woff2") format("woff2");
   font-weight: 100 900;
@@ -8,17 +24,9 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Sofia Sans";
-  src: url("./fonts/SofiaSans-Italic_v.woff2") format("woff2");
-  font-weight: 100 900;
-  font-style: italic;
-  font-display: swap;
-}
-
 @layer base {
   :root {
-    font-family: "Sofia Sans", "Roboto", "Arial Black", sans-serif;
+    font-family: "Roboto", "Arial Black", sans-serif;
     font-weight: 300;
     line-height: 1.5;
     font-synthesis: none;
@@ -38,10 +46,16 @@
     --line: color-mix(in lch, canvasText, transparent 70%);
 
     --secondaryColor: var(--color-green-800);
+
+    --color-orange: oklch(67.89% 0.210 36.29);
+    --color-blue-dark: oklch(29.43% 0.086 265.36);
+    --color-blue-light: oklch(77.20% 0.135 217.27);
+    --color-beige: oklch(92.61% 0.023 87.15);
+    --color-purple: oklch(39.80% 0.057 283.51);
   }
 
   body {
-    font-family: "Sofia Sans", "Roboto", "Arial Black", sans-serif;
+    font-family: "Roboto", "Arial Black", sans-serif;
     @apply m-0 flex items-stretch justify-center min-w-[320px] min-h-screen;
     /*    background: linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size), linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size);
     -webkit-mask: linear-gradient(-20deg, transparent 50%, white);*/
@@ -49,6 +63,30 @@
 
   #root {
     @apply mx-auto text-center w-full;
+  }
+
+  .orange {
+    color: var(--color-orange);
+  }
+
+  .blue-dark {
+    color: var(--color-blue-dark);
+  }
+
+  .blue-light {
+    color: var(--color-blue-light);
+  }
+
+  .blue-light {
+    color: var(--color-blue-light);
+  }
+
+  .beige {
+    color: var(--color-beige);
+  }
+
+  .purple {
+    color: var(--color-purple);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -64,7 +102,7 @@
 @layer utilities {
   /* Кастомные классы для точного контроля variable font */
   .font-sofia-variable {
-    font-family: "Sofia Sans", sans-serif;
+    font-family: "Roboto", sans-serif;
     font-variation-settings:
       "wght" 400,
       "wdth" 100;
@@ -106,14 +144,6 @@
     @apply flex flex-col items-center;
   }
 
-  .logo {
-    @apply flex items-center text-green-800 dark:text-white mr-8;
-  }
-
-  .logo__text {
-    @apply flex flex-col items-start text-green-800;
-  }
-
   .counter {
     @apply flex flex-col items-center gap-4 p-8 border border-gray-200 rounded-xl bg-white/5 backdrop-blur-sm;
   }
@@ -131,12 +161,12 @@
   }
 
   .form-control {
-    font-family: "Sofia Sans", "Roboto", "Arial Black", sans-serif;
+    font-family: "Roboto", "Arial Black", sans-serif;
     @apply text-green-800 w-full px-5 py-3 border border-green-800 bg-white text-base/5 rounded-md shadow-sm hover:shadow-green-900 focus:outline-none focus:border-green-900 focus:shadow-gray-400;
   }
 
   .form-label {
-    font-family: "Sofia Sans", "Roboto", "Arial Black", sans-serif;
+    font-family: "Roboto", "Arial Black", sans-serif;
     @apply absolute top-3 left-4 bg-white text-base/5 rounded-xs text-green-800 transition-all duration-300 ease-in-out py-0.25 px-1;
   }
 
@@ -162,12 +192,12 @@
   }
 
   .page-title {
-    font-family: "Sofia Sans", "Roboto", "Arial Black", sans-serif;
+    font-family: "Roboto", "Arial Black", sans-serif;
     @apply text-4xl text-gray-900 dark:text-white mb-4;
   }
 
   .btn {
-    @apply relative overflow-hidden text-white text-lg/5 transition-all duration-400 font-medium rounded-md px-3 py-2 cursor-pointer
+    @apply relative overflow-hidden text-white text-lg/5 transition-all duration-400 font-normal rounded-md px-3 py-2 cursor-pointer
     bg-gradient-to-r
     from-green-800
     via-green-500
@@ -178,6 +208,30 @@
     disabled:bg-blue-300
     shadow-md shadow-green-800/75
     hover:shadow-gray-500;
+  }
+
+  .btn-orange {
+    background-image: linear-gradient(to right, var(--color-yellow-500), var(--color-orange), var(--color-orange), var(--color-orange-300));
+    @apply shadow-orange-700/75;
+  }
+
+  .btn-blue-light {
+    background-image: linear-gradient(to right, var(--color-blue-light), var(--color-blue-500), var(--color-blue-light), var(--color-blue-500));
+    @apply shadow-blue-500/75;
+  }
+
+  .btn-blue-dark {
+    background-image: linear-gradient(to right, var(--color-blue-dark), var(--color-blue-800), var(--color-blue-dark), var(--color-blue-800));
+    @apply shadow-blue-900/75;
+  }
+
+  .btn-purple {
+    background-image: linear-gradient(to right, var(--color-purple), var(--color-indigo-700), var(--color-purple), var(--color-indigo-700));
+    @apply shadow-indigo-900/75;
+  }
+
+  .btn-beige {
+    background-image: linear-gradient(to right, var(--color-beige), var(--color-white), var(--color-beige), var(--color-white));
   }
 
   .btn-white {

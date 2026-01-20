@@ -9,7 +9,7 @@ export const CreateNewAdditionalWork = () => {
   };
 
   return (
-    <button className={"btn"} onClick={clickHandler}>
+    <button className={"btn btn-orange btn-blue-dark"} onClick={clickHandler}>
       Дополнительные работы
     </button>
   );

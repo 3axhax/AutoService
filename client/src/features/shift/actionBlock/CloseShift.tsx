@@ -26,7 +26,7 @@ export const CloseShift = () => {
   };
 
   return (
-    <button className={"btn"} onClick={clickHandler}>
+    <button className={"btn btn-orange"} onClick={clickHandler}>
       Закончить смену
     </button>
   );
