@@ -35,7 +35,7 @@ export const NavigationUI = ({
   return (
     <header className={`header shadow-sm`}>
       <div
-        className={`w-full relative bg-white dark:bg-gray-800 z-11 overflow-hidden transition-max-height duration-300 ease-linear ${collapsed && collapse ? "max-h-0" : "max-h-18"}`}
+        className={`w-full relative bg-blue-dark dark:bg-gray-800 z-11 overflow-hidden transition-max-height duration-300 ease-linear ${collapsed && collapse ? "max-h-0" : "max-h-18"}`}
       >
         <div className={"container flex py-4 ml-auto mr-auto"}>
           <Logo />
