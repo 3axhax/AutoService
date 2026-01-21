@@ -35,9 +35,9 @@ export const NavigationUI = ({
   return (
     <header className={`header shadow-lg`}>
       <div
-        className={`w-full relative bg-blue-dark dark:bg-gray-800 z-11 overflow-hidden transition-max-height duration-300 ease-linear ${collapsed && collapse ? "max-h-0" : "max-h-18"}`}
+        className={`w-full relative bg-blue-dark z-11 overflow-hidden transition-max-height duration-300 ease-linear ${collapsed && collapse ? "max-h-0" : "max-h-18"}`}
       >
-        <div className={"container flex py-4 ml-auto mr-auto"}>
+        <div className={"container flex py-2 ml-auto mr-auto"}>
           <Logo />
           <nav className="navigation ml-auto">
             <ul className="inline-flex space-x-6 justify-center">
@@ -90,25 +90,25 @@ export const NavigationUI = ({
                   ) : item.isButton ? (
                     <button
                       className={
-                        "cursor-pointer flex justify-center items-center rounded-full px-4 font-medium py-2 border-2 border-green-800 bg-green-800 text-white hover:bg-white hover:text-green-800 ml-20 transition-all"
+                        "cursor-pointer flex justify-center items-center px-4 py-2 text-white"
                       }
                       key={item.key}
                       onClick={item.onClick}
                     >
                       {item.iconLink && item.iconLink}
-                      {item.label}
+                      <span className={'bg-underline'}>{item.label}</span>
                     </button>
                   ) : (
                     <Link
                       to={item.path}
-                      className={`flex items-center flex-gap-2 px-4 py-2 rounded-full transition-colors duration-200 border-1 border-white  ${
+                      className={`flex items-center flex-gap-2 px-4 py-2 ${
                         location.pathname === item.path
-                          ? " bg-green-900 text-white"
-                          : " text-gray-600 dark:text-gray-300 hover:text-green-800 hover:border-green-800 hover:bg-green-600/10 dark:hover:bg-gray-700"
+                          ? "text-white"
+                          : " text-white"
                       }`}
                     >
                       {item.iconLink && item.iconLink}
-                      {item.label}
+                      <span className={'bg-underline'}>{item.label}</span>
                     </Link>
                   )}
                 </li>

@@ -9,7 +9,7 @@ import { useInfoModalData } from "@app/providers/infoModalProvider";
 import { LoginForm } from "@features/loginForm";
 import { NavigationUI, NavItem } from "./NavigationUI.tsx";
 import {
-  ArchiveBoxIcon,
+  ArchiveBoxArrowDownIcon,
   ArrowRightEndOnRectangleIcon,
   HomeModernIcon,
 } from "@heroicons/react/24/outline";
@@ -37,7 +37,7 @@ export const Navigation = () => {
       key: "facility",
       path: "/work_history",
       label: "История работ",
-      iconLink: <ArchiveBoxIcon className="inline-flex h-5 w-5 mr-1" />,
+      iconLink: <ArchiveBoxArrowDownIcon className="inline-flex h-5 w-5 mr-1" />,
     });
   }
 
@@ -46,7 +46,7 @@ export const Navigation = () => {
       key: "userMenu",
       path: "/logout",
       label: `${userName} (Выход)`,
-      iconLink: <UserSimple className="h-5 w-5 text-green-800 mr-1" />,
+      iconLink: <UserSimple className="h-5 w-5 inline-flex mr-1" />,
     });
   } else {
     navItems.push({

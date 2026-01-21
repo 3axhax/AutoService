@@ -47,6 +47,10 @@
 
     --secondaryColor: var(--color-green-800);
 
+    --underline-height: 1px;
+    --underline-spacing: 0.25em;
+    --transition-time: 0.3s;
+
     --color-orange: oklch(67.89% 0.210 36.29);
     --color-blue-dark: oklch(29.43% 0.086 265.36);
     --color-blue-light: oklch(77.20% 0.135 217.27);
@@ -152,6 +156,16 @@
     dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[-webkit-text-stroke:1px_var(--color-white)]
     dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[-webkit-text-fill-color:var(--color-gray-900)]
     dark:supports-[-webkit-text-stroke:1px_var(--color-white)]:[text-shadow:none];
+  }
+
+  .bg-underline {
+    @apply bg-gradient-to-r from-current to-current
+    bg-no-repeat
+    [background-position:left_bottom_var(--underline-spacing)]
+    [background-size:0_var(--underline-height)]
+    hover:[background-size:100%_var(--underline-height)]
+    transition-[background-size] duration-300 ease-out
+    pb-[var(--underline-spacing)];
   }
 }
 
