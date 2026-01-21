@@ -21,16 +21,26 @@ export const WorkerShift = () => {
   }, [dispatch]);
 
   return (
-    <div>
-      <ActionBlock />
+    <>
+      <div className={"container px-4 lg:px-8"}>
+        <ActionBlock />
+      </div>
       {isActiveShift ? (
         <>
-          <OrderActiveList />
-          <AdditionalWorksActiveList />
-          <ClosedOrdersList />
-          <ClosedAdditionalWorksList />
+          <div className={'container px-4 lg:px-8'}>
+            <OrderActiveList />
+          </div>
+          <div className={'container px-4 lg:px-8'}>
+            <AdditionalWorksActiveList />
+          </div>
+          <div className={'container px-4 lg:px-8'}>
+            <ClosedOrdersList />
+          </div>
+          <div className={'container px-4 lg:px-8'}>
+            <ClosedAdditionalWorksList />
+          </div>
         </>
       ) : null}
-    </div>
+    </>
   );
 };
