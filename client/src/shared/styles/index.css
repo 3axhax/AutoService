@@ -327,7 +327,7 @@
   }
 
   .radio-input:before {
-    @apply w-3 h-3 absolute top-0.5 left-0.5 rounded-full z-1 bg-green-800 content-[''] transform scale-0   transition-transform duration-400 ease-[cubic-bezier(.45,1.8,.5,.75)];
+    @apply w-3 h-3 absolute top-0.5 left-0.5 rounded-full z-1 bg-blue-900 content-[''] transform scale-0   transition-transform duration-400 ease-[cubic-bezier(.45,1.8,.5,.75)];
   }
 
   .radio-label {
@@ -337,7 +337,7 @@
     @apply transform scale-100;
   }
   .radio-input:after {
-    @apply w-5 h-5 absolute -top-0.5 -left-0.5 rounded-full content-[''] bg-white border-2 border-green-800;
+    @apply w-5 h-5 absolute -top-0.5 -left-0.5 rounded-full content-[''] bg-white border-2 border-blue-900;
   }
 
   .slider li {
