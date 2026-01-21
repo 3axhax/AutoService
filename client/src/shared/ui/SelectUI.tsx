@@ -42,7 +42,7 @@ export const SelectUI = <T extends string | number = string>({
       {label ? (
         <label
           htmlFor={name}
-          className="text-lg font-medium text-gray-700 mb-1"
+          className="text-lg font-medium text-gray-800"
         >
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
@@ -62,10 +62,10 @@ export const SelectUI = <T extends string | number = string>({
         aria-required={required}
         classNames={{
           control: (state) =>
-            `!min-h-10 !border !rounded-lg !bg-white !shadow-sm transition-all duration-200 outline-none text-left ${
+            `mt-2 !min-h-10 !border !rounded-lg !bg-white !shadow-sm transition-all duration-200 outline-none text-left ${
               state.isFocused
-                ? "!border-green-800 !ring-1 !ring-green-800 !ring-opacity-20"
-                : "!border-gray-300 hover:!border-green-800 hover:!shadow-green-800"
+                ? "!border-blue-900 !ring-1 !ring-blue-900 !ring-opacity-20"
+                : "!border-gray-300 hover:!border-blue-900 hover:!shadow-blue-900"
             } ${
               state.isDisabled
                 ? "!bg-gray-50 !cursor-not-allowed !opacity-50"
@@ -77,9 +77,9 @@ export const SelectUI = <T extends string | number = string>({
           option: (state) =>
             `!px-3 !py-2 !cursor-pointer ${
               state.isSelected
-                ? "!bg-green-800 !text-white"
+                ? "!bg-blue-900 !text-white"
                 : state.isFocused
-                  ? "!bg-green-50 !text-gray-900"
+                  ? "!bg-blue-50 !text-gray-900"
                   : "!text-gray-700 hover:!bg-gray-50"
             } ${state.isDisabled ? "!opacity-50 !cursor-not-allowed" : ""}`,
           placeholder: () => "!text-gray-400",
@@ -87,8 +87,8 @@ export const SelectUI = <T extends string | number = string>({
           valueContainer: () => "!px-3 !py-1",
           indicatorsContainer: () => "!pr-2",
           dropdownIndicator: (state) =>
-            `!text-gray-400 hover:!text-gray-600 transition-all duration-300 ease-in-out ${
-              state.selectProps.menuIsOpen ? "!rotate-180 !text-green-800" : ""
+            `!text-gray-400 hover:!text-blue-900 transition-all duration-300 ease-in-out ${
+              state.selectProps.menuIsOpen ? "!rotate-180 !text-blue-900" : "!text-blue-900"
             }`,
           clearIndicator: () => "!text-gray-400 hover:!text-gray-600",
           indicatorSeparator: () => "!bg-transparent",

@@ -69,7 +69,7 @@ export const EditOrderForm = ({
           aria-label={`Go to slide ${index}`}
           type={"button"}
           onClick={onClick}
-          className={`shadow-sm hover:scale-110 transition-transform duration-200 cursor-pointer shadow-gray-800/10 h-6 w-6 rounded-full bg-gray-300 mr-2 ${active ? "bg-green-800/40 text-w" : ""}`}
+          className={`shadow-sm shadow-blue-900 font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/10 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mr-2 ${active ? "bg-blue-900 text-white" : ""}`}
         >
           {index ? index + 1 : "1"}
         </button>

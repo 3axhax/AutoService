@@ -86,7 +86,7 @@ export const SwitchParameterType = ({
           name={parameter.name}
           label={parameter.translationRu}
           placeholder={`${parameter.translationRu}...`}
-          className={"self-start"}
+          className={"text-left"}
           options={parameter.options.map((item) => ({
             value: item.id.toString(),
             label: item.translationRu,

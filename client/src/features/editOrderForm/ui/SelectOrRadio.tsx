@@ -30,7 +30,7 @@ export const SelectOrRadio = ({
         />
       ) : (
         <SelectUI
-          className={"self-start"}
+          className={"text-left"}
           key={parameter.id}
           label={parameter.translationRu}
           name={parameter.name}

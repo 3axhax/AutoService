@@ -197,7 +197,7 @@
 
   .form-label {
     font-family: "Roboto", "Arial Black", sans-serif;
-    @apply absolute top-3 left-4 bg-white text-base/5 rounded-xs text-green-800 transition-all duration-300 ease-in-out py-0.25 px-1;
+    @apply absolute top-3 left-4 bg-white text-base/5 rounded-xs text-blue-900 transition-all duration-300 ease-in-out py-0.25 px-1;
   }
 
   .form-control:focus + .form-label,
