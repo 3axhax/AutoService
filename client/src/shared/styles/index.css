@@ -227,7 +227,7 @@
   }
 
   .btn {
-    @apply relative overflow-hidden text-white text-lg/5 transition-all duration-400 font-normal rounded-md px-3 py-2 cursor-pointer
+    @apply relative overflow-hidden text-white text-base/5 transition-all duration-400 font-normal rounded-md px-4 py-2 cursor-pointer
     bg-gradient-to-r
     from-green-800
     via-green-500

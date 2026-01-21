@@ -13,7 +13,7 @@ import {
   ArrowRightEndOnRectangleIcon,
   HomeModernIcon,
 } from "@heroicons/react/24/outline";
-import { UserSimple } from "@shared/ui/Icons/UserSimple.tsx";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 
 export const Navigation = () => {
   const isUserAuthorized = useAppSelector(selectIsUserAuthorized);
@@ -46,7 +46,7 @@ export const Navigation = () => {
       key: "userMenu",
       path: "/logout",
       label: `${userName} (Выход)`,
-      iconLink: <UserSimple className="h-5 w-5 inline-flex mr-1" />,
+      iconLink: <UserCircleIcon className="h-5 w-5 inline-flex mr-1" />,
     });
   } else {
     navItems.push({
