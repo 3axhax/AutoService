@@ -79,7 +79,7 @@ export const EditOrderForm = ({
 
   return (
     <div>
-      <form onSubmit={handlerOnSubmit} className={"w-full pt-12 pb-8 relative"}>
+      <form onSubmit={handlerOnSubmit} className={"w-full my-10 pt-12 pb-8 relative"}>
         <Carousel
           ref={carouselRef}
           responsive={responsive}
@@ -117,19 +117,20 @@ export const EditOrderForm = ({
           orderId={orderId}
           className={"col-span-full border-b-2 w-fit"}
         />
-        <div className={"col-span-full flex gap-2"}>
-          <button className={"btn w-full"} type={"submit"}>
+        <div className={"col-span-full flex items-center justify-center gap-2"}>
+          <button className={"btn btn-blue-dark w-1/2"} type={"submit"}>
             {!edit ? "Завершить" : "Изменить"}
           </button>
           {!edit ? (
             <button
               type={"button"}
               className={
-                "w-[36px] h-[36px] text-red-600 hover:text-red-700 transition-colors cursor-pointer"
+                "btn-white cursor-pointer text-red-600 hover:text-red-800 transition-colors outline-red-700"
               }
               onClick={() => dispatch(deleteActiveOrder(orderId))}
             >
-              <TrashIcon className="w-[36px] h-[36px]" />
+              <TrashIcon className="w-5 h-5 inline-flex mr-1" />
+              Удалить
             </button>
           ) : null}
         </div>

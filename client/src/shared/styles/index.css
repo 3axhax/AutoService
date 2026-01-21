@@ -262,17 +262,18 @@
 
   .btn-beige {
     background-image: linear-gradient(to right, var(--color-beige), var(--color-white), var(--color-beige), var(--color-white));
+    @apply shadow-gray-800/75;
   }
 
   .btn-white {
-    @apply relative overflow-hidden text-green-800 text-lg/5 transition-all duration-400 font-medium rounded-md px-5 py-4 cursor-pointer
+    @apply relative overflow-hidden text-blue-900 text-base/5 transition-all duration-400 font-normal rounded-md px-4 py-2 cursor-pointer
     shadow-md
     bg-white
     hover:shadow-gray-500
-    hover:text-green-950
+    hover:text-blue-950
     disabled:cursor-not-allowed
-    disabled:bg-blue-300
-    outline outline-1 outline-offset-[-1px] outline-green-800;
+    disabled:bg-gray-400
+    outline outline-1 outline-offset-[-1px] outline-blue-900;
   }
 
   .b-border {
