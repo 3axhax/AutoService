@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { JSX, useEffect, useState } from "react";
 import { Logo } from "@widgets/logo";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { ChevronDoubleDownIcon } from "@heroicons/react/24/outline";
+import { BarsArrowUpIcon } from "@heroicons/react/24/solid";
 
 export interface NavItem {
   key: string;
@@ -33,7 +33,7 @@ export const NavigationUI = ({
   }, [collapse]);
 
   return (
-    <header className={`header shadow-sm`}>
+    <header className={`header shadow-lg`}>
       <div
         className={`w-full relative bg-blue-dark dark:bg-gray-800 z-11 overflow-hidden transition-max-height duration-300 ease-linear ${collapsed && collapse ? "max-h-0" : "max-h-18"}`}
       >
@@ -125,11 +125,11 @@ export const NavigationUI = ({
       </div>
       {collapse && (
         <button
-          className={`bg-white dark:bg-gray-800 w-[40px] h-[22px] cursor-pointer shadow-sm z-10 absolute right-3 bottom-[-20px] flex justify-center rounded-b-[5px]`}
+          className={`bg-blue-dark w-12 h-8 cursor-pointer shadow-lg z-10 absolute right-3 -bottom-8 flex justify-center items-center rounded-b-md`}
           onClick={() => setCollapsed(!collapsed)}
         >
-          <ChevronDoubleDownIcon
-            className={`inline-flex h-4 w-4 text-green-800 dark:text-white translate-y-0.5 transition-transform group-hover:text-green-800 duration-200 ${!collapsed ? "rotate-180" : ""}`}
+          <BarsArrowUpIcon
+            className={`inline-flex h-5 w-5 text-white dark:text-white transition-transform duration-200 ${!collapsed ? "rotate-180" : ""}`}
           />
         </button>
       )}
