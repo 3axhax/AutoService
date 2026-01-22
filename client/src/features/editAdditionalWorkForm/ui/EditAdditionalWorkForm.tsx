@@ -11,7 +11,9 @@ import {
   additionalWorkErrorSelect,
   setAdditionalWorksValue,
 } from "@entities/additionalWorks";
-import { TrashIcon } from "@heroicons/react/16/solid";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import {ExtraIcon} from "@shared/ui/Icons/Extra.tsx";
 
 interface EditAdditionalWorkFormProps {
   additionalWorkId: number;
@@ -61,52 +63,57 @@ export const EditAdditionalWorkForm = ({
   };
 
   return (
-    <div className={"mt-5"}>
-      <form
-        onSubmit={handlerOnSubmit}
-        className={"grid gap-3 grid-cols-[80%_20%]"}
-      >
-        <InputWithLabel
-          className={"self-end"}
-          name={"description"}
-          label={"Описание"}
-          value={values.description ?? ""}
-          onChange={(value) => setValue({ name: "description", value })}
-        />
-        <InputWithLabel
-          className={"self-end"}
-          name={"totalValue"}
-          label={"Сумма"}
-          value={values.totalValue ?? ""}
-          type={"number"}
-          onChange={(value) => setValue({ name: "totalValue", value })}
-        />
-        {additionalWorkError && (
-          <div
-            className={"bg-red-200 border-1 rounded-md px-4 py-2 col-span-full"}
-          >
-            {additionalWorkError}
-          </div>
-        )}
-        <div className={"col-span-full flex gap-2"}>
-          <button className={`btn w-full`} type={"submit"}>
-            {!edit ? "Записать" : "Изменить"}
-          </button>
-          {!edit ? (
-            <button
-              type={"button"}
-              className={
-                "w-[36px] h-[36px] text-red-600 hover:text-red-700 transition-colors cursor-pointer"
-              }
-              onClick={() =>
-                dispatch(deleteActiveAdditionalWork(additionalWorkId))
-              }
-            >
-              <TrashIcon className="w-[36px] h-[36px]" />
+      <div className={"mt-5"}>
+        <h2 className={'text-2xl mb-6 text-gray-700'}><ExtraIcon
+            className={'h-7 w-7 inline-flex mr-2'}/>Запись о дополнительной
+          работе</h2>
+        <form
+            onSubmit={handlerOnSubmit}
+            className={"grid gap-3 grid-cols-[80%_20%]"}
+        >
+          <InputWithLabel
+              className={"self-end"}
+              name={"description"}
+              label={"Описание"}
+              value={values.description ?? ""}
+              onChange={(value) => setValue({name: "description", value})}
+          />
+          <InputWithLabel
+              className={"self-end"}
+              name={"totalValue"}
+              label={"Сумма"}
+              value={values.totalValue ?? ""}
+              type={"number"}
+              onChange={(value) => setValue({name: "totalValue", value})}
+          />
+          {additionalWorkError && (
+              <div
+                  className={"bg-red-200 border-1 rounded-md px-4 py-2 col-span-full"}
+              >
+                {additionalWorkError}
+              </div>
+          )}
+          <div className={"col-span-full flex items-center justify-center gap-2"}>
+            <button className={`btn btn-blue-dark w-1/2`} type={"submit"}>
+              <PencilSquareIcon className="w-5 h-5 inline-flex mr-1"/>
+              {!edit ? "Записать" : "Изменить"}
             </button>
-          ) : null}
-        </div>
-      </form>
-    </div>
+            {!edit ? (
+                <button
+                    type={"button"}
+                    className={
+                      "btn-white cursor-pointer text-red-600 hover:text-red-800 transition-colors outline-red-700"
+                    }
+                    onClick={() =>
+                        dispatch(deleteActiveAdditionalWork(additionalWorkId))
+                    }
+                >
+                  <TrashIcon className="w-5 h-5 inline-flex mr-1"/>
+                  Удалить
+                </button>
+            ) : null}
+          </div>
+        </form>
+      </div>
   );
 };

@@ -8,7 +8,7 @@ import {
   editOrder,
   orderErrorSelect,
 } from "@entities/order";
-import { TrashIcon } from "@heroicons/react/16/solid";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import Carousel, { DotProps } from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { SwitchParameterType } from "./SwitchParameterType";
