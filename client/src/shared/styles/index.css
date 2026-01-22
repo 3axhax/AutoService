@@ -165,7 +165,7 @@
     [background-size:0_var(--underline-height)]
     hover:[background-size:100%_var(--underline-height)]
     transition-[background-size] duration-300 ease-out
-    pb-[var(--underline-spacing)];
+    pb-[var(--underline-spacing)] -mb-1;
   }
 }
 

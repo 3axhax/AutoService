@@ -2,7 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 import { JSX, useEffect, useState } from "react";
 import { Logo } from "@widgets/logo";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { BarsArrowUpIcon } from "@heroicons/react/24/solid";
+import { Bars3Icon } from "@heroicons/react/24/solid";
+import { ArrowDownIcon } from "@heroicons/react/24/solid";
 
 export interface NavItem {
   key: string;
@@ -125,12 +126,15 @@ export const NavigationUI = ({
       </div>
       {collapse && (
         <button
-          className={`bg-blue-dark w-12 h-8 cursor-pointer shadow-lg z-10 absolute right-3 -bottom-8 flex justify-center items-center rounded-b-md`}
+          className={`bg-blue-dark w-12 h-8 text-white dark:text-white cursor-pointer shadow-lg z-10 group absolute right-3 -bottom-8 flex justify-center items-center rounded-b-md`}
           onClick={() => setCollapsed(!collapsed)}
-        >
-          <BarsArrowUpIcon
-            className={`inline-flex h-5 w-5 text-white dark:text-white transition-transform duration-200 ${!collapsed ? "rotate-180" : ""}`}
+        ><span className={'relative'}>
+
+        </span>
+          <Bars3Icon
+            className={"inline-flex h-5 w-5"}
           />
+          <ArrowDownIcon className={`rounded-full bg-blue-dark h-3 w-3 absolute right-2.5 duration-200 transition-all duration-200 ${!collapsed ? "rotate-180 bottom-1.5 group-hover:bottom-3" : "bottom-3 group-hover:bottom-1.5"}`} />
         </button>
       )}
     </header>
