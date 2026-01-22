@@ -3,7 +3,6 @@ import { clearShiftsList, closeActiveShift } from "@entities/shifts";
 import { clearOrdersList } from "@entities/order";
 import { clearAdditionalWorksList } from "@entities/additionalWorks";
 import { useInfoModalData } from "@app/providers/infoModalProvider";
-import {CheckOut} from "@shared/ui/Icons/CheckOut.tsx";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 
 export const CloseShift = () => {

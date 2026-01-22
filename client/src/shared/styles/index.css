@@ -190,7 +190,8 @@
     @apply w-full mb-8 sticky top-0 opacity-95 flex items-center justify-center z-10;
   }
 
-  .form-control {
+  .form-control,
+  .input {
     font-family: "Roboto", "Arial Black", sans-serif;
     @apply text-blue-900 w-full px-5 py-3 border border-blue-900 bg-white text-base/5 rounded-md shadow-sm hover:shadow-blue-950 focus:outline-none focus:border-blue-900 focus:shadow-gray-400;
   }
@@ -351,12 +352,12 @@
   }
 
   .react-multiple-carousel__arrow--right {
-    right: 0 !important;
+    right: 20px !important;
     z-index: 9 !important;
   }
 
   .react-multiple-carousel__arrow--left {
-    left: 0 !important;
+    left:  20px !important;
     z-index: 9 !important;
   }
 

@@ -25,20 +25,22 @@ export const InputWithLabel = ({
     }
   };
   return (
-    <div className={`relative${className ? ` ${className}` : ``}`}>
-      <input
-        autoComplete={"on"}
-        type={type}
-        placeholder={placeholder}
-        name={name}
-        id={name}
-        className={"form-control"}
-        value={value}
-        onChange={handlerOnChange}
-      />
-      <label className={"form-label"} htmlFor={name}>
-        {label}
-      </label>
-    </div>
+      <div className={`relative${className ? ` ${className}` : ``}`}>
+        <p
+            className={"text-lg text-left font-medium group-label mr-5 mb-2"}
+        >
+          {label}
+        </p>
+        <input
+            autoComplete={"on"}
+            type={type}
+            placeholder={placeholder}
+            name={name}
+            id={name}
+            className={"input"}
+            value={value}
+            onChange={handlerOnChange}
+        />
+      </div>
   );
 };

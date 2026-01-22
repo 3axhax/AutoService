@@ -79,14 +79,13 @@ export const EditOrderForm = ({
   };
 
   return (
-    <div>
       <form onSubmit={handlerOnSubmit} className={"w-full my-10 pt-12 pb-8 relative"}>
         <Carousel
           ref={carouselRef}
           responsive={responsive}
           showDots={true}
           removeArrowOnDeviceType={["tablet", "mobile"]}
-          containerClass={"w-full"}
+          containerClass={"container mx-auto"}
           sliderClass={"slider"}
           dotListClass={"dot-list top-4 h-4"}
           renderDotsOutside={true}
@@ -140,6 +139,5 @@ export const EditOrderForm = ({
           ) : null}
         </div>
       </form>
-    </div>
   );
 };

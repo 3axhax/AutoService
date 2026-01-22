@@ -52,6 +52,7 @@ export const SwitchParameterType = ({
           key={parameter.id}
           name={parameter.name}
           label={parameter.translationRu}
+          placeholder={parameter.translationRu}
           value={(values[parameter.name] as string) ?? ""}
           onChange={(value) => setValue({ name: parameter.name, value })}
         />
