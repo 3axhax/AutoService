@@ -241,7 +241,7 @@
   }
 
   .btn-orange {
-    background-image: linear-gradient(to right, var(--color-yellow-500), var(--color-orange), var(--color-orange), var(--color-orange-300));
+    background-image: linear-gradient(to right, var(--color-orange-400), var(--color-orange), var(--color-orange), var(--color-orange-300));
     @apply shadow-orange-700/75;
   }
 
@@ -261,8 +261,8 @@
   }
 
   .btn-beige {
-    background-image: linear-gradient(to right, var(--color-beige), var(--color-white), var(--color-beige), var(--color-white));
-    @apply shadow-gray-800/75;
+    background-image: linear-gradient(to right, var(--color-stone-100), var(--color-stone-50), var(--color-stone-100), var(--color-stone-50));
+    @apply shadow-gray-700/75;
   }
 
   .btn-green {

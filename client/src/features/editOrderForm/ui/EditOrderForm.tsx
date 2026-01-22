@@ -119,24 +119,24 @@ export const EditOrderForm = ({
           className={"w-fit"}
         />
         <div className={"col-span-full flex items-center justify-center gap-2"}>
-          <button className={"btn btn-green w-1/2"} type={"submit"}>
-            {!edit ?<CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
+          <button className={"btn btn-orange w-1/2"} type={"submit"}>
+            {!edit ? <CheckCircleIcon className="w-5 h-5 inline-flex mr-1"/>
                 :
                 <PencilSquareIcon className="w-5 h-5 inline-flex mr-1"/>
             }
             {!edit ? "Завершить" : "Изменить"}
           </button>
           {!edit ? (
-            <button
-              type={"button"}
-              className={
-                "btn-white cursor-pointer text-red-600 hover:text-red-800 transition-colors outline-red-700 shadow-red-800/40 hover:shadow-gray-500"
-              }
-              onClick={() => dispatch(deleteActiveOrder(orderId))}
-            >
-              <TrashIcon className="w-5 h-5 inline-flex mr-1" />
-              Удалить
-            </button>
+              <button
+                  type={"button"}
+                  className={
+                    "btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
+                  }
+                  onClick={() => dispatch(deleteActiveOrder(orderId))}
+              >
+                <TrashIcon className="w-5 h-5 inline-flex mr-1"/>
+                Удалить
+              </button>
           ) : null}
         </div>
       </form>
