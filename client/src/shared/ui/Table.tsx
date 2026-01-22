@@ -26,7 +26,7 @@ export const Table = ({ tableData, className }: TableProps) => {
           {tableData.header.map((th) => (
             <th
               key={th.name}
-              className={`border-r border-white last:border-0 px-4 py-3 text-center text-sm font-medium${th.className ? ` ${th.className}` : ``}`}
+              className={`border-r border-blue-200 last:border-0 px-4 py-3 text-center text-sm font-medium${th.className ? ` ${th.className}` : ``}`}
             >
               {th.label}
             </th>
@@ -43,7 +43,7 @@ export const Table = ({ tableData, className }: TableProps) => {
               {row.map((cell: TableDataRow, cellIndex: number) => (
                 <td
                   key={cell.name}
-                  className={`px-4 py-3 text-sm text-gray-900${cellIndex + 1 < Object.keys(row).length ? ` border-r border-blue-900` : ``}${cell.className ? ` ${cell.className}` : ``}`}
+                  className={`px-3 py-2 text-base text-gray-900${cellIndex + 1 < Object.keys(row).length ? ` border-r border-blue-900` : ``}${cell.className ? ` ${cell.className}` : ``}`}
                 >
                   {cell.data}
                 </td>

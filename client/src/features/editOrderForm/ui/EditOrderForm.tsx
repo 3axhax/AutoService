@@ -8,7 +8,8 @@ import {
   editOrder,
   orderErrorSelect,
 } from "@entities/order";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import Carousel, { DotProps } from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { SwitchParameterType } from "./SwitchParameterType";
@@ -69,7 +70,7 @@ export const EditOrderForm = ({
           aria-label={`Go to slide ${index}`}
           type={"button"}
           onClick={onClick}
-          className={`shadow-sm shadow-blue-900 font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/10 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mr-2 ${active ? "bg-blue-900 text-white" : ""}`}
+          className={`shadow-sm font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/20 hover:shadow-gray-800/50 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mr-2 ${active ? "bg-blue-900 text-white" : ""}`}
         >
           {index ? index + 1 : "1"}
         </button>
@@ -119,6 +120,10 @@ export const EditOrderForm = ({
         />
         <div className={"col-span-full flex items-center justify-center gap-2"}>
           <button className={"btn btn-blue-dark w-1/2"} type={"submit"}>
+            {!edit ?<CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
+                :
+                <PencilSquareIcon className="w-5 h-5 inline-flex mr-1"/>
+            }
             {!edit ? "Завершить" : "Изменить"}
           </button>
           {!edit ? (
