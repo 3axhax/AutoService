@@ -53,9 +53,9 @@ export const ClosedOrdersList = () => {
     <>
       {ordersList.length > 0 ? (
         <>
-          <Table tableData={tableData} className={"w-[100%] mt-3"} />
-          <div className={"text-end text-xl mt-2"}>
-            Итого по заказам: {shiftTotalValue} ₽
+          <Table tableData={tableData} className={"w-full mt-6"} />
+          <div className={"text-end text-base mt-2"}>
+            Итого по заказам: <span className={'font-medium text-xl'}>{shiftTotalValue} ₽</span>
           </div>
         </>
       ) : null}

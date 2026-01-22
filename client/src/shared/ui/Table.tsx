@@ -19,14 +19,14 @@ interface TableProps {
 export const Table = ({ tableData, className }: TableProps) => {
   return (
     <table
-      className={`m-auto border border-gray-300${className ? ` ${className}` : ""}`}
+      className={`border-collapse rounded-lg shadow-sm border border-blue-900${className ? ` ${className}` : ""}`}
     >
       <thead>
-        <tr className="bg-gray-800 text-white">
+        <tr className="bg-blue-dark text-white">
           {tableData.header.map((th) => (
             <th
               key={th.name}
-              className={`border-r border-gray-600 px-4 py-3 text-center text-sm font-medium${th.className ? ` ${th.className}` : ``}`}
+              className={`border-r border-white last:border-0 px-4 py-3 text-center text-sm font-medium${th.className ? ` ${th.className}` : ``}`}
             >
               {th.label}
             </th>
@@ -38,12 +38,12 @@ export const Table = ({ tableData, className }: TableProps) => {
           tableData.rows.map((row: TableDataRow[], index: number) => (
             <tr
               key={index}
-              className="border-t border-gray-300 hover:bg-gray-50"
+              className="border-t border-blue-900 hover:bg-blue-light"
             >
               {row.map((cell: TableDataRow, cellIndex: number) => (
                 <td
                   key={cell.name}
-                  className={`px-4 py-3 text-sm text-gray-900${cellIndex + 1 < Object.keys(row).length ? ` border-r border-gray-300` : ``}${cell.className ? ` ${cell.className}` : ``}`}
+                  className={`px-4 py-3 text-sm text-gray-900${cellIndex + 1 < Object.keys(row).length ? ` border-r border-blue-900` : ``}${cell.className ? ` ${cell.className}` : ``}`}
                 >
                   {cell.data}
                 </td>
