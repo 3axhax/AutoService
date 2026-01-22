@@ -119,7 +119,7 @@ export const EditOrderForm = ({
           className={"w-fit"}
         />
         <div className={"col-span-full flex items-center justify-center gap-2"}>
-          <button className={"btn btn-blue-dark w-1/2"} type={"submit"}>
+          <button className={"btn btn-green w-1/2"} type={"submit"}>
             {!edit ?<CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
                 :
                 <PencilSquareIcon className="w-5 h-5 inline-flex mr-1"/>
@@ -130,7 +130,7 @@ export const EditOrderForm = ({
             <button
               type={"button"}
               className={
-                "btn-white cursor-pointer text-red-600 hover:text-red-800 transition-colors outline-red-700"
+                "btn-white cursor-pointer text-red-600 hover:text-red-800 transition-colors outline-red-700 shadow-red-800/40 hover:shadow-gray-500"
               }
               onClick={() => dispatch(deleteActiveOrder(orderId))}
             >

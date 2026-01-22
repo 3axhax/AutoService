@@ -265,10 +265,15 @@
     @apply shadow-gray-800/75;
   }
 
+  .btn-green {
+    background-image: linear-gradient(to right, var(--color-green-950), var(--color-green-700), var(--color-green-950), var(--color-green-700));
+    @apply shadow-green-900/75;
+  }
+
   .btn-white {
     @apply relative overflow-hidden text-blue-900 text-base/5 transition-all duration-400 font-normal rounded-md px-4 py-2 cursor-pointer
-    shadow-md
     bg-white
+    shadow-md
     hover:shadow-gray-500
     hover:text-blue-950
     disabled:cursor-not-allowed
