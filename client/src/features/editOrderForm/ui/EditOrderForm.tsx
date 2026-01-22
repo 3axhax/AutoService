@@ -115,7 +115,7 @@ export const EditOrderForm = ({
         )}
         <OrderTotalValue
           orderId={orderId}
-          className={"col-span-full border-b-2 w-fit"}
+          className={"w-fit"}
         />
         <div className={"col-span-full flex items-center justify-center gap-2"}>
           <button className={"btn btn-blue-dark w-1/2"} type={"submit"}>

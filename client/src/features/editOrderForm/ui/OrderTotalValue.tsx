@@ -11,10 +11,10 @@ export const OrderTotalValue = ({
   const total = useAppSelector((state) => orderTotalValue(state, orderId));
   return (
     <div
-      className={`flex gap-2 mb-2 text-xl${className ? ` ${className}` : ""}`}
+      className={`flex ml-auto text-base mt-2 ${className ? ` ${className}` : ""}`}
     >
-      <span>Итого:</span>
-      <span>{total} ₽</span>
+      <span>Сумма по текущему заказу:</span>&nbsp;
+      <span className={"font-medium text-xl"}>{total} ₽</span>
     </div>
   );
 };

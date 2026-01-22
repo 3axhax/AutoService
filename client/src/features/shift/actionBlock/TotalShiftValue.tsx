@@ -9,7 +9,7 @@ export const TotalShiftValue = () => {
 
   return (
     <div className={"text-base"}>
-      Итого за смену:{" "}
+      Общая сумма за смену:{" "}
       <span className={"font-medium text-xl"}>{total}&nbsp;₽</span>
     </div>
   );
