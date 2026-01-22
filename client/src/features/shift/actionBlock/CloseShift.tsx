@@ -4,6 +4,7 @@ import { clearOrdersList } from "@entities/order";
 import { clearAdditionalWorksList } from "@entities/additionalWorks";
 import { useInfoModalData } from "@app/providers/infoModalProvider";
 import {CheckOut} from "@shared/ui/Icons/CheckOut.tsx";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 
 export const CloseShift = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +29,7 @@ export const CloseShift = () => {
 
   return (
     <button className={"btn btn-orange"} onClick={clickHandler}>
-      <CheckOut className={"h-5 w-5 inline-flex mr-1 -ml-1 text-white"}/>
+      <ArrowTopRightOnSquareIcon className={"h-5 w-5 inline-flex mr-1 -ml-1 text-white"} />
       Закончить смену
     </button>
   );
