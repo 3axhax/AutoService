@@ -96,7 +96,7 @@ export const EditOrderForm = ({
       <button
         onClick={onClick}
         type={"button"}
-        className={`absolute cursor-pointer top-1/2 -translate-y-1/2 text-blue-900 hover:text-orange-500 transition-colors duration-200 ${direction === "left" ? "-left-8" : "-right-8 rotate-180"} ${disabled ? "hidden" : ""}`}
+        className={`hidden lg:flex absolute cursor-pointer top-1/2 -translate-y-1/2 text-blue-900 hover:text-orange-500 transition-colors duration-200 ${direction === "left" ? "-left-8" : "-right-8 rotate-180"} ${disabled ? "hidden" : ""}`}
         aria-label={direction === "left" ? "Previous slide" : "Next slide"}
       >
         {direction === "left" ? (
@@ -154,7 +154,7 @@ export const EditOrderForm = ({
             parametersList.map((parameter) => (
               <div
                 className={
-                  "shadow-gray-800/10 shadow-xs border-gray-800/20 border-1 px-4 mx-2 py-4 rounded-lg h-full"
+                  "shadow-gray-800/10 shadow-xs border-gray-800/20 border-1 px-4 lg:mx-2 py-4 rounded-lg h-full"
                 }
               >
                 <SwitchParameterType
@@ -173,8 +173,8 @@ export const EditOrderForm = ({
           {orderError}
         </div>
       )}
-      <div className="flex items-center justify-stretch gap-3">
-          <button className={"btn btn-orange w-1/2 ml-auto"} type={"submit"}>
+      <div className="flex items-center justify-stretch gap-5 lg:gap-3 flex-wrap">
+          <button className={"btn btn-orange flex-grow w-1/2 ml-auto"} type={"submit"}>
             {!edit ? (
               <CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
             ) : (
@@ -194,7 +194,7 @@ export const EditOrderForm = ({
               Удалить
             </button>
           ) : null}
-        <OrderTotalValue orderId={orderId} className={"w-fit"} />
+        <OrderTotalValue orderId={orderId} className={"w-fit ml-auto lg:ml-0"} />
       </div>
     </form>
   );
