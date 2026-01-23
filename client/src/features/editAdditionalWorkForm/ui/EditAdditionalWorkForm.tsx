@@ -103,7 +103,7 @@ export const EditAdditionalWorkForm = ({
             <button
               type={"button"}
               className={
-                "btn-white cursor-pointer text-red-600 hover:text-red-800 transition-colors outline-red-700 shadow-red-800/75"
+                "btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
               }
               onClick={() =>
                 dispatch(deleteActiveAdditionalWork(additionalWorkId))
