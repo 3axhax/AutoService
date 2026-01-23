@@ -10,9 +10,14 @@ import {
 } from "@entities/order";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import Carousel, { DotProps } from "react-multi-carousel";
+import Carousel, {
+  DotProps,
+  Direction,
+  ButtonGroupProps,
+} from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { SwitchParameterType } from "./SwitchParameterType";
+import { ChevronLeftIcon } from "@shared/ui/Icons/ChevronLeft.tsx";
 
 interface EditOrderFormProps {
   orderId: number;
@@ -78,37 +83,89 @@ export const EditOrderForm = ({
     );
   };
 
+  const ButtonArrow = ({
+    onClick,
+    direction,
+    disabled,
+  }: {
+    onClick?: () => void;
+    direction: Direction;
+    disabled?: boolean;
+  }) => {
+    return (
+      <button
+        onClick={onClick}
+        type={"button"}
+        className={`absolute cursor-pointer top-1/2 -translate-y-1/2 text-blue-900 hover:text-orange-500 transition-colors duration-200 ${direction === "left" ? "-left-8" : "-right-8 rotate-180"} ${disabled ? "hidden" : ""}`}
+        aria-label={direction === "left" ? "Previous slide" : "Next slide"}
+      >
+        {direction === "left" ? (
+          <ChevronLeftIcon className={"h-10 w-10"} />
+        ) : (
+          <ChevronLeftIcon className={"h-10 w-10"} />
+        )}
+      </button>
+    );
+  };
+
+  const ButtonGroup = ({ next, previous, ...rest }: ButtonGroupProps) => {
+    const disabledLeft = rest.carouselState?.currentSlide === 0;
+    const disabledRight =
+      rest.carouselState &&
+      rest.carouselState.currentSlide ===
+        rest.carouselState.totalItems - rest.carouselState.slidesToShow;
+    return (
+      <div className="carousel-button-group">
+        <ButtonArrow
+          direction={"right"}
+          disabled={disabledRight}
+          onClick={next}
+        />
+        <ButtonArrow
+          direction={"left"}
+          disabled={disabledLeft}
+          onClick={previous}
+        />
+      </div>
+    );
+  };
+
   return (
     <form
       onSubmit={handlerOnSubmit}
-      className={"w-full my-10 pt-12 pb-8 relative"}
+      className={"w-full my-10 container px-4 lg:px-8"}
     >
-      <Carousel
-        ref={carouselRef}
-        responsive={responsive}
-        showDots={true}
-        removeArrowOnDeviceType={["tablet", "mobile"]}
-        containerClass={"container mx-auto"}
-        sliderClass={"slider"}
-        dotListClass={"dot-list top-4 h-4"}
-        renderDotsOutside={true}
-        customDot={<CustomDot />}
-      >
-        {parametersList &&
-          parametersList.map((parameter) => (
-            <div
-              className={
-                "shadow-gray-800/10 shadow-xs border-gray-800/20 border-1 px-4 mx-2 py-4 rounded-lg h-full"
-              }
-            >
-              <SwitchParameterType
-                parameter={parameter}
-                orderId={orderId}
-                carousel={carouselRef.current ?? undefined}
-              />
-            </div>
-          ))}
-      </Carousel>
+      <div className={"relative py-12"}>
+        <Carousel
+          ref={carouselRef}
+          responsive={responsive}
+          showDots={true}
+          removeArrowOnDeviceType={["tablet", "mobile"]}
+          containerClass={""}
+          sliderClass={"slider"}
+          dotListClass={"dot-list top-4 h-4"}
+          renderDotsOutside={true}
+          arrows={false}
+          renderButtonGroupOutside={true}
+          customDot={<CustomDot />}
+          customButtonGroup={<ButtonGroup />}
+        >
+          {parametersList &&
+            parametersList.map((parameter) => (
+              <div
+                className={
+                  "shadow-gray-800/10 shadow-xs border-gray-800/20 border-1 px-4 mx-2 py-4 rounded-lg h-full"
+                }
+              >
+                <SwitchParameterType
+                  parameter={parameter}
+                  orderId={orderId}
+                  carousel={carouselRef.current ?? undefined}
+                />
+              </div>
+            ))}
+        </Carousel>
+      </div>
       {orderError && (
         <div
           className={"bg-red-200 border-1 rounded-md px-4 py-2 col-span-full"}
@@ -116,28 +173,30 @@ export const EditOrderForm = ({
           {orderError}
         </div>
       )}
-      <OrderTotalValue orderId={orderId} className={"w-fit"} />
-      <div className={"col-span-full flex items-center justify-center gap-2"}>
-        <button className={"btn btn-orange w-1/2"} type={"submit"}>
-          {!edit ? (
-            <CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
-          ) : (
-            <PencilSquareIcon className="w-5 h-5 inline-flex mr-1" />
-          )}
-          {!edit ? "Завершить" : "Изменить"}
-        </button>
-        {!edit ? (
-          <button
-            type={"button"}
-            className={
-              "btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
-            }
-            onClick={() => dispatch(deleteActiveOrder(orderId))}
-          >
-            <TrashIcon className="w-5 h-5 inline-flex mr-1" />
-            Удалить
+      <div className="container px-4 lg:px-8">
+        <OrderTotalValue orderId={orderId} className={"w-fit"} />
+        <div className={"col-span-full flex items-center justify-center gap-2"}>
+          <button className={"btn btn-orange w-1/2"} type={"submit"}>
+            {!edit ? (
+              <CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
+            ) : (
+              <PencilSquareIcon className="w-5 h-5 inline-flex mr-1" />
+            )}
+            {!edit ? "Завершить" : "Изменить"}
           </button>
-        ) : null}
+          {!edit ? (
+            <button
+              type={"button"}
+              className={
+                "btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
+              }
+              onClick={() => dispatch(deleteActiveOrder(orderId))}
+            >
+              <TrashIcon className="w-5 h-5 inline-flex mr-1" />
+              Удалить
+            </button>
+          ) : null}
+        </div>
       </div>
     </form>
   );
