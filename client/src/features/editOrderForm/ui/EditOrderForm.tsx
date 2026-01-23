@@ -75,7 +75,7 @@ export const EditOrderForm = ({
           aria-label={`Go to slide ${index}`}
           type={"button"}
           onClick={onClick}
-          className={`shadow-sm font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/20 hover:shadow-gray-800/50 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mr-2 ${active ? "bg-blue-900 text-white" : ""}`}
+          className={`shadow-sm font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/20 hover:shadow-gray-800/50 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mx-1 ${active ? "bg-blue-900 text-white" : ""}`}
         >
           {index ? index + 1 : "1"}
         </button>
@@ -96,7 +96,7 @@ export const EditOrderForm = ({
       <button
         onClick={onClick}
         type={"button"}
-        className={`hidden lg:flex absolute cursor-pointer top-1/2 -translate-y-1/2 text-blue-900 hover:text-orange-500 transition-colors duration-200 ${direction === "left" ? "-left-8" : "-right-8 rotate-180"} ${disabled ? "hidden" : ""}`}
+        className={`hidden lg:flex absolute cursor-pointer top-1/2 -translate-y-1/2 text-blue-900 hover:text-orange-500 transition-colors duration-200 ${direction === "left" ? "-left-8" : "-right-8 rotate-180"} ${disabled ? "lg:hidden" : ""}`}
         aria-label={direction === "left" ? "Previous slide" : "Next slide"}
       >
         {direction === "left" ? (
@@ -135,6 +135,9 @@ export const EditOrderForm = ({
       onSubmit={handlerOnSubmit}
       className={"w-full my-10 container px-4 lg:px-8"}
     >
+      <h2 className={"text-2xl mи-3 text-gray-700"}>
+        Оформление нового заказа
+      </h2>
       <div className={"relative pt-12 pb-3"}>
         <Carousel
           ref={carouselRef}
@@ -143,7 +146,7 @@ export const EditOrderForm = ({
           removeArrowOnDeviceType={["tablet", "mobile"]}
           containerClass={""}
           sliderClass={"slider"}
-          dotListClass={"dot-list top-4 h-4"}
+          dotListClass={"dot-list top-4 h-7"}
           renderDotsOutside={true}
           arrows={false}
           renderButtonGroupOutside={true}
@@ -174,27 +177,33 @@ export const EditOrderForm = ({
         </div>
       )}
       <div className="flex items-center justify-stretch gap-5 lg:gap-3 flex-wrap">
-          <button className={"btn btn-orange flex-grow w-1/2 ml-auto"} type={"submit"}>
-            {!edit ? (
-              <CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
-            ) : (
-              <PencilSquareIcon className="w-5 h-5 inline-flex mr-1" />
-            )}
-            {!edit ? "Завершить" : "Изменить"}
-          </button>
+        <button
+          className={"btn btn-orange flex-grow w-1/2 ml-auto"}
+          type={"submit"}
+        >
           {!edit ? (
-            <button
-              type={"button"}
-              className={
-                "btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
-              }
-              onClick={() => dispatch(deleteActiveOrder(orderId))}
-            >
-              <TrashIcon className="w-5 h-5 inline-flex mr-1" />
-              Удалить
-            </button>
-          ) : null}
-        <OrderTotalValue orderId={orderId} className={"w-fit ml-auto lg:ml-0"} />
+            <CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
+          ) : (
+            <PencilSquareIcon className="w-5 h-5 inline-flex mr-1" />
+          )}
+          {!edit ? "Завершить" : "Изменить"}
+        </button>
+        {!edit ? (
+          <button
+            type={"button"}
+            className={
+              "btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
+            }
+            onClick={() => dispatch(deleteActiveOrder(orderId))}
+          >
+            <TrashIcon className="w-5 h-5 inline-flex mr-1" />
+            Удалить
+          </button>
+        ) : null}
+        <OrderTotalValue
+          orderId={orderId}
+          className={"w-fit ml-auto lg:ml-0"}
+        />
       </div>
     </form>
   );

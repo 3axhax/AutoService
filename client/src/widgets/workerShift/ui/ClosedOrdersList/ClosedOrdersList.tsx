@@ -49,11 +49,19 @@ export const ClosedOrdersList = () => {
     <>
       {ordersList.length > 0 ? (
         <>
-          <h3 className={"text-2xl mb-6 text-gray-700"}>Список выполненных заказов</h3>
+          <h3 className={"text-2xl mb-6 text-gray-700"}>
+            Список выполненных заказов
+          </h3>
           <Table tableData={tableData} className={"w-full max-w-full"} />
-          <div className={"mt-5 lg:mt-10 text-base/5 flex w-fit items-baseline rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige ml-auto"}>
+          <div
+            className={
+              "mt-5 lg:mt-10 text-base/5 flex w-fit items-baseline rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige ml-auto"
+            }
+          >
             Итоговая сумма по заказам:&nbsp;
-            <span className={"font-medium text-xl"}>{shiftTotalValue}&nbsp;₽</span>
+            <span className={"font-medium text-xl"}>
+              {shiftTotalValue}&nbsp;₽
+            </span>
           </div>
         </>
       ) : null}
