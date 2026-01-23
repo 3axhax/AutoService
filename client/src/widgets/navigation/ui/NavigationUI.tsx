@@ -38,7 +38,7 @@ export const NavigationUI = ({
       <div
         className={`w-full relative bg-blue-dark z-11 overflow-hidden transition-max-height duration-300 ease-linear ${collapsed && collapse ? "max-h-0" : "max-h-18"}`}
       >
-        <div className={"container flex py-2 ml-auto mr-auto"}>
+        <div className={"container px-4 lg:px-8 flex py-2 ml-auto mr-auto"}>
           <Logo />
           <nav className="navigation ml-auto">
             <ul className="inline-flex space-x-6 justify-center">

@@ -8,8 +8,14 @@ export const TotalShiftValue = () => {
     useAppSelector(workerActiveShiftClosedOrdersTotalValueSelect);
 
   return (
-    <div className={"text-base"}>
-      Общая сумма за смену:{" "}
+    <div
+      className={
+        "text-base/5 flex items-baseline rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige"
+      }
+    >
+      <span className={"hidden lg:inline"}>Общая сумма</span>
+      <span className={"inline lg:hidden text-xl font-bold"}>&sum;&nbsp;</span>
+      &nbsp;за смену:&nbsp;
       <span className={"font-medium text-xl"}>{total}&nbsp;₽</span>
     </div>
   );

@@ -10,9 +10,13 @@ export const CreateNewAdditionalWork = () => {
   };
 
   return (
-    <button className={"btn btn-orange btn-blue-dark"} onClick={clickHandler}>
+    <button
+      className={"btn btn-orange btn-blue-dark w-1/2 lg:w-fit"}
+      onClick={clickHandler}
+    >
       <ExtraIcon className={"h-5 w-5 inline-flex mr-1 -ml-1 text-white"} />
-      Дополнительные работы
+      <span className={"hidden lg:inline"}>Дополнительные работы</span>
+      <span className={"inline lg:hidden"}>Доп. работы</span>
     </button>
   );
 };

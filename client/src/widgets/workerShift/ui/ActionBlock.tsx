@@ -11,8 +11,8 @@ import {
 export const ActionBlock = () => {
   const isActiveShift = useAppSelector(SelectWorkerActiveShift);
   return (
-    <div className={"flex flex-col lg:flex-row justify-between"}>
-      <div className={"flex justify-start gap-3"}>
+    <div className={"flex flex-col lg:flex-row justify-between gap-y-5"}>
+      <div className={"flex justify-stretch lg:justify-start gap-3"}>
         {!isActiveShift ? (
           <>
             <CreateNewShift />
@@ -24,11 +24,11 @@ export const ActionBlock = () => {
           </>
         )}
       </div>
-      <div className={"flex justify-end items-center gap-3"}>
+      <div className={"flex justify-stretch lg:justify-end items-center gap-3"}>
         {isActiveShift && (
           <>
-            <TotalShiftValue />
             <CloseShift />
+            <TotalShiftValue />
           </>
         )}
       </div>

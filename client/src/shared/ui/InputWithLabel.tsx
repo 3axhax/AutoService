@@ -26,7 +26,7 @@ export const InputWithLabel = ({
   };
   return (
     <div className={`relative${className ? ` ${className}` : ``}`}>
-      <p className={"text-lg text-left font-medium group-label mr-5 mb-2"}>
+      <p className={"text-lg text-left font-medium group-label lg:mr-5 mb-2"}>
         {label}
       </p>
       <input
