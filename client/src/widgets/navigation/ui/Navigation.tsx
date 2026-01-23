@@ -37,7 +37,9 @@ export const Navigation = () => {
       key: "facility",
       path: "/work_history",
       label: "История работ",
-      iconLink: <ArchiveBoxArrowDownIcon className="inline-flex h-5 w-5 mr-1" />,
+      iconLink: (
+        <ArchiveBoxArrowDownIcon className="inline-flex h-5 w-5 mr-1" />
+      ),
     });
   }
 

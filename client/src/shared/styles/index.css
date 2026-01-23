@@ -51,11 +51,11 @@
     --underline-spacing: 0.25em;
     --transition-time: 0.3s;
 
-    --color-orange: oklch(67.89% 0.210 36.29);
+    --color-orange: oklch(67.89% 0.21 36.29);
     --color-blue-dark: oklch(29.43% 0.086 265.36);
-    --color-blue-light: oklch(77.20% 0.135 217.27);
+    --color-blue-light: oklch(77.2% 0.135 217.27);
     --color-beige: oklch(92.61% 0.023 87.15);
-    --color-purple: oklch(39.80% 0.057 283.51);
+    --color-purple: oklch(39.8% 0.057 283.51);
   }
 
   body {
@@ -242,32 +242,68 @@
   }
 
   .btn-orange {
-    background-image: linear-gradient(to right, var(--color-orange-400), var(--color-orange), var(--color-orange), var(--color-orange-300));
+    background-image: linear-gradient(
+      to right,
+      var(--color-orange-400),
+      var(--color-orange),
+      var(--color-orange),
+      var(--color-orange-300)
+    );
     @apply shadow-orange-700/75;
   }
 
   .btn-blue-light {
-    background-image: linear-gradient(to right, var(--color-blue-light), var(--color-blue-500), var(--color-blue-light), var(--color-blue-500));
+    background-image: linear-gradient(
+      to right,
+      var(--color-blue-light),
+      var(--color-blue-500),
+      var(--color-blue-light),
+      var(--color-blue-500)
+    );
     @apply shadow-blue-500/75;
   }
 
   .btn-blue-dark {
-    background-image: linear-gradient(to right, var(--color-blue-dark), var(--color-blue-800), var(--color-blue-dark), var(--color-blue-800));
+    background-image: linear-gradient(
+      to right,
+      var(--color-blue-dark),
+      var(--color-blue-800),
+      var(--color-blue-dark),
+      var(--color-blue-800)
+    );
     @apply shadow-blue-900/75;
   }
 
   .btn-purple {
-    background-image: linear-gradient(to right, var(--color-purple), var(--color-indigo-700), var(--color-purple), var(--color-indigo-700));
+    background-image: linear-gradient(
+      to right,
+      var(--color-purple),
+      var(--color-indigo-700),
+      var(--color-purple),
+      var(--color-indigo-700)
+    );
     @apply shadow-indigo-900/75;
   }
 
   .btn-beige {
-    background-image: linear-gradient(to right, var(--color-stone-100), var(--color-stone-50), var(--color-stone-100), var(--color-stone-50));
+    background-image: linear-gradient(
+      to right,
+      var(--color-stone-100),
+      var(--color-stone-50),
+      var(--color-stone-100),
+      var(--color-stone-50)
+    );
     @apply shadow-gray-700/75;
   }
 
   .btn-green {
-    background-image: linear-gradient(to right, var(--color-green-950), var(--color-green-700), var(--color-green-950), var(--color-green-700));
+    background-image: linear-gradient(
+      to right,
+      var(--color-green-950),
+      var(--color-green-700),
+      var(--color-green-950),
+      var(--color-green-700)
+    );
     @apply shadow-green-900/75;
   }
 
@@ -357,7 +393,7 @@
   }
 
   .react-multiple-carousel__arrow--left {
-    left:  20px !important;
+    left: 20px !important;
     z-index: 9 !important;
   }
 

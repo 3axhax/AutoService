@@ -1,6 +1,6 @@
-import { useInfoModalData } from "@app/providers/infoModalProvider";
 import { SignatureInput } from "./SignatureInput";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Modal } from "@shared/ui/Modal.tsx";
 
 interface GraphInputProps {
   label: string;
@@ -15,38 +15,47 @@ export const GraphInput = ({
   onChange,
   className,
 }: GraphInputProps) => {
-  const { openModal, open } = useInfoModalData();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const [signatureImg, setSignatureImg] = useState<string>("");
 
   useEffect(() => {
-    if (!open && signatureImg) {
+    if (!modalOpen && signatureImg) {
       onChange(signatureImg);
     }
-  }, [open, onChange, signatureImg]);
+  }, [modalOpen, onChange, signatureImg]);
+
+  const modalBody = useMemo(
+    () => (
+      <SignatureInput
+        updateSignature={(signature) => {
+          setSignatureImg(signature);
+        }}
+      />
+    ),
+    [],
+  );
 
   return (
-    <div className={className}>
-      {value && <img src={value} alt={label} />}
-      <button
-        type={"button"}
-        className={"btn p-3"}
-        onClick={() =>
-          openModal({
-            title: label,
-            hasButtons: false,
-            body: (
-              <SignatureInput
-                updateSignature={(signature) => {
-                  setSignatureImg(signature);
-                }}
-              />
-            ),
-          })
-        }
-      >
-        {label}
-      </button>
-    </div>
+    <>
+      <div className={className}>
+        {value && <img src={value} alt={label} />}
+        <button
+          type={"button"}
+          className={"btn p-3"}
+          onClick={() => setModalOpen(true)}
+        >
+          {label}
+        </button>
+      </div>
+      {modalOpen ? (
+        <Modal
+          open={modalOpen}
+          setOpen={() => setModalOpen(false)}
+          title={label}
+          body={modalBody}
+        />
+      ) : null}
+    </>
   );
 };

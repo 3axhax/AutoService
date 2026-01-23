@@ -40,10 +40,7 @@ export const SelectUI = <T extends string | number = string>({
   return (
     <div className={`${className}`}>
       {label ? (
-        <label
-          htmlFor={name}
-          className="text-lg font-medium text-gray-800"
-        >
+        <label htmlFor={name} className="text-lg font-medium text-gray-800">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
@@ -88,7 +85,9 @@ export const SelectUI = <T extends string | number = string>({
           indicatorsContainer: () => "!pr-2",
           dropdownIndicator: (state) =>
             `!text-gray-400 hover:!text-blue-900 transition-all duration-300 ease-in-out ${
-              state.selectProps.menuIsOpen ? "!rotate-180 !text-blue-900" : "!text-blue-900"
+              state.selectProps.menuIsOpen
+                ? "!rotate-180 !text-blue-900"
+                : "!text-blue-900"
             }`,
           clearIndicator: () => "!text-gray-400 hover:!text-gray-600",
           indicatorSeparator: () => "!bg-transparent",

@@ -97,7 +97,7 @@ export const NavigationUI = ({
                       onClick={item.onClick}
                     >
                       {item.iconLink && item.iconLink}
-                      <span className={'bg-underline'}>{item.label}</span>
+                      <span className={"bg-underline"}>{item.label}</span>
                     </button>
                   ) : (
                     <Link
@@ -109,7 +109,7 @@ export const NavigationUI = ({
                       }`}
                     >
                       {item.iconLink && item.iconLink}
-                      <span className={'bg-underline'}>{item.label}</span>
+                      <span className={"bg-underline"}>{item.label}</span>
                     </Link>
                   )}
                 </li>
@@ -128,13 +128,12 @@ export const NavigationUI = ({
         <button
           className={`bg-blue-dark w-12 h-8 text-white dark:text-white cursor-pointer shadow-lg z-10 group absolute right-3 -bottom-8 flex justify-center items-center rounded-b-md`}
           onClick={() => setCollapsed(!collapsed)}
-        ><span className={'relative'}>
-
-        </span>
-          <Bars3Icon
-            className={"inline-flex h-5 w-5"}
+        >
+          <span className={"relative"}></span>
+          <Bars3Icon className={"inline-flex h-5 w-5"} />
+          <ArrowDownIcon
+            className={`rounded-full bg-blue-dark h-3 w-3 absolute right-2.5 duration-200 transition-all duration-200 ${!collapsed ? "rotate-180 bottom-1.5 group-hover:bottom-3" : "bottom-3 group-hover:bottom-1.5"}`}
           />
-          <ArrowDownIcon className={`rounded-full bg-blue-dark h-3 w-3 absolute right-2.5 duration-200 transition-all duration-200 ${!collapsed ? "rotate-180 bottom-1.5 group-hover:bottom-3" : "bottom-3 group-hover:bottom-1.5"}`} />
         </button>
       )}
     </header>

@@ -28,7 +28,9 @@ export const CloseShift = () => {
 
   return (
     <button className={"btn btn-orange"} onClick={clickHandler}>
-      <ArrowTopRightOnSquareIcon className={"h-5 w-5 inline-flex mr-1 -ml-1 text-white"} />
+      <ArrowTopRightOnSquareIcon
+        className={"h-5 w-5 inline-flex mr-1 -ml-1 text-white"}
+      />
       Закончить смену
     </button>
   );

@@ -55,7 +55,8 @@ export const ClosedOrdersList = () => {
         <>
           <Table tableData={tableData} className={"w-full mt-6"} />
           <div className={"text-end text-base mt-2"}>
-            Итого по заказам: <span className={'font-medium text-xl'}>{shiftTotalValue} ₽</span>
+            Итого по заказам:{" "}
+            <span className={"font-medium text-xl"}>{shiftTotalValue} ₽</span>
           </div>
         </>
       ) : null}

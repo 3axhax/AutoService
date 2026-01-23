@@ -28,13 +28,13 @@ export const WorkerShift = () => {
       {isActiveShift ? (
         <>
           <OrderActiveList />
-          <div className={'container px-4 lg:px-8'}>
-            <AdditionalWorksActiveList/>
+          <div className={"container px-4 lg:px-8"}>
+            <AdditionalWorksActiveList />
           </div>
-          <div className={'container px-4 lg:px-8'}>
-            <ClosedOrdersList/>
+          <div className={"container px-4 lg:px-8"}>
+            <ClosedOrdersList />
           </div>
-          <div className={'container px-4 lg:px-8'}>
+          <div className={"container px-4 lg:px-8"}>
             <ClosedAdditionalWorksList />
           </div>
         </>
