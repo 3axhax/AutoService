@@ -32,7 +32,6 @@ export const Modal = ({
   hasButtons = true,
   buttons,
 }: ModalProps) => {
-  console.log("Modal");
   const setOpen = (state: boolean) => {
     if (setOpenProps) {
       setOpenProps(state);

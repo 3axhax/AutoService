@@ -50,9 +50,11 @@ export const ClosedAdditionalWorksList = () => {
     <>
       {additionalWorksList.length > 0 ? (
         <>
+          <h3 className={"text-xl mb-1 mt-3"}>Дополнительные работы</h3>
           <Table tableData={tableData} className={"w-[100%] mt-3"} />
           <div className={"text-end text-xl mt-2"}>
-            Итого по дополнительным работам: {shiftTotalValue} ₽
+            Итого по дополнительным работам:{" "}
+            <span className={"font-medium text-xl"}>{shiftTotalValue} ₽</span>
           </div>
         </>
       ) : null}

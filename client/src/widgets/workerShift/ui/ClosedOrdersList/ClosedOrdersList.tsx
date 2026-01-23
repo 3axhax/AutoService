@@ -3,9 +3,13 @@ import { Table, TableData, TableDataRow } from "@shared/ui";
 import {
   workerActiveShiftClosedOrdersListSelect,
   workerActiveShiftClosedOrdersTotalValueSelect,
-  OrderItem,
 } from "@entities/order";
-import { OrdersListActionButton } from "@widgets/workerShift/ui/ClosedOrdersList/OrdersListActionButton.tsx";
+import { OrdersListActionButton } from "./OrdersListActionButton";
+import {
+  formatClientType,
+  formatVehicleName,
+  formatWorkList,
+} from "./ClosedOrdersList.utils";
 
 export const ClosedOrdersList = () => {
   const ordersList = useAppSelector(workerActiveShiftClosedOrdersListSelect);
@@ -13,23 +17,13 @@ export const ClosedOrdersList = () => {
     workerActiveShiftClosedOrdersTotalValueSelect,
   );
 
-  const formatVehicleName = (order: OrderItem) => {
-    const car_number = order.optionValues.find(
-      (value) => value.parameter.name === "car_number",
-    );
-    const car_make = order.optionValues.find(
-      (value) => value.parameter.name === "car_make",
-    );
-    const car_make_name =
-      car_make && car_make.option ? car_make.option.translationRu : null;
-    return `${car_make_name ? car_make_name : ""}${car_make_name ? " " : ""}${car_number?.value ?? ""}`;
-  };
-
   const tableData: TableData = {
     header: [
       { name: "id", label: "ID" },
       { name: "createdAt", label: "Дата создания" },
+      { name: "clientType", label: "Тип клиента" },
       { name: "vehicle", label: "Автомобиль" },
+      { name: "workList", label: "Работы и материалы" },
       { name: "totalValue", label: "Сумма" },
       { name: "actions", label: "" },
     ],
@@ -43,7 +37,9 @@ export const ClosedOrdersList = () => {
         name: "createdAt",
         data: new Date(row.createdAt).toLocaleString("ru-RU"),
       },
+      { name: "clientType", data: formatClientType(row) },
       { name: "vehicle", data: formatVehicleName(row) },
+      { name: "workList", data: formatWorkList(row) },
       { name: "totalValue", data: `${row.totalValue.toString()} ₽` },
       { name: "action", data: <OrdersListActionButton orderId={row.id} /> },
     ]);
@@ -53,7 +49,8 @@ export const ClosedOrdersList = () => {
     <>
       {ordersList.length > 0 ? (
         <>
-          <Table tableData={tableData} className={"w-full mt-6"} />
+          <h3 className={"text-xl mb-1 mt-3"}>Заказы</h3>
+          <Table tableData={tableData} className={"w-full"} />
           <div className={"text-end text-base mt-2"}>
             Итого по заказам:{" "}
             <span className={"font-medium text-xl"}>{shiftTotalValue} ₽</span>
