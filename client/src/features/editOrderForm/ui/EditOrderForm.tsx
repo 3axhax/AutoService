@@ -135,7 +135,7 @@ export const EditOrderForm = ({
       onSubmit={handlerOnSubmit}
       className={"w-full my-10 container px-4 lg:px-8"}
     >
-      <div className={"relative py-12"}>
+      <div className={"relative pt-12 pb-3"}>
         <Carousel
           ref={carouselRef}
           responsive={responsive}
@@ -173,10 +173,8 @@ export const EditOrderForm = ({
           {orderError}
         </div>
       )}
-      <div className="container px-4 lg:px-8">
-        <OrderTotalValue orderId={orderId} className={"w-fit"} />
-        <div className={"col-span-full flex items-center justify-center gap-2"}>
-          <button className={"btn btn-orange w-1/2"} type={"submit"}>
+      <div className="flex items-center justify-stretch gap-3">
+          <button className={"btn btn-orange w-1/2 ml-auto"} type={"submit"}>
             {!edit ? (
               <CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
             ) : (
@@ -196,7 +194,7 @@ export const EditOrderForm = ({
               Удалить
             </button>
           ) : null}
-        </div>
+        <OrderTotalValue orderId={orderId} className={"w-fit"} />
       </div>
     </form>
   );
