@@ -135,9 +135,6 @@ export const EditOrderForm = ({
       onSubmit={handlerOnSubmit}
       className={"w-full my-10 container px-4 lg:px-8"}
     >
-      <h2 className={"text-2xl mи-3 text-gray-700"}>
-        Оформление нового заказа
-      </h2>
       <div className={"relative pt-12 pb-3"}>
         <Carousel
           ref={carouselRef}

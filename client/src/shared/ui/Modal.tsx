@@ -59,7 +59,7 @@ export const Modal = ({
                   </div>
                 )}
                 <div className="lg:mt-3 text-center w-full">
-                  <DialogTitle as="h3" className="text-2xl font-bold lg:mb-5">
+                  <DialogTitle as="h3" className="text-2xl mt-3 text-gray-700">
                     {title}
                   </DialogTitle>
                   <div className="mt-2">{body}</div>
@@ -71,9 +71,9 @@ export const Modal = ({
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="btn-white cursor-pointer inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold sm:w-auto"
+                  className="btn-white cursor-pointer inline-flex w-full justify-center rounded-md px-3 py-2 sm:w-auto"
                 >
-                  Cancel
+                  Отменить
                 </button>
                 {buttons &&
                   buttons.map((button) => (
