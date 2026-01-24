@@ -12,12 +12,11 @@ export const OrderActiveList = () => {
     <>
       {orderList.length > 0
         ? orderList.map((order) => (
-            <div className={"py-10"}>
+            <div className={"py-10"} key={order.id}>
               <h2 className={"text-2xl mb-6 text-gray-700"}>
                 Оформление нового заказа
               </h2>
               <EditOrderForm
-                key={order.id}
                 orderId={order.id}
                 onSuccess={() => dispatch(getOrdersFromActiveShift())}
               />
