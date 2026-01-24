@@ -64,7 +64,11 @@ export const EditAdditionalWorkForm = ({
 
   return (
     <div className={"mb-8"}>
-      <h2 className={"text-2xl mb-6 text-gray-700"}>
+      <h2
+        className={
+          "text-2xl mb-3 lg:mb-6 text-gray-700 text-left lg:text-center"
+        }
+      >
         <ExtraIcon className={"h-7 w-7 inline-flex mr-2"} />
         Запись о дополнительной работе
       </h2>

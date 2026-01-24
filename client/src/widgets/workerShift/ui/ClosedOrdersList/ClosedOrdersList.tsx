@@ -50,7 +50,11 @@ export const ClosedOrdersList = () => {
       {ordersList.length > 0 ? (
         <div className={"colored w-full"}>
           <div className={"container mx-auto px-4 lg:px-8"}>
-            <h3 className={"text-2xl mb-6 text-gray-700"}>
+            <h3
+              className={
+                "text-2xl mb-3 lg:mb-6 text-gray-700 text-left lg:text-center"
+              }
+            >
               Список выполненных заказов
             </h3>
             <Table tableData={tableData} className={"w-full max-w-full"} />

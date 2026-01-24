@@ -12,7 +12,13 @@ export const WorkerShiftsHistoryPage = () => {
 
   return (
     <div className={"container px-4 lg:px-8"}>
-      <h3 className={"text-2xl mb-6 text-gray-700"}>Смены</h3>
+      <h3
+        className={
+          "text-2xl mb-3 lg:mb-6 text-gray-700 text-left lg:text-center"
+        }
+      >
+        Смены
+      </h3>
       <Filters />
       <ShiftsList />
     </div>

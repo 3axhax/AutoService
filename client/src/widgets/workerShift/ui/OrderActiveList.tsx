@@ -13,7 +13,11 @@ export const OrderActiveList = () => {
       {orderList.length > 0
         ? orderList.map((order) => (
             <div className={"colored w-full"} key={order.id}>
-              <h2 className={"text-2xl mb-6 text-gray-700"}>
+              <h2
+                className={
+                  "text-2xl mb-3 lg:mb-6 text-gray-700 text-left lg:text-center px-4 lg:px-8"
+                }
+              >
                 Оформление нового заказа
               </h2>
               <EditOrderForm
