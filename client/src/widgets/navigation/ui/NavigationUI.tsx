@@ -127,7 +127,7 @@ export const NavigationUI = ({
       </div>
       {canCollapsed && (
         <button
-          className={`bg-blue-dark w-12 h-8 text-white dark:text-white cursor-pointer shadow-lg z-10 group absolute right-3 -bottom-8 flex justify-center items-center rounded-b-md`}
+          className={`bg-blue-dark w-12 h-8 text-white dark:text-white cursor-pointer shadow-lg group absolute right-3 -bottom-8 flex justify-center items-center rounded-b-md`}
           onClick={() => dispatch(setHideNavigation(!collapsed))}
         >
           <span className={"relative"}></span>

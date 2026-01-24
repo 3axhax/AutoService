@@ -1,4 +1,4 @@
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/16/solid";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useInfoModalData } from "@app/providers/infoModalProvider";
 import {
   deleteAdditionalWork,
@@ -51,18 +51,20 @@ export const AdditionalWorksListActionButton = ({
         type={"button"}
         onClick={handlerEdit}
         className={
-          "text-blue-600 hover:text-blue-700 transition-colors cursor-pointer"
+          "w-8 h-8 inline-flex justify-center items-center text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
         }
       >
+        <span className={"sr-only"}>Редактировать</span>
         <PencilSquareIcon className="w-5 h-5" />
       </button>
       <button
         type={"button"}
         onClick={handlerDelete}
         className={
-          "text-red-600 hover:text-red-700 transition-colors cursor-pointer"
+          "w-8 h-8 inline-flex justify-center items-center text-red-600 shadow-red-600/75 hover:text-red-800 transition-colors cursor-pointer"
         }
       >
+        <span className={"sr-only"}>Удалить</span>
         <TrashIcon className="w-5 h-5" />
       </button>
     </div>

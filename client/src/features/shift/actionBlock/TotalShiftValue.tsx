@@ -10,7 +10,7 @@ export const TotalShiftValue = () => {
   return (
     <div
       className={
-        "text-base/5 flex items-baseline rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige"
+        "flex-grow text-base/5 flex items-baseline justify-end rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige whitespace-pre"
       }
     >
       <span className={"hidden lg:inline"}>Общая сумма</span>

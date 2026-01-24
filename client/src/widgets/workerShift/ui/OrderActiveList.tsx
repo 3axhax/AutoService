@@ -12,11 +12,16 @@ export const OrderActiveList = () => {
     <>
       {orderList.length > 0
         ? orderList.map((order) => (
-            <EditOrderForm
-              key={order.id}
-              orderId={order.id}
-              onSuccess={() => dispatch(getOrdersFromActiveShift())}
-            />
+            <div className={"py-10"}>
+              <h2 className={"text-2xl mb-6 text-gray-700"}>
+                Оформление нового заказа
+              </h2>
+              <EditOrderForm
+                key={order.id}
+                orderId={order.id}
+                onSuccess={() => dispatch(getOrdersFromActiveShift())}
+              />
+            </div>
           ))
         : null}
     </>
