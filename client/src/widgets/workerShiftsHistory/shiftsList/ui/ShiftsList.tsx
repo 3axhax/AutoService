@@ -4,7 +4,6 @@ import { Table, TableData, TableDataRow } from "@shared/ui";
 
 export const ShiftsList = () => {
   const shiftsList = useAppSelector(SelectShiftListSortByCreated);
-  console.log(shiftsList);
   const tableData: TableData = {
     header: [
       { name: "id", label: "ID" },
@@ -30,7 +29,10 @@ export const ShiftsList = () => {
           <span className={"text-green-600"}>Смена не закрыта</span>
         ),
       },
-      { name: "totalValue", data: `${row.totalOrdersSum.toString()} ₽` },
+      {
+        name: "totalValue",
+        data: `${row.totalOrdersSum ? row.totalOrdersSum.toString() : "0"} ₽`,
+      },
     ]);
   }
 
