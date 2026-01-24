@@ -34,10 +34,6 @@ export const NavigationUI = ({
 
   const collapsed = useAppSelector(SelectHideNavigation);
 
-  console.log("canCollapsed", canCollapsed);
-  console.log("collapsed", collapsed);
-  console.log("canCollapsed && collapsed", canCollapsed && collapsed);
-
   return (
     <header className={`header shadow-lg`}>
       <div
