@@ -23,7 +23,9 @@ export const WorkerShift = () => {
   return (
     <>
       <div
-        className={"shadow-lg w-full py-4 lg:py-5 sticky top-0 bg-stone-200/75 z-10"}
+        className={
+          "shadow-lg w-full py-4 lg:py-5 sticky top-0 bg-stone-200/75 z-10"
+        }
       >
         <div className={"container px-4 lg:px-8 mx-auto"}>
           <ActionBlock />

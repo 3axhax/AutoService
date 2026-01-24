@@ -57,3 +57,21 @@ export const closeActiveShift = createAsyncThunk(
     }
   },
 );
+
+export const getShiftsList = createAsyncThunk(
+  "shifts/getList",
+  async (_, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.shifts.pending) {
+      dispatch(setPending(true));
+      try {
+        const response = await Request.get("/shifts/getList");
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);

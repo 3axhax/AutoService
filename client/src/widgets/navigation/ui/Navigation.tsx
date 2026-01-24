@@ -34,9 +34,9 @@ export const Navigation = () => {
   }
   if (isUserWorker) {
     navItems.push({
-      key: "facility",
-      path: "/work_history",
-      label: "История работ",
+      key: "shiftsHistory",
+      path: "/shiftsHistory",
+      label: "История смен",
       iconLink: (
         <ArchiveBoxArrowDownIcon className="inline-flex h-5 w-5 mr-1" />
       ),
