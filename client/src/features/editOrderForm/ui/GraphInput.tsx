@@ -42,7 +42,7 @@ export const GraphInput = ({
         {value && <img src={value} alt={label} />}
         <button
           type={"button"}
-          className={"btn p-3"}
+          className={"btn btn-orange mx-auto"}
           onClick={() => setModalOpen(true)}
         >
           {label}
