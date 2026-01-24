@@ -5,6 +5,7 @@ import { orderSlice } from "@entities/order";
 import { priceSlice } from "@entities/price";
 import { shiftsSlice } from "@entities/shifts";
 import { additionalWorksSlice } from "@entities/additionalWorks";
+import { appSlice } from "@entities/app";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     price: priceSlice.reducer,
     shifts: shiftsSlice.reducer,
     additionalWorks: additionalWorksSlice.reducer,
+    app: appSlice.reducer,
   },
 });
 

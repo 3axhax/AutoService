@@ -13,6 +13,7 @@ import { LogoutPage } from "@pages/logout";
 import { NotFoundPage } from "@pages/404";
 import { WorkerOrderPage } from "@pages/workerOrder";
 import { OrdersPage } from "@pages/orders";
+import { checkLSAppSettings } from "@entities/app";
 
 function AppContainer() {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
@@ -21,6 +22,7 @@ function AppContainer() {
 
   useEffect(() => {
     dispatch(checkLSUser());
+    dispatch(checkLSAppSettings());
   }, [dispatch]);
 
   return (

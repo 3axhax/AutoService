@@ -1,9 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { JSX, useEffect, useState } from "react";
+import { JSX, useState } from "react";
 import { Logo } from "@widgets/logo";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Bars3Icon } from "@heroicons/react/24/solid";
 import { ArrowDownIcon } from "@heroicons/react/24/solid";
+import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
+import { SelectHideNavigation, setHideNavigation } from "@entities/app";
 
 export interface NavItem {
   key: string;
@@ -18,25 +20,28 @@ export interface NavItem {
 
 interface NavigationUIProps {
   navItems: NavItem[];
-  collapse?: boolean;
+  canCollapsed: boolean;
 }
 
 export const NavigationUI = ({
   navItems,
-  collapse = false,
+  canCollapsed = false,
 }: NavigationUIProps) => {
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState<string>("");
-  const [collapsed, setCollapsed] = useState<boolean>(collapse);
 
-  useEffect(() => {
-    setCollapsed(collapse);
-  }, [collapse]);
+  const dispatch = useAppDispatch();
+
+  const collapsed = useAppSelector(SelectHideNavigation);
+
+  console.log("canCollapsed", canCollapsed);
+  console.log("collapsed", collapsed);
+  console.log("canCollapsed && collapsed", canCollapsed && collapsed);
 
   return (
     <header className={`header shadow-lg`}>
       <div
-        className={`w-full relative bg-blue-dark z-11 overflow-hidden transition-max-height duration-300 ease-linear ${collapsed && collapse ? "max-h-0" : "max-h-18"}`}
+        className={`w-full relative bg-blue-dark z-11 overflow-hidden transition-max-height duration-300 ease-linear ${canCollapsed && collapsed ? "max-h-0" : "max-h-18"}`}
       >
         <div className={"container px-4 lg:px-8 flex py-2 ml-auto mr-auto"}>
           <Logo />
@@ -124,15 +129,15 @@ export const NavigationUI = ({
           </nav>
         </div>
       </div>
-      {collapse && (
+      {canCollapsed && (
         <button
           className={`bg-blue-dark w-12 h-8 text-white dark:text-white cursor-pointer shadow-lg z-10 group absolute right-3 -bottom-8 flex justify-center items-center rounded-b-md`}
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={() => dispatch(setHideNavigation(!collapsed))}
         >
           <span className={"relative"}></span>
           <Bars3Icon className={"inline-flex h-5 w-5"} />
           <ArrowDownIcon
-            className={`rounded-full bg-blue-dark h-3 w-3 absolute right-2.5 duration-200 transition-all duration-200 ${!collapsed ? "rotate-180 bottom-1.5 group-hover:bottom-3" : "bottom-3 group-hover:bottom-1.5"}`}
+            className={`rounded-full bg-blue-dark h-3 w-3 absolute right-2.5 duration-200 transition-all ${!collapsed ? "rotate-180 bottom-1.5 group-hover:bottom-3" : "bottom-3 group-hover:bottom-1.5"}`}
           />
         </button>
       )}
