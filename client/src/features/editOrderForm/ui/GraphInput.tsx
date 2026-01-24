@@ -54,7 +54,7 @@ export const GraphInput = ({
           setOpen={() => setModalOpen(false)}
           title={label}
           body={modalBody}
-          className={'test'}
+          className={"test"}
         />
       ) : null}
     </>

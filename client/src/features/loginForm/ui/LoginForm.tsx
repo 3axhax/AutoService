@@ -39,10 +39,7 @@ export const LoginForm = () => {
   }, [navigate, isUserAuthorized, closeModal]);
 
   return (
-    <form
-      className="space-y-2 text-gray-900"
-      onSubmit={handlerSubmit}
-    >
+    <form className="space-y-2 text-gray-900" onSubmit={handlerSubmit}>
       <InputWithLabel
         type={"email"}
         name={"email"}
@@ -58,11 +55,15 @@ export const LoginForm = () => {
         value={password}
         onChange={setPassword}
         label={"Пароль"}
-        className={'mt-3'}
+        className={"mt-3"}
       />
 
       {error && (
-        <div className={"bg-red-600/20 outline-1 outline-red-600 rounded-md px-4 py-2"}>
+        <div
+          className={
+            "bg-red-600/20 outline-1 outline-red-600 rounded-md px-4 py-2"
+          }
+        >
           {error}
         </div>
       )}

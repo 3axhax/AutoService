@@ -47,26 +47,26 @@ export const AdditionalWorksListActionButton = ({
   };
   return (
     <div className={"flex justify-center gap-3"}>
-        <button
-            type={"button"}
-            onClick={handlerEdit}
-            className={
-                "w-8 h-8 inline-flex justify-center items-center text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
-            }
-        >
-            <span className={"sr-only"}>Редактировать</span>
-            <PencilSquareIcon className="w-5 h-5"/>
-        </button>
-        <button
-            type={"button"}
-            onClick={handlerDelete}
-            className={
-                "w-8 h-8 inline-flex justify-center items-center text-red-600 shadow-red-600/75 hover:text-red-800 transition-colors cursor-pointer"
-            }
-        >
-            <span className={"sr-only"}>Удалить</span>
-            <TrashIcon className="w-5 h-5"/>
-        </button>
+      <button
+        type={"button"}
+        onClick={handlerEdit}
+        className={
+          "w-8 h-8 inline-flex justify-center items-center text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
+        }
+      >
+        <span className={"sr-only"}>Редактировать</span>
+        <PencilSquareIcon className="w-5 h-5" />
+      </button>
+      <button
+        type={"button"}
+        onClick={handlerDelete}
+        className={
+          "w-8 h-8 inline-flex justify-center items-center text-red-600 shadow-red-600/75 hover:text-red-800 transition-colors cursor-pointer"
+        }
+      >
+        <span className={"sr-only"}>Удалить</span>
+        <TrashIcon className="w-5 h-5" />
+      </button>
     </div>
   );
 };

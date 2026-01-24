@@ -94,7 +94,11 @@ export const EditAdditionalWorkForm = ({
             {additionalWorkError}
           </div>
         )}
-        <div className={"col-span-full flex items-center justify-center gap-2"}>
+        <div
+          className={
+            "col-span-full flex items-center justify-center gap-2 lg:mt-4"
+          }
+        >
           <button className={`btn btn-blue-dark w-1/2`} type={"submit"}>
             <PencilSquareIcon className="w-5 h-5 inline-flex mr-1" />
             {!edit ? "Записать" : "Изменить"}
