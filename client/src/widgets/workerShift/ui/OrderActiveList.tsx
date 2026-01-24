@@ -12,7 +12,7 @@ export const OrderActiveList = () => {
     <>
       {orderList.length > 0
         ? orderList.map((order) => (
-            <div className={"colored w-full py-10"} key={order.id}>
+            <div className={"colored w-full"} key={order.id}>
               <h2 className={"text-2xl mb-6 text-gray-700"}>
                 Оформление нового заказа
               </h2>

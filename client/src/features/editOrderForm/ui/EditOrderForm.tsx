@@ -135,7 +135,7 @@ export const EditOrderForm = ({
       onSubmit={handlerOnSubmit}
       className={"w-full container mx-auto px-4 lg:px-8"}
     >
-      <div className={"relative pt-12 pb-3 w-full"}>
+      <div className={"relative pt-9 pb-3 w-full"}>
         <Carousel
           ref={carouselRef}
           responsive={responsive}
@@ -143,7 +143,7 @@ export const EditOrderForm = ({
           removeArrowOnDeviceType={["tablet", "mobile"]}
           containerClass={""}
           sliderClass={"slider"}
-          dotListClass={"dot-list top-4 h-7"}
+          dotListClass={"dot-list top-0 h-7"}
           renderDotsOutside={true}
           arrows={false}
           renderButtonGroupOutside={true}
