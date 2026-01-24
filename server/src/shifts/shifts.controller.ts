@@ -29,4 +29,11 @@ export class ShiftsController {
   createActiveShiftByUser(@User() user: UserModel | undefined) {
     return this.shiftsService.createActiveShiftByUser({ user });
   }
+
+  @Get('getList')
+  @Roles('ADMIN', 'WORKER')
+  @UseGuards(RolesGuard)
+  getList(@User() user: UserModel | undefined) {
+    return this.shiftsService.getList({ user });
+  }
 }

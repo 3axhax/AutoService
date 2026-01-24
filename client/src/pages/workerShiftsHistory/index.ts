@@ -1,0 +1,1 @@
+export { WorkerShiftsHistoryPage } from "./WorkerShiftsHistoryPage";

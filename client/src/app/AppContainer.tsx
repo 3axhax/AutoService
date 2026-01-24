@@ -9,11 +9,12 @@ import {
   selectIsUserAdmin,
   selectIsUserWorker,
 } from "@entities/user";
+import { checkLSAppSettings } from "@entities/app";
 import { LogoutPage } from "@pages/logout";
 import { NotFoundPage } from "@pages/404";
 import { WorkerOrderPage } from "@pages/workerOrder";
 import { OrdersPage } from "@pages/orders";
-import { checkLSAppSettings } from "@entities/app";
+import { WorkerShiftsHistoryPage } from "@pages/workerShiftsHistory";
 
 function AppContainer() {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
@@ -41,6 +42,7 @@ function AppContainer() {
             )
           }
         />
+        <Route path={"/shiftsHistory"} element={<WorkerShiftsHistoryPage />} />
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
