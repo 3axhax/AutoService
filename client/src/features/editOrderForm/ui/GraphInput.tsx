@@ -39,10 +39,13 @@ export const GraphInput = ({
   return (
     <>
       <div className={className}>
+        <p className={"text-lg font-medium text-gray-800 mb-2"}>
+          Добавьте подпись
+        </p>
         {value && <img src={value} alt={label} />}
         <button
           type={"button"}
-          className={"btn btn-orange mx-auto"}
+          className={"btn btn-purple w-full"}
           onClick={() => setModalOpen(true)}
         >
           {label}

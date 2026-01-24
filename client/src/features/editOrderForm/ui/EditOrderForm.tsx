@@ -75,7 +75,7 @@ export const EditOrderForm = ({
           aria-label={`Go to slide ${index}`}
           type={"button"}
           onClick={onClick}
-          className={`shadow-sm font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/20 hover:shadow-gray-800/50 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mx-1 ${active ? "bg-blue-900 text-white" : ""}`}
+          className={`shadow-sm font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/20 hover:shadow-gray-800/50 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mx-1 ${active ? "bg-blue-900 text-white" : "bg-white"}`}
         >
           {index ? index + 1 : "1"}
         </button>
@@ -133,7 +133,7 @@ export const EditOrderForm = ({
   return (
     <form
       onSubmit={handlerOnSubmit}
-      className={"w-full container px-4 lg:px-8"}
+      className={"w-full container mx-auto px-4 lg:px-8"}
     >
       <div className={"relative pt-12 pb-3 w-full"}>
         <Carousel
@@ -154,7 +154,7 @@ export const EditOrderForm = ({
             parametersList.map((parameter) => (
               <div
                 className={
-                  "shadow-gray-800/10 shadow-xs border-gray-800/20 border-1 px-4 lg:mx-2 py-4 rounded-lg h-full"
+                  "bg-white shadow-gray-800/10 shadow-xs border-gray-800/20 border-1 px-4 lg:mx-2 py-4 rounded-lg h-full"
                 }
               >
                 <SwitchParameterType

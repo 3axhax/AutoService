@@ -12,11 +12,17 @@ export const AdditionalWorksActiveList = () => {
     <>
       {additionalWorksList.length > 0
         ? additionalWorksList.map((additionalWork) => (
-            <EditAdditionalWorkForm
-              key={additionalWork.id}
-              additionalWorkId={additionalWork.id}
-              onSuccess={() => dispatch(getAdditionalWorksFromActiveShift())}
-            />
+            <div className={"colored w-full"}>
+              <div className={"container mx-auto px-4 lg:px-8"}>
+                <EditAdditionalWorkForm
+                  key={additionalWork.id}
+                  additionalWorkId={additionalWork.id}
+                  onSuccess={() =>
+                    dispatch(getAdditionalWorksFromActiveShift())
+                  }
+                />
+              </div>
+            </div>
           ))
         : null}
     </>

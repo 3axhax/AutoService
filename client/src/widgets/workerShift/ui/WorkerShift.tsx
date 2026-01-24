@@ -34,15 +34,12 @@ export const WorkerShift = () => {
       {isActiveShift ? (
         <>
           <OrderActiveList />
-          <div className={"container px-4 lg:px-8"}>
-            <AdditionalWorksActiveList />
-          </div>
-          <div className={"container px-4 lg:px-8"}>
-            <ClosedOrdersList />
-          </div>
-          <div className={"container px-4 lg:px-8"}>
-            <ClosedAdditionalWorksList />
-          </div>
+
+          <AdditionalWorksActiveList />
+
+          <ClosedOrdersList />
+
+          <ClosedAdditionalWorksList />
         </>
       ) : null}
     </>

@@ -403,6 +403,10 @@
   .custom-select__menu-portal {
     z-index: 10 !important;
   }
+
+  .colored {
+    @apply even:not-empty:bg-stone-200/25 border-t-1 border-stone-200;
+  }
 }
 
 .font-sans {

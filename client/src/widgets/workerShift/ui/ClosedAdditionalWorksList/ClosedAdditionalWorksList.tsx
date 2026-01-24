@@ -49,18 +49,22 @@ export const ClosedAdditionalWorksList = () => {
   return (
     <>
       {additionalWorksList.length > 0 ? (
-        <>
-          <h3 className={"text-xl mb-1 mt-3"}>Дополнительные работы</h3>
-          <Table tableData={tableData} className={"w-[100%] mt-3"} />
-          <div
-            className={
-              "mt-5 lg:mt-10 text-base/5 flex w-fit items-baseline rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige ml-auto"
-            }
-          >
-            Итого по дополнительным работам:{" "}
-            <span className={"font-medium text-xl"}>{shiftTotalValue} ₽</span>
+        <div className={"colored w-full"}>
+          <div className={"container mx-auto px-4 lg:px-8"}>
+            <h3 className={"text-2xl mb-6 text-gray-700"}>
+              Список дополнительных работ
+            </h3>
+            <Table tableData={tableData} className={"w-[100%] mt-3"} />
+            <div
+              className={
+                "mt-5 lg:mt-10 text-base/5 flex w-fit items-baseline rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige ml-auto"
+              }
+            >
+              Итого по дополнительным работам:{" "}
+              <span className={"font-medium text-xl"}>{shiftTotalValue} ₽</span>
+            </div>
           </div>
-        </>
+        </div>
       ) : null}
     </>
   );

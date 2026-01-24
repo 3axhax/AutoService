@@ -101,7 +101,7 @@ export const SwitchParameterType = ({
         <GraphInput
           key={parameter.id}
           label={parameter.translationRu}
-          className={"self-end"}
+          className={""}
           value={(values[parameter.name] as string) ?? ""}
           onChange={(value) => {
             setValue({ name: parameter.name, value });
