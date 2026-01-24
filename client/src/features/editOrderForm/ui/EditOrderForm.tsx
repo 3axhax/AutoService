@@ -135,7 +135,7 @@ export const EditOrderForm = ({
       onSubmit={handlerOnSubmit}
       className={"w-full my-10 container px-4 lg:px-8"}
     >
-      <div className={"relative pt-12 pb-3"}>
+      <div className={"relative pt-12 pb-3 w-full"}>
         <Carousel
           ref={carouselRef}
           responsive={responsive}

@@ -44,7 +44,7 @@ export const OrdersListActionButton = ({ orderId }: { orderId: number }) => {
         type={"button"}
         onClick={handlerEdit}
         className={
-          "w-8 h-8 inline-flex text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
+          "w-8 h-8 inline-flex justify-center items-center text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
         }
       >
         <span className={"sr-only"}>Редактировать</span>
@@ -54,7 +54,7 @@ export const OrdersListActionButton = ({ orderId }: { orderId: number }) => {
         type={"button"}
         onClick={handlerDelete}
         className={
-          "w-8 h-8 inline-flex text-red-600 shadow-red-600/75 hover:text-red-800 transition-colors cursor-pointer"
+          "w-8 h-8 inline-flex justify-center items-center text-red-600 shadow-red-600/75 hover:text-red-800 transition-colors cursor-pointer"
         }
       >
         <span className={"sr-only"}>Удалить</span>

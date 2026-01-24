@@ -47,12 +47,13 @@ export const Modal = ({
 
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+          // TODO: relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in lg:my-8 min-w-full lg:min-w-auto sm:w-full lg:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95 min-w-auto md:min-w-[90%]
           <DialogPanel
             transition
-            className={`relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95${className ? ` ${className}` : ``}`}
+            className={`relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:w-full lg:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95${className ? ` ${className}` : ``}`}
           >
             <div className="bg-white px-4 py-4 lg:py-6 lg:px-6">
-              <div className="flex">
+              <div className="flex w-full">
                 {icon && (
                   <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
                     {icon}
@@ -62,7 +63,7 @@ export const Modal = ({
                   <DialogTitle as="h3" className="text-2xl mt-3 text-gray-700">
                     {title}
                   </DialogTitle>
-                  <div className="mt-2">{body}</div>
+                  <div className="mt-2 w-full">{body}</div>
                 </div>
               </div>
             </div>

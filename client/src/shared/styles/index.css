@@ -58,9 +58,12 @@
     --color-purple: oklch(39.8% 0.057 283.51);
   }
 
+  html {
+    @apply w-full h-full;
+  }
   body {
     font-family: "Roboto", "Arial Black", sans-serif;
-    @apply m-0 flex items-stretch justify-center min-w-[320px] min-h-screen;
+    @apply m-0 flex items-stretch justify-center w-full min-w-[320px] min-h-screen;
     /*    background: linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size), linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size);
     -webkit-mask: linear-gradient(-20deg, transparent 50%, white);*/
   }
