@@ -32,17 +32,48 @@ export const ClosedOrdersList = () => {
 
   if (ordersList?.length > 0) {
     tableData.rows = ordersList.map((row) => [
-      { name: "id", data: row.id.toString(), label: "ID" },
+      {
+        name: "id",
+        data: row.id.toString(),
+        label: "Заказ #",
+        className: "inline-flex font-medium",
+      },
       {
         name: "createdAt",
         data: new Date(row.createdAt).toLocaleString("ru-RU"),
-        label: "Дата создания",
+        label: "Дата создания:",
+        className: "col-span-2 flex border-t-1 border-stone-400",
       },
-      { name: "clientType", data: formatClientType(row), label: "Тип клиента" },
-      { name: "vehicle", data: formatVehicleName(row), label: "Автомобиль" },
-      { name: "workList", data: formatWorkList(row), label: "Работы и материалы", className: "col-span-3 lg:col-span-1" },
-      { name: "totalValue", data: `${row.totalValue.toString()} ₽`, label: "Сумма", className: "col-start-2 row-start-2 lg:row-start-1 lg:col-start-6" },
-      { name: "action", data: <OrdersListActionButton orderId={row.id} />, label: "Кнопки", className: "col-start-3 row-start-2 lg:row-start-1 lg:col-start-7" },
+      {
+        name: "clientType",
+        data: formatClientType(row),
+        label: "Тип клиента:",
+        className: "col-span-2 flex border-t-1 border-stone-400",
+      },
+      {
+        name: "vehicle",
+        data: formatVehicleName(row),
+        label: "Автомобиль:",
+        className: "col-span-2 flex border-t-1 border-stone-400",
+      },
+      {
+        name: "workList",
+        data: formatWorkList(row),
+        label: "Работы:",
+        className: "col-span-2 flex border-t-1 border-stone-400",
+      },
+      {
+        name: "totalValue",
+        data: `${row.totalValue.toString()} ₽`,
+        label: "Сумма",
+        className: "col-span-2 flex border-t-1 border-stone-400 font-medium",
+      },
+      {
+        name: "action",
+        data: <OrdersListActionButton orderId={row.id} />,
+        label: "",
+        className: "col-start-2 row-start-1 lg:col-start-7 inline-flex",
+      },
     ]);
   }
 
@@ -58,7 +89,12 @@ export const ClosedOrdersList = () => {
             >
               Список выполненных заказов
             </h3>
-            <Table tableData={tableData} className={"w-full max-w-full grid-cols-3 lg:grid-cols-7 [grid-template-areas:'id_createdAt_action''clientType_vehicle_totalValue''workList_workList_workList'] lg:grid-rows-1 lg:[grid-template-areas:'id_createdAt_clientType_vehicle_workList_totalValue_action']"} />
+            <Table
+              tableData={tableData}
+              className={
+                "overflow-hidden w-full grid-cols-2 lg:grid-cols-7 [grid-template-areas:'id_action''createdAt_createdAt''clientType_clientType''vehicle_vehicle''workList_workList' 'totalValue_totalValue'] lg:grid-rows-1 lg:[grid-template-areas:'id_createdAt_clientType_vehicle_workList_totalValue_action']"
+              }
+            />
             <div
               className={
                 "mt-5 lg:mt-10 text-base/5 flex w-fit items-baseline rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige ml-auto"

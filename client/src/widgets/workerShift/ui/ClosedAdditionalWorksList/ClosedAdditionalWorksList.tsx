@@ -64,7 +64,9 @@ export const ClosedAdditionalWorksList = () => {
                 "mt-5 lg:mt-10 text-base/5 flex w-fit items-baseline rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige ml-auto"
               }
             >
-              Итого по дополнительным работам:{" "}
+              Итого по&nbsp;
+              <span className={"hidden lg:inline"}>дополнительным</span>
+              <span className={"inline lg:hidden"}>доп.</span> работам:{" "}
               <span className={"font-medium text-xl"}>{shiftTotalValue} ₽</span>
             </div>
           </div>

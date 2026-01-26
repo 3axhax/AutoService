@@ -39,7 +39,7 @@ export const OrdersListActionButton = ({ orderId }: { orderId: number }) => {
     });
   };
   return (
-    <div className={"flex justify-center gap-3"}>
+    <div className={"inline-flex lg:flex justify-center gap-3"}>
       <button
         type={"button"}
         onClick={handlerEdit}
