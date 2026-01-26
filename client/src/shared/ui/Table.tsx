@@ -44,9 +44,7 @@ export const Table = ({ tableData, className }: TableProps) => {
                 key={cell.name}
                 className={`px-3 py-1 lg:py-2 text-lg lg:text-base text-gray-900 lg:border-l-1 first:border-l-0 border-blue-900 [grid-area:${cell.name}] ${cell.className ? ` ${cell.className}` : ``}`}
               >
-                <span className={`inline-flex lg:hidden w-2/5 text-base/7`}>
-                  {cell.label}
-                </span>
+                  {cell.label ? <span className={`inline-flex lg:hidden w-2/5 text-base/7`}>{cell.label}</span> : ''}
                 {cell.data}
               </div>
             ))}

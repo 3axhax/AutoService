@@ -76,7 +76,6 @@ export const ClosedOrdersList = () => {
       {
         name: "action",
         data: <OrdersListActionButton orderId={row.id} />,
-        label: "",
         className: "col-start-2 row-start-1 lg:col-start-7 inline-flex",
       },
     ]);
