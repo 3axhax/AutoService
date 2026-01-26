@@ -46,7 +46,7 @@ export const AdditionalWorksListActionButton = ({
     });
   };
   return (
-    <div className={"inline-flex lg:flex justify-center gap-3"}>
+    <div className={"inline-flex lg:flex lg:w-full justify-center gap-3"}>
       <button
         type={"button"}
         onClick={handlerEdit}

@@ -41,7 +41,7 @@ export const formatClientType = (order: OrderItem) => {
     (value) => value.parameter.name === "legal_list",
   );
   return (
-    <ul className={"flex flex-col items-start"}>
+    <ul className={"flex flex-col items-start lg:items-center"}>
       {client_type && <li>{client_type?.option?.translationRu}</li>}
       {legal && <li>{legal?.option?.translationRu}</li>}
     </ul>
@@ -77,7 +77,7 @@ export const formatWorkList = (order: OrderItem) => {
     <div>
       {typeWorkList}
       {type_work.length > 0 && materials.length > 0 ? (
-        <hr className={"text-gray-700/50 ml-0 md:ml-10"} />
+        <hr className={"text-gray-700/50 ml-0 lg:mx-auto"} />
       ) : null}
       {materialsList}
     </div>

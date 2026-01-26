@@ -35,38 +35,43 @@ export const ClosedOrdersList = () => {
       {
         name: "id",
         data: row.id.toString(),
-        label: "Заказ #",
-        className: "inline-flex font-medium",
+        label: "Заказ номер:",
+        className: "inline-flex font-medium lg:flex lg:justify-center",
       },
       {
         name: "createdAt",
         data: new Date(row.createdAt).toLocaleString("ru-RU"),
         label: "Дата создания:",
-        className: "col-span-2 flex border-t-1 border-stone-400",
+        className:
+          "col-span-2 lg:col-span-1 flex lg:justify-center border-t-1 lg:border-t-0 border-stone-400",
       },
       {
         name: "clientType",
         data: formatClientType(row),
         label: "Тип клиента:",
-        className: "col-span-2 flex border-t-1 border-stone-400",
+        className:
+          "col-span-2 lg:col-span-1 flex lg:justify-center border-t-1 lg:border-t-0 border-stone-400",
       },
       {
         name: "vehicle",
         data: formatVehicleName(row),
         label: "Автомобиль:",
-        className: "col-span-2 flex border-t-1 border-stone-400",
+        className:
+          "col-span-2 lg:col-span-1 flex lg:justify-center border-t-1 lg:border-t-0 border-stone-400",
       },
       {
         name: "workList",
         data: formatWorkList(row),
         label: "Работы:",
-        className: "col-span-2 flex border-t-1 border-stone-400",
+        className:
+          "col-span-2 lg:col-span-1 flex lg:justify-center border-t-1 lg:border-t-0 border-stone-400",
       },
       {
         name: "totalValue",
         data: `${row.totalValue.toString()} ₽`,
         label: "Сумма",
-        className: "col-span-2 flex border-t-1 border-stone-400 font-medium",
+        className:
+          "col-span-2 lg:col-span-1 flex lg:justify-center border-t-1 lg:border-t-0 border-stone-400 font-medium",
       },
       {
         name: "action",
