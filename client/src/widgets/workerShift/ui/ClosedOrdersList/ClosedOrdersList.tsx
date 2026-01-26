@@ -32,16 +32,17 @@ export const ClosedOrdersList = () => {
 
   if (ordersList?.length > 0) {
     tableData.rows = ordersList.map((row) => [
-      { name: "id", data: row.id.toString() },
+      { name: "id", data: row.id.toString(), label: "ID" },
       {
         name: "createdAt",
         data: new Date(row.createdAt).toLocaleString("ru-RU"),
+        label: "Дата создания",
       },
-      { name: "clientType", data: formatClientType(row) },
-      { name: "vehicle", data: formatVehicleName(row) },
-      { name: "workList", data: formatWorkList(row) },
-      { name: "totalValue", data: `${row.totalValue.toString()} ₽` },
-      { name: "action", data: <OrdersListActionButton orderId={row.id} /> },
+      { name: "clientType", data: formatClientType(row), label: "Тип клиента" },
+      { name: "vehicle", data: formatVehicleName(row), label: "Автомобиль" },
+      { name: "workList", data: formatWorkList(row), label: "Работы и материалы", className: "col-span-3 lg:col-span-1" },
+      { name: "totalValue", data: `${row.totalValue.toString()} ₽`, label: "Сумма", className: "col-start-2 row-start-2 lg:row-start-1 lg:col-start-6" },
+      { name: "action", data: <OrdersListActionButton orderId={row.id} />, label: "Кнопки", className: "col-start-3 row-start-2 lg:row-start-1 lg:col-start-7" },
     ]);
   }
 
@@ -57,7 +58,7 @@ export const ClosedOrdersList = () => {
             >
               Список выполненных заказов
             </h3>
-            <Table tableData={tableData} className={"w-full max-w-full"} />
+            <Table tableData={tableData} className={"w-full max-w-full grid-cols-3 lg:grid-cols-7 [grid-template-areas:'id_createdAt_action''clientType_vehicle_totalValue''workList_workList_workList'] lg:grid-rows-1 lg:[grid-template-areas:'id_createdAt_clientType_vehicle_workList_totalValue_action']"} />
             <div
               className={
                 "mt-5 lg:mt-10 text-base/5 flex w-fit items-baseline rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige ml-auto"
