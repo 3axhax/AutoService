@@ -9,3 +9,4 @@ export {
   closeActiveShift,
   getShiftsList,
 } from "./extraReducers";
+export type { ShiftItem } from "./types";

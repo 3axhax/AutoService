@@ -7,6 +7,7 @@ export interface OrderItem {
   id: number;
   totalValue: number;
   createdAt: string;
+  shiftId?: number;
   optionValues: {
     parameterId: number;
     value: string;

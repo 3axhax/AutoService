@@ -52,7 +52,7 @@ export const Table = ({ tableData, className }: TableProps) => {
               </tr>
             ))
           ) : (
-            <tr>
+            <tr className={"text-center"}>
               <td colSpan={tableData.header.length}>Нет записей</td>
             </tr>
           )}

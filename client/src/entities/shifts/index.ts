@@ -8,3 +8,4 @@ export {
   clearShiftsList,
   getShiftsList,
 } from "./model";
+export type { ShiftItem } from "./model";

@@ -82,3 +82,21 @@ export const deleteOrder = createAsyncThunk(
     }
   },
 );
+
+export const getOrderByShiftId = createAsyncThunk(
+  "orders/getByShiftId",
+  async (shiftId: number, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.order.pending) {
+      dispatch(setPending(true));
+      try {
+        const response = await Request.get("/orders/getByShiftId", { shiftId });
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);

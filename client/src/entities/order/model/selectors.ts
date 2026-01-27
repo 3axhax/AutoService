@@ -29,3 +29,15 @@ export const workerActiveShiftClosedOrdersTotalValueSelect = createSelector(
   (ordersList) =>
     ordersList.reduce((total, order) => total + order.totalValue, 0),
 );
+
+export const ordersListByShiftIdSelect = createSelector(
+  [orderListSelect, (_: RootState, shiftId: number) => shiftId],
+  (ordersList, shiftId) =>
+    ordersList
+      ? [...Object.values(ordersList)]
+          .filter((order) => order.shiftId === shiftId)
+          .sort((a, b) =>
+            Date.parse(a.createdAt) > Date.parse(b.createdAt) ? -1 : 1,
+          )
+      : [],
+);

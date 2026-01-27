@@ -1,4 +1,4 @@
-import { OrderItem } from "@entities/order";
+import { OrderItem } from "./model";
 
 export const formatVehicleName = (order: OrderItem) => {
   const car_number = order.optionValues.find(

@@ -2,7 +2,11 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { WritableDraft } from "immer";
 import { OrderItem, OrderState, OrderValue } from "./types";
 import { ErrorActionType } from "@shared/types";
-import { addOrder, getOrdersFromActiveShift } from "@entities/order";
+import {
+  addOrder,
+  getOrderByShiftId,
+  getOrdersFromActiveShift,
+} from "@entities/order";
 
 const initialState: OrderState = {
   pending: false,
@@ -100,10 +104,19 @@ export const orderSlice = createSlice({
         ) => {
           state.pending = false;
           if (action.payload) {
-            state.ordersList = action.payload.reduce(
-              (acc, order) => ({ ...acc, [order.id]: order }),
-              {},
-            );
+            state.ordersList = mapOrdersResponceList(action.payload);
+          }
+        },
+      )
+      .addCase(
+        getOrderByShiftId.fulfilled,
+        (
+          state: WritableDraft<OrderState>,
+          action: PayloadAction<OrderItem[]>,
+        ) => {
+          state.pending = false;
+          if (action.payload) {
+            state.ordersList = mapOrdersResponceList(action.payload);
           }
         },
       )
@@ -158,4 +171,8 @@ export const formatOrderValueFromOrderItemList = (listItem: OrderItem) => {
     }
   });
   return values;
+};
+
+const mapOrdersResponceList = (orderList: OrderItem[]) => {
+  return orderList.reduce((acc, order) => ({ ...acc, [order.id]: order }), {});
 };

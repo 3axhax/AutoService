@@ -174,4 +174,44 @@ export class OrdersService {
     }
     return parametersOptions;
   }
+
+  async getByShiftId({
+    user,
+    param,
+  }: {
+    user: User | undefined;
+    param: { shiftId: number };
+  }): Promise<Orders[] | null> {
+    if (user) {
+      const shift =
+        user.roles.length === 1 && user.roles[0].value === 'WORKER'
+          ? await this.shiftsService.getShiftByUserAndId({
+              user,
+              shiftId: param.shiftId,
+            })
+          : null;
+      if (shift) {
+        return await this.ordersRepository.findAll({
+          where: { shiftId: shift.id },
+          attributes: ['id', 'shiftId', 'totalValue', 'createdAt'],
+          include: [
+            {
+              model: OrdersOptionValues,
+              include: [
+                {
+                  model: OrderParameters,
+                  attributes: ['name', 'type'],
+                },
+                {
+                  model: OrderParametersOptions,
+                  attributes: ['translationRu'],
+                },
+              ],
+            },
+          ],
+        });
+      }
+    }
+    return null;
+  }
 }

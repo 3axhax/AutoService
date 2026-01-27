@@ -1,43 +1,26 @@
 import { useAppSelector } from "@shared/store/hooks.ts";
 import { SelectShiftListSortByCreated } from "@entities/shifts";
-import { Table, TableData, TableDataRow } from "@shared/ui";
+import { ShiftsListItem } from "./ShiftsListItem.tsx";
+import { useState } from "react";
 
 export const ShiftsList = () => {
   const shiftsList = useAppSelector(SelectShiftListSortByCreated);
-  const tableData: TableData = {
-    header: [
-      { name: "id", label: "ID" },
-      { name: "createdAt", label: "Начало смены" },
-      { name: "closedAt", label: "Окончание смены" },
-      { name: "totalValue", label: "Сумма" },
-    ],
-    rows: [] as TableDataRow[][],
+  const [openedItem, setOpenedItem] = useState<number>(0);
+
+  const handlerOnclick = (id: number) => {
+    setOpenedItem(id === openedItem ? 0 : id);
   };
 
-  if (shiftsList?.length > 0) {
-    tableData.rows = shiftsList.map((row) => {
-      const totalValue = +row.totalOrdersSum + +row.totalAdditionalWorksSum;
-      return [
-        { name: "id", data: row.id.toString() },
-        {
-          name: "createdAt",
-          data: new Date(row.createdAt).toLocaleString("ru-RU"),
-        },
-        {
-          name: "closedAt",
-          data: row.closedAt ? (
-            new Date(row.createdAt).toLocaleString("ru-RU")
-          ) : (
-            <span className={"text-green-600"}>Смена не закрыта</span>
-          ),
-        },
-        {
-          name: "totalValue",
-          data: `${totalValue > 0 ? totalValue.toString() : "0"} ₽`,
-        },
-      ];
-    });
-  }
-
-  return <Table tableData={tableData} className={"w-full max-w-full"} />;
+  return (
+    <ul className={"text-start flex flex-col gap-2"}>
+      {shiftsList.map((item) => (
+        <ShiftsListItem
+          key={item.id}
+          item={item}
+          onClick={() => handlerOnclick(item.id)}
+          activeItem={openedItem === item.id}
+        />
+      ))}
+    </ul>
+  );
 };

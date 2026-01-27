@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { Roles } from '../auth/roles-auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
@@ -47,5 +47,15 @@ export class OrdersController {
     @Body() param: { id: number },
   ): Promise<boolean> {
     return this.orderService.delete({ user, id: param.id });
+  }
+
+  @Get('getByShiftId')
+  @Roles('ADMIN', 'WORKER')
+  @UseGuards(RolesGuard)
+  byShiftId(
+    @User() user: UserModel | undefined,
+    @Query() param: { shiftId: number },
+  ): Promise<Orders[] | null> {
+    return this.orderService.getByShiftId({ user, param });
   }
 }

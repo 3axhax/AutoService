@@ -1,15 +1,13 @@
 import { useAppSelector } from "@shared/store/hooks.ts";
 import { Table, TableData, TableDataRow } from "@shared/ui";
 import {
+  formatClientType,
+  formatVehicleName,
+  formatWorkList,
   workerActiveShiftClosedOrdersListSelect,
   workerActiveShiftClosedOrdersTotalValueSelect,
 } from "@entities/order";
 import { OrdersListActionButton } from "./OrdersListActionButton";
-import {
-  formatClientType,
-  formatVehicleName,
-  formatWorkList,
-} from "./ClosedOrdersList.utils";
 
 export const ClosedOrdersList = () => {
   const ordersList = useAppSelector(workerActiveShiftClosedOrdersListSelect);

@@ -11,6 +11,7 @@ export {
   getOrdersFromActiveShift,
   editOrder,
   deleteOrder,
+  getOrderByShiftId,
 } from "./extraReducers";
 
 export {
@@ -18,6 +19,7 @@ export {
   activeOrdersListSelect,
   workerActiveShiftClosedOrdersListSelect,
   workerActiveShiftClosedOrdersTotalValueSelect,
+  ordersListByShiftIdSelect,
 } from "./selectors.ts";
 
 export type { OrderItem } from "./types";

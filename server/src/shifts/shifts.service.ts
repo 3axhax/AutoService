@@ -70,7 +70,11 @@ export class ShiftsService {
     return null;
   }
 
-  async createActiveShiftByUser({ user }: { user: User | undefined }) {
+  async createActiveShiftByUser({
+    user,
+  }: {
+    user: User | undefined;
+  }): Promise<Shifts | null> {
     if (user) {
       await this.getOrCreateActiveShiftByUserCompany({
         userId: user.id,
@@ -119,6 +123,25 @@ export class ShiftsService {
           where: { companyId: user.companyId },
         });
       }
+    }
+    return null;
+  }
+
+  async getShiftByUserAndId({
+    user,
+    shiftId,
+  }: {
+    user: User | undefined;
+    shiftId: number;
+  }): Promise<Shifts | null> {
+    if (user) {
+      return await this.shiftsRepository.findOne({
+        where: {
+          companyId: user.companyId,
+          userId: user.id,
+          id: shiftId,
+        },
+      });
     }
     return null;
   }
