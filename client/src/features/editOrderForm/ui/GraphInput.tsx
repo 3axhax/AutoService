@@ -1,5 +1,5 @@
 import { SignatureInput } from "./SignatureInput";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Modal } from "@shared/ui/Modal.tsx";
 
 interface GraphInputProps {
@@ -18,12 +18,6 @@ export const GraphInput = ({
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const [signatureImg, setSignatureImg] = useState<string>("");
-
-  useEffect(() => {
-    if (!modalOpen && signatureImg) {
-      onChange(signatureImg);
-    }
-  }, [modalOpen, onChange, signatureImg]);
 
   const modalBody = useMemo(
     () => (
@@ -58,6 +52,14 @@ export const GraphInput = ({
           title={label}
           body={modalBody}
           className={"test"}
+          buttons={[
+            {
+              label: "Применить",
+              onClick: () => {
+                onChange(signatureImg);
+              },
+            },
+          ]}
         />
       ) : null}
     </>
