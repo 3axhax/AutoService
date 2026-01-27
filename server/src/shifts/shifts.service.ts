@@ -98,6 +98,12 @@ export class ShiftsService {
           ),
           'totalOrdersSum',
         ],
+        [
+          literal(
+            `(SELECT COALESCE(SUM("totalValue"), 0) FROM "additionalWorks" WHERE "shiftId" = "Shifts"."id")`,
+          ),
+          'totalAdditionalWorksSum',
+        ],
       ];
       if (user.roles.length === 1 && user.roles[0].value === 'WORKER') {
         return await this.shiftsRepository.findAll({

@@ -15,25 +15,28 @@ export const ShiftsList = () => {
   };
 
   if (shiftsList?.length > 0) {
-    tableData.rows = shiftsList.map((row) => [
-      { name: "id", data: row.id.toString() },
-      {
-        name: "createdAt",
-        data: new Date(row.createdAt).toLocaleString("ru-RU"),
-      },
-      {
-        name: "closedAt",
-        data: row.closedAt ? (
-          new Date(row.createdAt).toLocaleString("ru-RU")
-        ) : (
-          <span className={"text-green-600"}>Смена не закрыта</span>
-        ),
-      },
-      {
-        name: "totalValue",
-        data: `${row.totalOrdersSum ? row.totalOrdersSum.toString() : "0"} ₽`,
-      },
-    ]);
+    tableData.rows = shiftsList.map((row) => {
+      const totalValue = +row.totalOrdersSum + +row.totalAdditionalWorksSum;
+      return [
+        { name: "id", data: row.id.toString() },
+        {
+          name: "createdAt",
+          data: new Date(row.createdAt).toLocaleString("ru-RU"),
+        },
+        {
+          name: "closedAt",
+          data: row.closedAt ? (
+            new Date(row.createdAt).toLocaleString("ru-RU")
+          ) : (
+            <span className={"text-green-600"}>Смена не закрыта</span>
+          ),
+        },
+        {
+          name: "totalValue",
+          data: `${totalValue > 0 ? totalValue.toString() : "0"} ₽`,
+        },
+      ];
+    });
   }
 
   return <Table tableData={tableData} className={"w-full max-w-full"} />;

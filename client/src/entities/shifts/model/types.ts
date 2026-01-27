@@ -4,6 +4,7 @@ export interface ShiftItem {
   createdAt: string;
   closedAt: string | null;
   totalOrdersSum: number;
+  totalAdditionalWorksSum: number;
 }
 
 export interface ShiftsState {
