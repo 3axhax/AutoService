@@ -104,7 +104,7 @@ export const orderSlice = createSlice({
         ) => {
           state.pending = false;
           if (action.payload) {
-            state.ordersList = mapOrdersResponceList(action.payload);
+            state.ordersList = mapOrdersResponseList(action.payload);
           }
         },
       )
@@ -116,7 +116,7 @@ export const orderSlice = createSlice({
         ) => {
           state.pending = false;
           if (action.payload) {
-            state.ordersList = mapOrdersResponceList(action.payload);
+            state.ordersList = mapOrdersResponseList(action.payload);
           }
         },
       )
@@ -173,6 +173,5 @@ export const formatOrderValueFromOrderItemList = (listItem: OrderItem) => {
   return values;
 };
 
-const mapOrdersResponceList = (orderList: OrderItem[]) => {
-  return orderList.reduce((acc, order) => ({ ...acc, [order.id]: order }), {});
-};
+const mapOrdersResponseList = (list: OrderItem[]) =>
+  list.reduce((acc, order) => ({ ...acc, [order.id]: order }), {});

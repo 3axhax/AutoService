@@ -53,7 +53,10 @@ export const shiftsSlice = createSlice({
         ) => {
           state.pending = false;
           if (action.payload) {
-            state.shiftsList = action.payload;
+            state.shiftsList = {
+              ...state.shiftsList,
+              ...mapShiftsResponseList(action.payload),
+            };
           }
         },
       )
@@ -89,3 +92,6 @@ export const shiftsSlice = createSlice({
 export const { resetError, setPending, clearShiftsList } = shiftsSlice.actions;
 
 export default shiftsSlice.reducer;
+
+const mapShiftsResponseList = (list: ShiftItem[]) =>
+  list.reduce((acc, shift) => ({ ...acc, [shift.id]: shift }), {});

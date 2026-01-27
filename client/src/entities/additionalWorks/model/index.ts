@@ -11,6 +11,7 @@ export {
   addAdditionalWork,
   deleteAdditionalWork,
   editAdditionalWork,
+  getAdditionalWorksByShiftId,
 } from "./extraReducers";
 
 export {

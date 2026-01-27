@@ -50,7 +50,7 @@ export const ShiftListItemDetailOrders = ({ id }: { id: number }) => {
     <div>
       <h3
         className={
-          "text-xl mb-1 lg:mb-2 text-gray-700 text-left lg:text-center"
+          "text-xl mb-1 lg:mb-1 text-gray-700 text-left lg:text-center"
         }
       >
         Список заказов

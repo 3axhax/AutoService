@@ -31,7 +31,7 @@ export const ShiftsListItem = ({
         <ChevronDownIcon
           className={`inline-flex h-4 w-4 mr-2 text-gray-600 transition-transform group-hover:text-green-800 duration-200 ${activeItem ? "rotate-180" : ""}`}
         />
-        Начало - {createdAt}, Окончание - {closedAt}, Сумма - {totalValue}
+        Начало: {createdAt}, Окончание: {closedAt}, Сумма: {totalValue}
       </div>
       {activeItem && <ShiftListItemDetail id={item.id} />}
     </li>

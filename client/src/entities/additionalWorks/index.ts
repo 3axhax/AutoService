@@ -13,4 +13,5 @@ export {
   selectAdditionalWorkValue,
   deleteAdditionalWork,
   editAdditionalWork,
+  getAdditionalWorksByShiftId,
 } from "./model";

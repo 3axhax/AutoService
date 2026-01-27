@@ -8,6 +8,7 @@ import {
 import { ErrorActionType } from "@shared/types";
 import {
   addAdditionalWork,
+  getAdditionalWorksByShiftId,
   getAdditionalWorksFromActiveShift,
 } from "@entities/additionalWorks";
 
@@ -112,12 +113,22 @@ export const additionalWorksSlice = createSlice({
         ) => {
           state.pending = false;
           if (action.payload) {
-            state.additionalWorksList = action.payload.reduce(
-              (acc, additionalWork) => ({
-                ...acc,
-                [additionalWork.id]: additionalWork,
-              }),
-              {},
+            state.additionalWorksList = mapAdditionalWorksResponseList(
+              action.payload,
+            );
+          }
+        },
+      )
+      .addCase(
+        getAdditionalWorksByShiftId.fulfilled,
+        (
+          state: WritableDraft<AdditionalWorksState>,
+          action: PayloadAction<AdditionalWorkItem[]>,
+        ) => {
+          state.pending = false;
+          if (action.payload) {
+            state.additionalWorksList = mapAdditionalWorksResponseList(
+              action.payload,
             );
           }
         },
@@ -154,3 +165,9 @@ export const {
 } = additionalWorksSlice.actions;
 
 export default additionalWorksSlice.reducer;
+
+const mapAdditionalWorksResponseList = (list: AdditionalWorkItem[]) =>
+  list.reduce(
+    (acc, additionalWork) => ({ ...acc, [additionalWork.id]: additionalWork }),
+    {},
+  );

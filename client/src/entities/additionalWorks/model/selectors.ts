@@ -58,3 +58,15 @@ export const workerActiveShiftClosedAdditionalWorksTotalValueSelect =
         0,
       ),
   );
+
+export const additionalWorksListByShiftIdSelect = createSelector(
+  [additionalWorkListSelect, (_: RootState, shiftId: number) => shiftId],
+  (additionalWorksList, shiftId) =>
+    additionalWorksList
+      ? [...Object.values(additionalWorksList)]
+          .filter((additionalWork) => additionalWork.shiftId === shiftId)
+          .sort((a, b) =>
+            Date.parse(a.createdAt) > Date.parse(b.createdAt) ? -1 : 1,
+          )
+      : [],
+);

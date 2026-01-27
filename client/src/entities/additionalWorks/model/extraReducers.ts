@@ -96,3 +96,23 @@ export const deleteAdditionalWork = createAsyncThunk(
     }
   },
 );
+
+export const getAdditionalWorksByShiftId = createAsyncThunk(
+  "additionalWorks/getByShiftId",
+  async (shiftId: number, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.additionalWorks.pending) {
+      dispatch(setPending(true));
+      try {
+        const response = await Request.get("/additionalWorks/getByShiftId", {
+          shiftId,
+        });
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);
