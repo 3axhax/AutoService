@@ -36,7 +36,8 @@ export const ClosedOrdersList = () => {
         name: "id",
         data: row.id.toString(),
         label: "Заказ номер:",
-        className: "inline-flex font-medium lg:flex lg:justify-center",
+        className:
+          "bg-stone-200/50 lg:bg-transparent inline-flex font-medium lg:flex lg:justify-center",
       },
       {
         name: "createdAt",
@@ -76,7 +77,8 @@ export const ClosedOrdersList = () => {
       {
         name: "action",
         data: <OrdersListActionButton orderId={row.id} />,
-        className: "col-start-2 row-start-1 lg:col-start-7 inline-flex",
+        className:
+          "bg-stone-200/50 lg:bg-transparent col-start-2 row-start-1 lg:col-start-7 inline-flex",
       },
     ]);
   }

@@ -37,14 +37,20 @@ export const Table = ({ tableData, className }: TableProps) => {
         tableData.rows.map((row: TableDataRow[], index: number) => (
           <div
             key={index}
-            className={`grid mb-4 lg:mb-0 rounded-lg lg:rounded-none border-1 lg:border-t-0 border-blue-900 bg-white  hover:bg-blue-light odd:bg-stone-200/25 last:rounded-b-lg ${className ? ` ${className}` : ""}`}
+            className={`grid mb-4 lg:mb-0 rounded-lg lg:rounded-none border-1 lg:border-t-0 border-blue-900 bg-white  hover:bg-blue-light lg:odd:bg-stone-200/50 last:rounded-b-lg ${className ? ` ${className}` : ""}`}
           >
             {row.map((cell: TableDataRow) => (
               <div
                 key={cell.name}
-                className={`px-3 py-1 lg:py-2 text-lg lg:text-base text-gray-900 lg:border-l-1 first:border-l-0 border-blue-900 [grid-area:${cell.name}] ${cell.className ? ` ${cell.className}` : ``}`}
+                className={`px-3 py-1 lg:py-2 text-lg lg:text-base text-gray-900 lg:border-r-1 last:border-r-0 border-blue-900 [grid-area:${cell.name}] ${cell.className ? ` ${cell.className}` : ``}`}
               >
-                  {cell.label ? <span className={`inline-flex lg:hidden w-2/5 text-base/7`}>{cell.label}</span> : ''}
+                {cell.label ? (
+                  <span className={`inline-flex lg:hidden w-2/5 text-base/7`}>
+                    {cell.label}
+                  </span>
+                ) : (
+                  ""
+                )}
                 {cell.data}
               </div>
             ))}
