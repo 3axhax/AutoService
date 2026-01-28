@@ -60,12 +60,12 @@
 
   html {
     @apply w-full h-full;
+    scrollbar-gutter: stable;
   }
+
   body {
     font-family: "Roboto", "Arial Black", sans-serif;
     @apply m-0 flex items-stretch justify-center w-full min-w-[320px] min-h-screen;
-    /*    background: linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size), linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size);
-    -webkit-mask: linear-gradient(-20deg, transparent 50%, white);*/
   }
 
   #root {
@@ -406,6 +406,10 @@
 
   .colored {
     @apply even:not-empty:bg-stone-200/25 border-t-1 border-stone-200 py-5 lg:py-10 last:pb-10;
+  }
+
+  .scrollbar-stable {
+    scrollbar-gutter: stable;
   }
 }
 
