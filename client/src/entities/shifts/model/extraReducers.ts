@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@shared/store";
 import Request from "@shared/transport/RestAPI.ts";
 import { HandlerAxiosError } from "@shared/transport/RequestHandlersError.ts";
-import { setPending } from "./slice";
+import { clearShiftsList, setPending } from "./slice";
 
 export const getActiveShift = createAsyncThunk(
   "shifts/getActive",
@@ -65,7 +65,12 @@ export const getShiftsList = createAsyncThunk(
     if (!state.shifts.pending) {
       dispatch(setPending(true));
       try {
-        const response = await Request.get("/shifts/getList");
+        const sendData = {
+          currentPage: state.shifts.pagination.currentPage,
+          recordPerPage: state.shifts.pagination.recordPerPage,
+        };
+        const response = await Request.get("/shifts/getList", sendData);
+        dispatch(clearShiftsList());
         return response.data;
       } catch (e) {
         HandlerAxiosError(e);

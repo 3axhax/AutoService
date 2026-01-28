@@ -14,8 +14,8 @@ const initialState: ShiftsState = {
   shiftsList: {},
   pagination: {
     currentPage: 1,
-    recordPerPage: 20,
-    totalRecord: 40,
+    recordPerPage: 5,
+    totalRecord: 0,
   },
 };
 
@@ -34,6 +34,12 @@ export const shiftsSlice = createSlice({
     },
     clearShiftsList: (state: WritableDraft<ShiftsState>) => {
       state.shiftsList = {};
+    },
+    setCurrentPage: (
+      state: WritableDraft<ShiftsState>,
+      action: PayloadAction<number>,
+    ) => {
+      state.pagination.currentPage = action.payload > 0 ? action.payload : 1;
     },
   },
   extraReducers: (builder) => {
@@ -54,14 +60,21 @@ export const shiftsSlice = createSlice({
         getShiftsList.fulfilled,
         (
           state: WritableDraft<ShiftsState>,
-          action: PayloadAction<ShiftItem[]>,
+          action: PayloadAction<{
+            totalRecord: number;
+            currentPage: number;
+            rows: ShiftItem[] | null;
+          }>,
         ) => {
           state.pending = false;
-          if (action.payload) {
-            state.shiftsList = {
-              ...state.shiftsList,
-              ...mapShiftsResponseList(action.payload),
-            };
+          if (
+            action.payload &&
+            action.payload.currentPage === state.pagination.currentPage
+          ) {
+            state.pagination.totalRecord = action.payload.totalRecord;
+            state.shiftsList = action.payload.rows
+              ? mapShiftsResponseList(action.payload.rows)
+              : {};
           }
         },
       )
@@ -94,7 +107,8 @@ export const shiftsSlice = createSlice({
   },
 });
 
-export const { resetError, setPending, clearShiftsList } = shiftsSlice.actions;
+export const { resetError, setPending, clearShiftsList, setCurrentPage } =
+  shiftsSlice.actions;
 
 export default shiftsSlice.reducer;
 

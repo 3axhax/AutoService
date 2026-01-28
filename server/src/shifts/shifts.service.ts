@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Shifts } from './shifts.model';
 import { User } from '../users/users.model';
-import { FindAttributeOptions, literal } from 'sequelize';
+import { FindAttributeOptions, Order, literal } from 'sequelize';
+import { GetShiftListDto } from './dto/shifts.dto';
 
 @Injectable()
 export class ShiftsService {
@@ -85,46 +86,69 @@ export class ShiftsService {
     return null;
   }
 
-  async getList({ user }: { user: User | undefined }) {
+  async getList({
+    user,
+    param,
+  }: {
+    user: User | undefined;
+    param: GetShiftListDto;
+  }): Promise<{
+    totalRecord: number;
+    currentPage: number;
+    rows: Shifts[] | null;
+  }> {
     if (user) {
       const sequelize = this.shiftsRepository.sequelize;
       if (!sequelize) {
         throw new Error('Sequelize instance not found');
       }
-      const commonAttributes: FindAttributeOptions = [
-        'id',
-        'active',
-        'createdAt',
-        'closedAt',
-        [
-          literal(
-            `(SELECT COALESCE(SUM("totalValue"), 0) FROM "orders" WHERE "shiftId" = "Shifts"."id")`,
-          ),
-          'totalOrdersSum',
-        ],
-        [
-          literal(
-            `(SELECT COALESCE(SUM("totalValue"), 0) FROM "additionalWorks" WHERE "shiftId" = "Shifts"."id")`,
-          ),
-          'totalAdditionalWorksSum',
-        ],
-      ];
-      if (user.roles.length === 1 && user.roles[0].value === 'WORKER') {
-        return await this.shiftsRepository.findAll({
-          where: { userId: user.id, companyId: user.companyId },
-          attributes: commonAttributes,
+      const commonProps = {
+        offset: (param.currentPage - 1) * param.recordPerPage,
+        limit: param.recordPerPage,
+        order: [['createdAt', 'DESC']] as Order,
+        attributes: [
+          'id',
+          'active',
+          'createdAt',
+          'closedAt',
+          [
+            literal(
+              `(SELECT COALESCE(SUM("totalValue"), 0) FROM "orders" WHERE "shiftId" = "Shifts"."id")`,
+            ),
+            'totalOrdersSum',
+          ],
+          [
+            literal(
+              `(SELECT COALESCE(SUM("totalValue"), 0) FROM "additionalWorks" WHERE "shiftId" = "Shifts"."id")`,
+            ),
+            'totalAdditionalWorksSum',
+          ],
+        ] as FindAttributeOptions,
+      };
+      const whereProps =
+        user.roles.length === 1 && user.roles[0].value === 'WORKER'
+          ? { userId: user.id, companyId: user.companyId }
+          : user.roles.length > 0 &&
+              user.roles.map((role) => role.value).includes('ADMIN')
+            ? { companyId: user.companyId }
+            : null;
+      if (whereProps) {
+        const { count, rows } = await this.shiftsRepository.findAndCountAll({
+          ...commonProps,
+          where: whereProps,
         });
-      }
-      if (
-        user.roles.length > 0 &&
-        user.roles.map((role) => role.value).includes('ADMIN')
-      ) {
-        return await this.shiftsRepository.findAll({
-          where: { companyId: user.companyId },
-        });
+        return {
+          totalRecord: count,
+          currentPage: param.currentPage,
+          rows: rows,
+        };
       }
     }
-    return null;
+    return {
+      totalRecord: 0,
+      currentPage: param.currentPage,
+      rows: null,
+    };
   }
 
   async getShiftByUserAndId({

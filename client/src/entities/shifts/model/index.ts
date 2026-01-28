@@ -1,7 +1,9 @@
-export { shiftsSlice, clearShiftsList } from "./slice";
+export { shiftsSlice, clearShiftsList, setCurrentPage } from "./slice";
 export {
   SelectWorkerActiveShift,
   SelectShiftListSortByCreated,
+  SelectShiftPaginationCurrentPage,
+  SelectShiftPaginationTotalPage,
 } from "./selectors";
 export {
   getActiveShift,
