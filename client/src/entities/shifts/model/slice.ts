@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { WritableDraft } from "immer";
-import { ShiftItem, ShiftsState } from "./types.ts";
+import { ShiftItem, ShiftsState, ShiftsFilters } from "./types.ts";
 import { ErrorActionType } from "@shared/types";
 import {
   createActiveShift,
@@ -16,6 +16,10 @@ const initialState: ShiftsState = {
     currentPage: 1,
     recordPerPage: 5,
     totalRecord: 0,
+  },
+  filters: {
+    closedAtStart: null,
+    closedAtEnd: null,
   },
 };
 
@@ -40,6 +44,18 @@ export const shiftsSlice = createSlice({
       action: PayloadAction<number>,
     ) => {
       state.pagination.currentPage = action.payload > 0 ? action.payload : 1;
+    },
+    setShiftsFilters: (
+      state: WritableDraft<ShiftsState>,
+      action: PayloadAction<ShiftsFilters>,
+    ) => {
+      if (action.payload) {
+        state.pagination.currentPage = 1;
+        state.filters = {
+          ...state.filters,
+          ...action.payload,
+        };
+      }
     },
   },
   extraReducers: (builder) => {
@@ -107,8 +123,13 @@ export const shiftsSlice = createSlice({
   },
 });
 
-export const { resetError, setPending, clearShiftsList, setCurrentPage } =
-  shiftsSlice.actions;
+export const {
+  resetError,
+  setPending,
+  clearShiftsList,
+  setCurrentPage,
+  setShiftsFilters,
+} = shiftsSlice.actions;
 
 export default shiftsSlice.reducer;
 

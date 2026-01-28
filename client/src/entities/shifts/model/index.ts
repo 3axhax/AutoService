@@ -1,4 +1,9 @@
-export { shiftsSlice, clearShiftsList, setCurrentPage } from "./slice";
+export {
+  shiftsSlice,
+  clearShiftsList,
+  setCurrentPage,
+  setShiftsFilters,
+} from "./slice";
 export {
   SelectWorkerActiveShift,
   SelectShiftListSortByCreated,
