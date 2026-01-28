@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Shifts } from './shifts.model';
 import { User } from '../users/users.model';
-import { FindAttributeOptions, Order, literal } from 'sequelize';
+import {
+  FindAttributeOptions,
+  Order,
+  literal,
+  Op,
+  WhereOptions,
+} from 'sequelize';
 import { GetShiftListDto } from './dto/shifts.dto';
 
 @Injectable()
@@ -102,9 +108,11 @@ export class ShiftsService {
       if (!sequelize) {
         throw new Error('Sequelize instance not found');
       }
+      const limit = param.recordPerPage ?? 20;
+      const offset = param.currentPage ? (param.currentPage - 1) * limit : 0;
       const commonProps = {
-        offset: (param.currentPage - 1) * param.recordPerPage,
-        limit: param.recordPerPage,
+        offset,
+        limit,
         order: [['createdAt', 'DESC']] as Order,
         attributes: [
           'id',
@@ -132,10 +140,11 @@ export class ShiftsService {
               user.roles.map((role) => role.value).includes('ADMIN')
             ? { companyId: user.companyId }
             : null;
+
       if (whereProps) {
         const { count, rows } = await this.shiftsRepository.findAndCountAll({
           ...commonProps,
-          where: whereProps,
+          where: { ...whereProps, ...this._formatIntervalWhereProps(param) },
         });
         return {
           totalRecord: count,
@@ -168,5 +177,38 @@ export class ShiftsService {
       });
     }
     return null;
+  }
+
+  _formatIntervalWhereProps(param: GetShiftListDto): WhereOptions<Shifts> {
+    if (!param.closedAtStart && !param.closedAtEnd) {
+      return {};
+    }
+
+    const now = new Date();
+
+    const andCondition: WhereOptions<Shifts>[] = [];
+
+    if (param.closedAtStart) {
+      andCondition.push({ closedAt: { [Op.gte]: param.closedAtStart } });
+    }
+
+    if (param.closedAtEnd) {
+      andCondition.push({ closedAt: { [Op.lte]: param.closedAtEnd } });
+    }
+
+    const orCondition: WhereOptions<Shifts>[] = [{ [Op.and]: andCondition }];
+
+    if (param.closedAtStart && param.closedAtEnd) {
+      if (
+        now.getTime() < param.closedAtEnd.getTime() &&
+        now.getTime() > param.closedAtStart.getTime()
+      ) {
+        orCondition.push({ closedAt: null });
+      }
+    }
+
+    return {
+      [Op.or]: orCondition,
+    };
   }
 }

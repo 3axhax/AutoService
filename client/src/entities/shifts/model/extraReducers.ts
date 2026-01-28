@@ -65,10 +65,21 @@ export const getShiftsList = createAsyncThunk(
     if (!state.shifts.pending) {
       dispatch(setPending(true));
       try {
-        const sendData = {
+        const sendData: {
+          currentPage: number;
+          recordPerPage: number;
+          closedAtStart?: string;
+          closedAtEnd?: string;
+        } = {
           currentPage: state.shifts.pagination.currentPage,
           recordPerPage: state.shifts.pagination.recordPerPage,
         };
+        if (state.shifts.filters.closedAtStart) {
+          sendData.closedAtStart = state.shifts.filters.closedAtStart;
+        }
+        if (state.shifts.filters.closedAtEnd) {
+          sendData.closedAtEnd = state.shifts.filters.closedAtEnd;
+        }
         const response = await Request.get("/shifts/getList", sendData);
         dispatch(clearShiftsList());
         return response.data;
