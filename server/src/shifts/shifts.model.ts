@@ -15,7 +15,7 @@ export interface ShiftsCreationAttrs {
   companyId: number;
   userId: number;
   active: boolean;
-  closedAt?: Date | string;
+  closedAt?: Date | string | null;
 }
 @Table({
   tableName: 'shifts',
@@ -54,7 +54,7 @@ export class Shifts extends Model<Shifts, ShiftsCreationAttrs> {
     allowNull: true,
     defaultValue: null,
   })
-  declare closedAt: Date | string;
+  declare closedAt: Date | string | null;
 
   @HasMany(() => Orders, { foreignKey: 'shiftId' })
   declare orders: Orders[];

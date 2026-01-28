@@ -9,6 +9,7 @@ export {
   closeActiveShift,
   clearShiftsList,
   setCurrentPage,
+  setShiftsFilters,
   getShiftsList,
 } from "./model";
 export type { ShiftItem } from "./model";

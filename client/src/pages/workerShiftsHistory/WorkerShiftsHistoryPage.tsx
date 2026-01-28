@@ -1,8 +1,9 @@
-import { Filters, ShiftsList } from "@widgets/workerShiftsHistory";
+import { ShiftsList } from "@widgets/workerShiftsHistory";
 import { useAppDispatch } from "@shared/store/hooks.ts";
 import { useEffect } from "react";
 import { getShiftsList } from "@entities/shifts";
-import { WorkerShiftsHistoryPagination } from "@features/workerShiftsHistoryPagination";
+import { WorkerShiftsHistoryPagination } from "@features/workerShiftsHistory/workerShiftsHistoryPagination";
+import { WorkerShiftsHistoryFilters } from "@features/workerShiftsHistory/workerShiftsHistoryFilters";
 
 export const WorkerShiftsHistoryPage = () => {
   const dispatch = useAppDispatch();
@@ -20,7 +21,7 @@ export const WorkerShiftsHistoryPage = () => {
       >
         Смены
       </h3>
-      <Filters />
+      <WorkerShiftsHistoryFilters />
       <ShiftsList />
       <WorkerShiftsHistoryPagination />
     </div>
