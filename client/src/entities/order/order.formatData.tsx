@@ -41,7 +41,7 @@ export const formatClientType = (order: OrderItem) => {
     (value) => value.parameter.name === "legal_list",
   );
   return (
-    <ul>
+    <ul className={"flex flex-col items-start lg:items-center"}>
       {client_type && <li>{client_type?.option?.translationRu}</li>}
       {legal && <li>{legal?.option?.translationRu}</li>}
     </ul>
@@ -56,7 +56,7 @@ export const formatWorkList = (order: OrderItem) => {
     (value) => value.parameter.name === "materials",
   );
   const typeWorkList = (
-    <ul className={"text-end text-sm flex flex-col gap-1"}>
+    <ul className={"text-left lg:text-center"}>
       {type_work.map((item, index) => (
         <li key={index}>
           {item.option?.translationRu ?? ""} x {item.count}
@@ -65,7 +65,7 @@ export const formatWorkList = (order: OrderItem) => {
     </ul>
   );
   const materialsList = (
-    <ul className={"text-end text-sm flex flex-col gap-1"}>
+    <ul className={"text-left lg:text-center"}>
       {materials.map((item, index) => (
         <li key={index}>
           {item.option?.translationRu ?? ""} x {item.count}
@@ -74,12 +74,12 @@ export const formatWorkList = (order: OrderItem) => {
     </ul>
   );
   return (
-    <>
+    <div>
       {typeWorkList}
       {type_work.length > 0 && materials.length > 0 ? (
-        <hr className={"text-blue-900 ml-0 md:ml-10"} />
+        <hr className={"text-gray-700/50 ml-0 lg:mx-auto"} />
       ) : null}
       {materialsList}
-    </>
+    </div>
   );
 };

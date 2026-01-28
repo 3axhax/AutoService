@@ -3,6 +3,7 @@ import { JSX } from "react";
 export type TableDataRow = {
   name: string;
   data: string | JSX.Element;
+  label?: string | JSX.Element;
   className?: string;
 };
 
@@ -19,45 +20,45 @@ interface TableProps {
 export const Table = ({ tableData, className }: TableProps) => {
   return (
     <div className="w-full overflow-x-auto">
-      <table
-        className={`border-collapse rounded-lg shadow-sm border border-blue-900${className ? ` ${className}` : ""}`}
+      <div
+        className={`hidden lg:grid rounded-t-lg shadow-sm bg-blue-dark text-white border border-blue-900${className ? ` ${className}` : ""}`}
       >
-        <thead>
-          <tr className="bg-blue-dark text-white">
-            {tableData.header.map((th) => (
-              <th
-                key={th.name}
-                className={`border-r border-blue-200 last:border-0 px-4 py-3 text-center text-sm font-medium${th.className ? ` ${th.className}` : ``}`}
+        {tableData.header.map((th) => (
+          <div
+            key={th.name}
+            className={`border-r border-blue-200 last:border-0 px-4 py-3 text-center text-sm font-medium${th.className ? ` ${th.className}` : ``}`}
+          >
+            {th.label}
+          </div>
+        ))}
+      </div>
+
+      {tableData.rows.length > 0 ? (
+        tableData.rows.map((row: TableDataRow[], index: number) => (
+          <div
+            key={index}
+            className={`grid mb-4 lg:mb-0 rounded-lg lg:rounded-none border-1 lg:border-t-0 border-blue-900 bg-white  hover:bg-blue-light lg:odd:bg-stone-200/50 last:rounded-b-lg ${className ? ` ${className}` : ""}`}
+          >
+            {row.map((cell: TableDataRow) => (
+              <div
+                key={cell.name}
+                className={`px-3 py-1 lg:py-2 text-lg lg:text-base text-gray-900 lg:border-r-1 last:border-r-0 border-blue-900 [grid-area:${cell.name}] ${cell.className ? ` ${cell.className}` : ``}`}
               >
-                {th.label}
-              </th>
+                {cell.label ? (
+                  <span className={`inline-flex lg:hidden w-2/5 text-base/7`}>
+                    {cell.label}
+                  </span>
+                ) : (
+                  ""
+                )}
+                {cell.data}
+              </div>
             ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.rows.length > 0 ? (
-            tableData.rows.map((row: TableDataRow[], index: number) => (
-              <tr
-                key={index}
-                className="border-t border-blue-900 hover:bg-blue-light"
-              >
-                {row.map((cell: TableDataRow, cellIndex: number) => (
-                  <td
-                    key={cell.name}
-                    className={`px-3 py-2 text-base text-gray-900${cellIndex + 1 < Object.keys(row).length ? ` border-r border-blue-900` : ``}${cell.className ? ` ${cell.className}` : ``}`}
-                  >
-                    {cell.data}
-                  </td>
-                ))}
-              </tr>
-            ))
-          ) : (
-            <tr className={"text-center"}>
-              <td colSpan={tableData.header.length}>Нет записей</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+          </div>
+        ))
+      ) : (
+        <div>Нет записей</div>
+      )}
     </div>
   );
 };
