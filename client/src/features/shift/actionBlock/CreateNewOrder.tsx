@@ -11,7 +11,7 @@ export const CreateNewOrder = () => {
 
   return (
     <button
-      className={"btn btn-blue-light inline-flex w-1/2 lg:w-fit"}
+      className={"btn btn-blue-light inline-flex w-3/7 lg:w-fit tracking-tight lg:tracking-normal"}
       onClick={clickHandler}
     >
       <PlusCircleIcon className="h-5 w-5 inline-flex mr-1 -ml-1 text-white" />

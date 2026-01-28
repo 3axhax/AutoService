@@ -74,7 +74,7 @@ export const EditAdditionalWorkForm = ({
       </h2>
       <form
         onSubmit={handlerOnSubmit}
-        className={"grid gap-3 grid-cols-[80%_20%]"}
+        className={"grid gap-3 grid-row-auto lg:grid-cols-[80%_20%]"}
       >
         <InputWithLabel
           className={"self-end"}
