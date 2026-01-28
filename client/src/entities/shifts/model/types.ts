@@ -11,4 +11,9 @@ export interface ShiftsState {
   pending: boolean;
   error: string;
   shiftsList: Record<number, ShiftItem>;
+  pagination: {
+    currentPage: number;
+    recordPerPage: number;
+    totalRecord: number;
+  };
 }

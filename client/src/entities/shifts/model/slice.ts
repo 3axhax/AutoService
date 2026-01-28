@@ -12,6 +12,11 @@ const initialState: ShiftsState = {
   pending: false,
   error: "",
   shiftsList: {},
+  pagination: {
+    currentPage: 1,
+    recordPerPage: 20,
+    totalRecord: 40,
+  },
 };
 
 export const shiftsSlice = createSlice({

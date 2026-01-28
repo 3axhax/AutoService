@@ -2,6 +2,7 @@ import { Filters, ShiftsList } from "@widgets/workerShiftsHistory";
 import { useAppDispatch } from "@shared/store/hooks.ts";
 import { useEffect } from "react";
 import { getShiftsList } from "@entities/shifts";
+import { WorkerShiftsHistoryPagination } from "@features/workerShiftsHistoryPagination";
 
 export const WorkerShiftsHistoryPage = () => {
   const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ export const WorkerShiftsHistoryPage = () => {
       </h3>
       <Filters />
       <ShiftsList />
+      <WorkerShiftsHistoryPagination />
     </div>
   );
 };
