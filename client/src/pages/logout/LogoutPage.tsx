@@ -15,7 +15,7 @@ export const LogoutPage = () => {
   }, [dispatch, navigate]);
 
   return (
-    <div className="app">
+    <div className="app relative">
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
           Выйти

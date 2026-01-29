@@ -35,20 +35,20 @@ export const NavigationUI = ({
   const collapsed = useAppSelector(SelectHideNavigation);
 
   return (
-    <header className={`header shadow-lg`}>
+    <header className={`w-full h-full lg:h-auto fixed lg:sticky top-0 opacity-95 flex justify-end lg:items-center lg:justify-center z-11 lg:shadow-lg ${canCollapsed && collapsed ? "translate-x-full" : "translate-x-0"}`}>
       <div
-        className={`w-full relative bg-blue-dark z-11 overflow-hidden transition-max-height duration-300 ease-linear ${canCollapsed && collapsed ? "max-h-0" : "max-h-18"}`}
+        className={`w-6/8 lg:w-full h-full relative bg-blue-dark z-11 overflow-hidden lg:transition-max-height duration-300 ease-linear ${canCollapsed && collapsed ? "lg:max-h-0" : "lg:max-h-18"}`}
       >
-        <div className={"container px-4 lg:px-8 flex py-2 ml-auto mr-auto"}>
+        <div className={"container px-4 lg:px-8 flex flex-col lg:flex-row py-2 lg:mx-auto"}>
           <Logo />
-          <nav className="navigation ml-auto">
-            <ul className="inline-flex space-x-6 justify-center">
+          <nav className="navigation lg:ml-auto">
+            <ul className="flex flex-col lg:flex-row lg:inline-flex space-x-6 lg:justify-center">
               {navItems.map((item) => (
-                <li key={item.key} className={"inline-flex justify-center"}>
+                <li key={item.key} className={"inline-flex lg:justify-center"}>
                   {item.isDropdown ? (
                     <>
                       <div
-                        className={`relative flex items-center flex-gap-2 px-4 py-2 rounded-full transition-colors duration-200 border-1 border-green-800 hover:cursor-pointer text-gray-600 dark:text-gray-300 group hover:text-green-800 hover:bg-green-600/10 dark:hover:bg-gray-700`}
+                        className={`relative flex items-center flex-gap-2 lg:px-4 py-2 rounded-full transition-colors duration-200 border-1 border-green-800 hover:cursor-pointer text-gray-600 dark:text-gray-300 group hover:text-green-800 hover:bg-green-600/10 dark:hover:bg-gray-700`}
                         onClick={() => setIsDropdownOpen(item.key)}
                       >
                         {item.iconLink && item.iconLink}
@@ -92,7 +92,7 @@ export const NavigationUI = ({
                   ) : item.isButton ? (
                     <button
                       className={
-                        "cursor-pointer flex justify-center items-center px-4 py-2 text-white"
+                        "cursor-pointer flex justify-center items-center lg:px-4 py-2 text-white"
                       }
                       key={item.key}
                       onClick={item.onClick}
@@ -103,7 +103,7 @@ export const NavigationUI = ({
                   ) : (
                     <Link
                       to={item.path}
-                      className={`flex items-center flex-gap-2 px-4 py-2 ${
+                      className={`flex items-center flex-gap-2 lg:px-4 py-2 ${
                         location.pathname === item.path
                           ? "text-white"
                           : " text-white"
@@ -127,14 +127,15 @@ export const NavigationUI = ({
       </div>
       {canCollapsed && (
         <button
-          className={`bg-blue-dark w-12 h-8 text-white dark:text-white cursor-pointer shadow-lg group absolute right-3 -bottom-8 flex justify-center items-center rounded-b-md`}
+          className={`bg-blue-dark w-12 h-8 text-white dark:text-white cursor-pointer shadow-lg group absolute lg:right-3 top-0 lg:-bottom-8 flex justify-center items-center rounded-b-md z-12 ${!collapsed ? "right-0" : "-left-12"}`}
           onClick={() => dispatch(setHideNavigation(!collapsed))}
         >
-          <span className={"relative"}></span>
+          <span className={"relative"}>
           <Bars3Icon className={"inline-flex h-5 w-5"} />
           <ArrowDownIcon
             className={`rounded-full bg-blue-dark h-3 w-3 absolute right-2.5 duration-200 transition-all ${!collapsed ? "rotate-180 bottom-1.5 group-hover:bottom-3" : "bottom-3 group-hover:bottom-1.5"}`}
           />
+            </span>
         </button>
       )}
     </header>

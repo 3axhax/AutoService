@@ -189,10 +189,6 @@
     @apply flex gap-4 flex-wrap justify-center;
   }
 
-  .header {
-    @apply w-full sticky top-0 opacity-95 flex items-center justify-center z-11;
-  }
-
   .form-control,
   .input {
     font-family: "Roboto", "Arial Black", sans-serif;
