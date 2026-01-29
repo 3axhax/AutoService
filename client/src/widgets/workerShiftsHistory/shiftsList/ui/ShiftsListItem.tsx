@@ -1,6 +1,7 @@
 import { ShiftItem } from "@entities/shifts";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { ShiftListItemDetail } from "@widgets/workerShiftsHistory/shiftsList/ui/ShiftListItemDetail.tsx";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
 interface ShiftsListItemProps {
   item: ShiftItem;
@@ -22,17 +23,21 @@ export const ShiftsListItem = ({
   const totalValue = `${+item.totalOrdersSum + +item.totalAdditionalWorksSum} ₽`;
   return (
     <li
-      className={"cursor-pointer"}
+      className={
+        "cursor-pointer border-1 rounded-lg border-stone-700/80 drop-shadow-lg px-2 py-2 odd:bg-stone-200/55"
+      }
       onClick={() => {
         if (onClick) onClick();
       }}
     >
-      <div>
+      <span className={"flex"}>
+        <CheckCircleIcon className="h-6 w-6 text-green-700 inline-flex mr-2" />
+        Начало: {createdAt}, Окончание: {closedAt}, Сумма:{" "}
+        <span className={"text-base font-medium"}>{totalValue}</span>
         <ChevronDownIcon
-          className={`inline-flex h-4 w-4 mr-2 text-gray-600 transition-transform group-hover:text-green-800 duration-200 ${activeItem ? "rotate-180" : ""}`}
+          className={`inline-flex h-5 w-5 ml-auto text-gray-600 transition-transform group-hover:text-green-800 duration-200 ${activeItem ? "rotate-180" : ""}`}
         />
-        Начало: {createdAt}, Окончание: {closedAt}, Сумма: {totalValue}
-      </div>
+      </span>
       {activeItem && <ShiftListItemDetail id={item.id} />}
     </li>
   );

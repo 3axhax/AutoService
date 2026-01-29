@@ -86,7 +86,7 @@ export const Modal = ({
                           button.onClick();
                         }
                       }}
-                      className={`btn btn-purple cursor-pointer inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-xs sm:w-auto
+                      className={`btn cursor-pointer inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-xs sm:w-auto
                         ${button?.type === "danger" ? " bg-red-600 hover:bg-red-500" : button?.type === "warning" ? " bg-yellow-600 hover:bg-yellow-500" : " bg-green-600 hover:bg-green-500"}
                         `}
                     >

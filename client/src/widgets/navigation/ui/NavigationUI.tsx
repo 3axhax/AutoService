@@ -133,28 +133,27 @@ export const NavigationUI = ({
         </div>
       </div>
       {canCollapsed && (
-          <>
+        <>
           <button
-              className={`bg-blue-dark w-12 h-10 text-white dark:text-white cursor-pointer shadow-lg group absolute right-7/8 lg:right-3 lg:left-auto top-4 lg:top-auto lg:-bottom-8 flex justify-center items-center rounded-l-md lg:rounded-b-md z-12`}
-              onClick={() => dispatch(setHideNavigation(!collapsed))}
+            className={`bg-blue-dark w-12 h-10 text-white dark:text-white cursor-pointer shadow-lg group absolute right-7/8 lg:right-3 lg:left-auto top-4 lg:top-auto lg:-bottom-8 flex justify-center items-center rounded-l-md lg:rounded-b-md z-12`}
+            onClick={() => dispatch(setHideNavigation(!collapsed))}
           >
-          <span className={"relative"}>
-            <span className={'sr-only'}>Open or close navigation menu</span>
-            <Bars3Icon className={"inline-flex h-6 w-6"}/>
-            <ArrowDownIcon
+            <span className={"relative"}>
+              <span className={"sr-only"}>Open or close navigation menu</span>
+              <Bars3Icon className={"inline-flex h-6 w-6"} />
+              <ArrowDownIcon
                 className={`rounded-full bg-blue-dark h-4 w-4 lg:h-3 lg:w-3 absolute -right-1.5 duration-200 transition-all ${!collapsed ? "-rotate-90 lg:rotate-180 bottom-1.5 group-hover:bottom-3" : "rotate-90 lg:rotate-0 bottom-1.5 lg:bottom-3 group-hover:bottom-1.5"}`}
-            />
-          </span>
+              />
+            </span>
           </button>
           <button
-              className={`bg-transparent text-white w-12 h-10 dark:text-white cursor-pointer absolute right-0 top-4 z-12 lg:hidden`}
-              onClick={() => dispatch(setHideNavigation(!collapsed))}
+            className={`bg-transparent text-white w-12 h-10 dark:text-white cursor-pointer absolute right-0 top-4 z-12 lg:hidden`}
+            onClick={() => dispatch(setHideNavigation(!collapsed))}
           >
             <XMarkIcon className="h-6 w-6" />
           </button>
-          </>
-
-          )}
-          </header>
-      );
-      };
+        </>
+      )}
+    </header>
+  );
+};

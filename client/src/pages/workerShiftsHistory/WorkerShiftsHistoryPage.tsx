@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { getShiftsList } from "@entities/shifts";
 import { WorkerShiftsHistoryPagination } from "@features/workerShiftsHistory/workerShiftsHistoryPagination";
 import { WorkerShiftsHistoryFilters } from "@features/workerShiftsHistory/workerShiftsHistoryFilters";
+import { ShiftIcon } from "@shared/ui/Icons/Shift.tsx";
 
 export const WorkerShiftsHistoryPage = () => {
   const dispatch = useAppDispatch();
@@ -14,13 +15,14 @@ export const WorkerShiftsHistoryPage = () => {
 
   return (
     <div className={"container px-4 lg:px-8"}>
-      <h3
+      <h2
         className={
-          "text-2xl mb-3 lg:mb-6 text-gray-700 text-left lg:text-center"
+          "text-2xl mt-5 mb-3 lg:mb-6 text-gray-700 text-left lg:text-center"
         }
       >
+        <ShiftIcon className={"h6 w-6 inline-flex mr-2 text-gray-600"} />
         Смены
-      </h3>
+      </h2>
       <WorkerShiftsHistoryFilters />
       <ShiftsList />
       <WorkerShiftsHistoryPagination />
