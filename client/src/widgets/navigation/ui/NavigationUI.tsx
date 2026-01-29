@@ -36,11 +36,11 @@ export const NavigationUI = ({
 
   return (
     <>
-    <header className={`w-6/8 lg:w-full fixed h-full lg:sticky top-0 opacity-95 flex items-center justify-center z-12 lg:shadow-lg`}>
+    <header className={`lg:w-full fixed h-full lg:sticky top-0 opacity-95 flex items-center justify-center z-12 lg:shadow-lg transition-width duration-300 ease-linear ${canCollapsed && collapsed ? "w-0" : "w-6/8"}`}>
       <div
         className={`h-full lg:h-auto w-full relative bg-blue-dark z-11 overflow-hidden transition-transform lg:transition-all duration-300 ease-linear right-0 lg:translate-x-0 ${canCollapsed && collapsed ? "translate-x-full lg:max-h-0" : "translate-x-0 lg:max-h-18"}`}
       >
-        <div className={"container px-4 lg:px-8 flex flex-col lg:flex-row py-4 lg:py-2 ml-auto mr-auto"}>
+        <div className={"container px-4 lg:px-8 flex flex-col lg:flex-row py-4 lg:py-2 lg:mx-auto"}>
           <Logo />
           <nav className="navigation border-t-1 border-white/55 lg:border-t-0 py-3 lg:py-0 m-0 mt-3 lg:ml-auto lg:mt-0">
             <ul className="flex flex-col lg:inline-flex lg:flex-row space-x-6 justify-center">
@@ -128,14 +128,15 @@ export const NavigationUI = ({
       </div>
       {canCollapsed && (
           <button
-              className={`bg-blue-dark w-9 h-10 z-12 lg:w-12 lg:h-8 text-white dark:text-white cursor-pointer shadow-lg group fixed top-4 right-0 lg:absolute lg:right-3 lg:top-8 flex justify-center items-center rounded-l-md lg:rounded-t-0 lg:rounded-b-md`}
+              className={`bg-blue-dark w-9 h-10 z-12 lg:w-12 lg:h-8 text-white dark:text-white cursor-pointer shadow-lg group fixed top-0 right-0 lg:absolute lg:right-3 flex justify-center items-center rounded-l-md lg:rounded-t-0 lg:rounded-b-md lg:transition-all duration-200`}
               onClick={() => dispatch(setHideNavigation(!collapsed))}
           >
-            <span className={"relative"}></span>
+            <span className={"relative"}>
             <Bars3Icon className={"inline-flex h-5 w-5"} />
             <ArrowDownIcon
-                className={`rounded-full bg-blue-dark h-3 w-3 absolute right-1.5 lg:right-2.5 duration-200 transition-all ${!collapsed ? "-rotate-90 lg:rotate-180 bottom-1.5 group-hover:lg:bottom-3" : "rotate-90 lg:bottom-3 group-hover:lg:bottom-1.5"}`}
+                className={`rounded-full bg-blue-dark h-3 w-3 absolute right-1.5 lg:right-2.5 duration-300 ease-linear transition-all ${!collapsed ? "-rotate-90 lg:rotate-180 bottom-1.5 group-hover:lg:bottom-3" : "rotate-90 lg:rotate-0 lg:bottom-3 group-hover:lg:bottom-1.5"}`}
             />
+            </span>
           </button>
       )}
     </header>
