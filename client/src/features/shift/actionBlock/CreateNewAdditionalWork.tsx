@@ -11,7 +11,7 @@ export const CreateNewAdditionalWork = () => {
 
   return (
     <button
-      className={"btn btn-orange btn-blue-dark w-1/2 lg:w-fit"}
+      className={"btn btn-orange btn-blue-dark w-3/7 lg:w-fit"}
       onClick={clickHandler}
     >
       <ExtraIcon className={"h-5 w-5 inline-flex mr-1 -ml-1 text-white"} />

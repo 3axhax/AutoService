@@ -35,13 +35,19 @@ export const NavigationUI = ({
   const collapsed = useAppSelector(SelectHideNavigation);
 
   return (
-    <header className={`w-full h-full lg:h-auto fixed lg:sticky top-0 opacity-95 flex justify-end lg:items-center lg:justify-center z-11 lg:shadow-lg ${canCollapsed && collapsed ? "translate-x-full" : "translate-x-0"}`}>
+    <header
+      className={`w-full bg-red-600 h-14 lg:h-auto fixed lg:sticky top-0 opacity-95 flex justify-end lg:items-center lg:justify-center z-11 lg:shadow-lg transition-transform duration-300 ease-in-out lg:translate-x-0 ${canCollapsed && collapsed ? "translate-x-6/8" : "translate-x-0 bg-gray-900/55 h-full"}`}
+    >
       <div
         className={`w-6/8 lg:w-full h-full relative bg-blue-dark z-11 overflow-hidden lg:transition-max-height duration-300 ease-linear ${canCollapsed && collapsed ? "lg:max-h-0" : "lg:max-h-18"}`}
       >
-        <div className={"container px-4 lg:px-8 flex flex-col lg:flex-row py-2 lg:mx-auto"}>
+        <div
+          className={
+            "container px-4 lg:px-8 flex flex-col lg:flex-row py-4 lg:py-2 lg:mx-auto"
+          }
+        >
           <Logo />
-          <nav className="navigation lg:ml-auto">
+          <nav className="navigation mt-4 py-2 lg:py-0 border-t-1 lg:border-t-0 border-white/50 lg:mt-0 lg:ml-auto">
             <ul className="flex flex-col lg:flex-row lg:inline-flex space-x-6 lg:justify-center">
               {navItems.map((item) => (
                 <li key={item.key} className={"inline-flex lg:justify-center"}>
@@ -127,15 +133,15 @@ export const NavigationUI = ({
       </div>
       {canCollapsed && (
         <button
-          className={`bg-blue-dark w-12 h-8 text-white dark:text-white cursor-pointer shadow-lg group absolute lg:right-3 top-0 lg:-bottom-8 flex justify-center items-center rounded-b-md z-12 ${!collapsed ? "right-0" : "-left-12"}`}
+          className={`bg-blue-dark w-12 h-10 text-white dark:text-white cursor-pointer shadow-lg group absolute right-[calc(75%)] lg:right-3 lg:left-auto top-4 lg:top-auto lg:-bottom-8 flex justify-center items-center rounded-l-md lg:rounded-b-md z-12`}
           onClick={() => dispatch(setHideNavigation(!collapsed))}
         >
           <span className={"relative"}>
-          <Bars3Icon className={"inline-flex h-5 w-5"} />
-          <ArrowDownIcon
-            className={`rounded-full bg-blue-dark h-3 w-3 absolute right-2.5 duration-200 transition-all ${!collapsed ? "rotate-180 bottom-1.5 group-hover:bottom-3" : "bottom-3 group-hover:bottom-1.5"}`}
-          />
-            </span>
+            <Bars3Icon className={"inline-flex h-6 w-6"} />
+            <ArrowDownIcon
+              className={`rounded-full bg-blue-dark h-4 w-4 lg:h-3 lg:w-3 absolute -right-1.5 duration-200 transition-all ${!collapsed ? "-rotate-90 lg:rotate-180 bottom-1.5 group-hover:bottom-3" : "rotate-90 lg:rotate-0 bottom-1.5 lg:bottom-3 group-hover:bottom-1.5"}`}
+            />
+          </span>
         </button>
       )}
     </header>
