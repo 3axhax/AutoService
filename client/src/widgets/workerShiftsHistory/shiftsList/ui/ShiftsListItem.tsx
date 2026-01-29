@@ -18,7 +18,7 @@ export const ShiftsListItem = ({
   const closedAt = item.closedAt ? (
     new Date(item.closedAt).toLocaleString("ru-RU")
   ) : (
-    <span className={"text-green-600"}>Смена не закрыта</span>
+    <span className={"text-green-700"}>Смена не закрыта</span>
   );
   const totalValue = `${+item.totalOrdersSum + +item.totalAdditionalWorksSum} ₽`;
   return (
@@ -32,7 +32,7 @@ export const ShiftsListItem = ({
     >
       <span className={"flex"}>
         <CheckCircleIcon className="h-6 w-6 text-green-700 inline-flex mr-2" />
-        Начало: {createdAt}, Окончание: {closedAt}, Сумма:{" "}
+        Начало:&nbsp;{createdAt}, Окончание:&nbsp;{closedAt}, Сумма:&nbsp;
         <span className={"text-base font-medium"}>{totalValue}</span>
         <ChevronDownIcon
           className={`inline-flex h-5 w-5 ml-auto text-gray-600 transition-transform group-hover:text-green-800 duration-200 ${activeItem ? "rotate-180" : ""}`}
