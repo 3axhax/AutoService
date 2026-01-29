@@ -6,6 +6,7 @@ import { Bars3Icon } from "@heroicons/react/24/solid";
 import { ArrowDownIcon } from "@heroicons/react/24/solid";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { SelectHideNavigation, setHideNavigation } from "@entities/app";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 export interface NavItem {
   key: string;
@@ -36,10 +37,10 @@ export const NavigationUI = ({
 
   return (
     <header
-      className={`w-full bg-red-600 h-14 lg:h-auto fixed lg:sticky top-0 opacity-95 flex justify-end lg:items-center lg:justify-center z-11 lg:shadow-lg transition-transform duration-300 ease-in-out lg:translate-x-0 ${canCollapsed && collapsed ? "translate-x-6/8" : "translate-x-0 bg-gray-900/55 h-full"}`}
+      className={`w-full h-14 lg:h-auto fixed lg:sticky top-0 opacity-95 flex justify-end lg:items-center lg:justify-center z-11 lg:shadow-lg transition-transform duration-300 ease-in-out lg:translate-x-0 ${canCollapsed && collapsed ? "translate-x-7/8" : "translate-x-0 bg-gray-900/55 h-full"}`}
     >
       <div
-        className={`w-6/8 lg:w-full h-full relative bg-blue-dark z-11 overflow-hidden lg:transition-max-height duration-300 ease-linear ${canCollapsed && collapsed ? "lg:max-h-0" : "lg:max-h-18"}`}
+        className={`w-7/8 lg:w-full h-full relative bg-blue-dark z-11 overflow-hidden lg:transition-max-height duration-300 ease-linear ${canCollapsed && collapsed ? "lg:max-h-0" : "lg:max-h-18"}`}
       >
         <div
           className={
@@ -132,18 +133,28 @@ export const NavigationUI = ({
         </div>
       </div>
       {canCollapsed && (
-        <button
-          className={`bg-blue-dark w-12 h-10 text-white dark:text-white cursor-pointer shadow-lg group absolute right-[calc(75%)] lg:right-3 lg:left-auto top-4 lg:top-auto lg:-bottom-8 flex justify-center items-center rounded-l-md lg:rounded-b-md z-12`}
-          onClick={() => dispatch(setHideNavigation(!collapsed))}
-        >
+          <>
+          <button
+              className={`bg-blue-dark w-12 h-10 text-white dark:text-white cursor-pointer shadow-lg group absolute right-7/8 lg:right-3 lg:left-auto top-4 lg:top-auto lg:-bottom-8 flex justify-center items-center rounded-l-md lg:rounded-b-md z-12`}
+              onClick={() => dispatch(setHideNavigation(!collapsed))}
+          >
           <span className={"relative"}>
-            <Bars3Icon className={"inline-flex h-6 w-6"} />
+            <span className={'sr-only'}>Open or close navigation menu</span>
+            <Bars3Icon className={"inline-flex h-6 w-6"}/>
             <ArrowDownIcon
-              className={`rounded-full bg-blue-dark h-4 w-4 lg:h-3 lg:w-3 absolute -right-1.5 duration-200 transition-all ${!collapsed ? "-rotate-90 lg:rotate-180 bottom-1.5 group-hover:bottom-3" : "rotate-90 lg:rotate-0 bottom-1.5 lg:bottom-3 group-hover:bottom-1.5"}`}
+                className={`rounded-full bg-blue-dark h-4 w-4 lg:h-3 lg:w-3 absolute -right-1.5 duration-200 transition-all ${!collapsed ? "-rotate-90 lg:rotate-180 bottom-1.5 group-hover:bottom-3" : "rotate-90 lg:rotate-0 bottom-1.5 lg:bottom-3 group-hover:bottom-1.5"}`}
             />
           </span>
-        </button>
-      )}
-    </header>
-  );
-};
+          </button>
+          <button
+              className={`bg-transparent text-white w-12 h-10 dark:text-white cursor-pointer absolute right-0 top-4 z-12 lg:hidden`}
+              onClick={() => dispatch(setHideNavigation(!collapsed))}
+          >
+            <XMarkIcon className="h-6 w-6" />
+          </button>
+          </>
+
+          )}
+          </header>
+      );
+      };
