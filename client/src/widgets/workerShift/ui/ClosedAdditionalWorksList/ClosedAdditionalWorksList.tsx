@@ -88,8 +88,8 @@ export const ClosedAdditionalWorksList = () => {
               }
             >
               Итого по&nbsp;
-              <span className={"hidden lg:inline"}>дополнительным</span>
-              <span className={"inline lg:hidden"}>доп.</span> работам:{" "}
+              <span className={"hidden lg:inline"}>дополнительным&nbsp;</span>
+              <span className={"inline lg:hidden"}>доп.</span> работам:&nbsp;
               <span className={"font-medium text-xl"}>{shiftTotalValue} ₽</span>
             </div>
           </div>
