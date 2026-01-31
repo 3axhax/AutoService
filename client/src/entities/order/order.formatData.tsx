@@ -16,7 +16,7 @@ export const formatVehicleName = (order: OrderItem) => {
   const carMakeName =
     car_make && car_make.option ? car_make.option.translationRu : null;
   return (
-    <ul className={"flex flex-col"}>
+    <ul className={"inline-flex flex-col"}>
       {(carMakeName || car_number) && (
         <ul className={"flex gap-1.5 justify-center"}>
           {carMakeName && <li>{carMakeName}</li>}
@@ -41,7 +41,7 @@ export const formatClientType = (order: OrderItem) => {
     (value) => value.parameter.name === "legal_list",
   );
   return (
-    <ul className={"flex flex-col items-start lg:items-center"}>
+    <ul className={"inline-flex flex-col items-start lg:items-center"}>
       {client_type && <li>{client_type?.option?.translationRu}</li>}
       {legal && <li>{legal?.option?.translationRu}</li>}
     </ul>
@@ -56,7 +56,7 @@ export const formatWorkList = (order: OrderItem) => {
     (value) => value.parameter.name === "materials",
   );
   const typeWorkList = (
-    <ul className={"text-left lg:text-center"}>
+    <ul className={"inline-flex text-left lg:text-center"}>
       {type_work.map((item, index) => (
         <li key={index}>
           {item.option?.translationRu ?? ""} x {item.count}
@@ -65,7 +65,7 @@ export const formatWorkList = (order: OrderItem) => {
     </ul>
   );
   const materialsList = (
-    <ul className={"text-left lg:text-center"}>
+    <ul className={"inline-flex text-left lg:text-center"}>
       {materials.map((item, index) => (
         <li key={index}>
           {item.option?.translationRu ?? ""} x {item.count}
@@ -74,10 +74,10 @@ export const formatWorkList = (order: OrderItem) => {
     </ul>
   );
   return (
-    <div>
+    <div className={"inline-flex flex-col"}>
       {typeWorkList}
       {type_work.length > 0 && materials.length > 0 ? (
-        <hr className={"text-gray-700/50 ml-0 lg:mx-auto"} />
+        <hr className={"text-stone-400 lg:mx-auto"} />
       ) : null}
       {materialsList}
     </div>

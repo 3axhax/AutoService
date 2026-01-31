@@ -34,12 +34,20 @@ export const ShiftsListItem = ({
         if (onClick) onClick();
       }}
     >
-      <span className={"flex items-center"}>
-        <MenuIcon className="h-6 w-6 text-blue-900 inline-flex mx-1" />
-        Начало:&nbsp;{createdAt}, Окончание:&nbsp;{closedAt}, Сумма:&nbsp;
-        <span className={"text-base font-medium"}>{totalValue}</span>
+      <span
+        className={"flex flex-col lg:flex-row items-start lg:items-center "}
+      >
+        <span>
+          <MenuIcon className="h-6 w-6 text-blue-900 inline-flex lg:mx-1 -mt-1" />
+          Начало:&nbsp;{createdAt},&nbsp;
+        </span>
+        <span>Окончание:&nbsp;{closedAt},&nbsp;</span>
+        <span>
+          Сумма:&nbsp;
+          <span className={"text-base font-medium"}>{totalValue}</span>&nbsp;
+        </span>
         <ChevronDownIcon
-          className={`inline-flex h-5 w-5 ml-auto mr-2 text-gray-600 transition-transform transition-colors group-hover:text-blue-950 duration-200 group-hover:text-gray-900 ${activeItem ? "rotate-180" : ""}`}
+          className={`absolute lg:relative right-4 inline-flex h-5 w-5 ml-auto mr-2 text-gray-600 transition-transform transition-colors group-hover:text-blue-950 duration-200 group-hover:text-gray-900 ${activeItem ? "rotate-180" : ""}`}
         />
       </span>
       {activeItem && <ShiftListItemDetail id={item.id} />}
