@@ -12,7 +12,7 @@ export const ShiftsList = () => {
   };
 
   return (
-    <ul className={"text-start flex flex-col gap-2"}>
+    <ul className={"text-start flex flex-col gap-2 lg:gap-3"}>
       {shiftsList.map((item) => (
         <ShiftsListItem
           key={item.id}
