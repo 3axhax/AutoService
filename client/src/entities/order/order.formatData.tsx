@@ -56,7 +56,7 @@ export const formatWorkList = (order: OrderItem) => {
     (value) => value.parameter.name === "materials",
   );
   const typeWorkList = (
-    <ul className={"inline-flex text-left lg:text-center"}>
+    <ul className={"inline-flex flex-col text-left lg:text-center"}>
       {type_work.map((item, index) => (
         <li key={index}>
           {item.option?.translationRu ?? ""} x {item.count}
@@ -65,7 +65,7 @@ export const formatWorkList = (order: OrderItem) => {
     </ul>
   );
   const materialsList = (
-    <ul className={"inline-flex text-left lg:text-center"}>
+    <ul className={"inline-flex flex-col text-left lg:text-center"}>
       {materials.map((item, index) => (
         <li key={index}>
           {item.option?.translationRu ?? ""} x {item.count}
