@@ -28,7 +28,7 @@ export const ShiftsListItem = ({
   return (
     <li
       className={
-        "cursor-pointer border-1 rounded-lg border-stone-700/80 transition-shadow ease-in-out duration-200 shadow-lg px-2 py-2 odd:bg-stone-200/25 group hover:shadow-blue-950/55"
+        "cursor-pointer bg-white border-1 rounded-lg border-stone-700/80 transition-shadow ease-in-out duration-200 shadow-lg px-2 py-2 odd:bg-stone-100 group hover:shadow-blue-950/55"
       }
       onClick={() => {
         if (onClick) onClick();
