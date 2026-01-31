@@ -78,7 +78,7 @@ export const DateSelectInterval = ({
         dateFormat="P"
         placeholderText={placeholder ?? "Укажите интервал"}
         customInput={
-          <ExampleCustomInput className="btn btn-blue-light min-w-[220px]" />
+          <ExampleCustomInput className="btn btn-blue-light whitespace-pre" />
         }
       />
     </div>

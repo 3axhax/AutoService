@@ -1,7 +1,7 @@
 import { ShiftItem } from "@entities/shifts";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { ShiftListItemDetail } from "@widgets/workerShiftsHistory/shiftsList/ui/ShiftListItemDetail.tsx";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import {MenuIcon} from "@shared/ui/Icons/MenuIcon.tsx";
 
 interface ShiftsListItemProps {
   item: ShiftItem;
@@ -24,14 +24,14 @@ export const ShiftsListItem = ({
   return (
     <li
       className={
-        "cursor-pointer border-1 rounded-lg border-stone-700/80 drop-shadow-lg px-2 py-2 odd:bg-stone-200/55"
+        "cursor-pointer border-1 rounded-lg border-stone-700/80 drop-shadow-lg px-2 py-2 odd:bg-stone-200/25"
       }
       onClick={() => {
         if (onClick) onClick();
       }}
     >
       <span className={"flex"}>
-        <CheckCircleIcon className="h-6 w-6 text-green-700 inline-flex mr-2" />
+        <MenuIcon className="h-6 w-6 text-blue-900 inline-flex mr-1" />
         Начало:&nbsp;{createdAt}, Окончание:&nbsp;{closedAt}, Сумма:&nbsp;
         <span className={"text-base font-medium"}>{totalValue}</span>
         <ChevronDownIcon
