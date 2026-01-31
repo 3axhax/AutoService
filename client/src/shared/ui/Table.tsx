@@ -37,7 +37,7 @@ export const Table = ({ tableData, className }: TableProps) => {
         tableData.rows.map((row: TableDataRow[], index: number) => (
           <div
             key={index}
-            className={`relative flex flex-col lg:flex-row last:mt-4 lg:mb-0 rounded-lg lg:rounded-none border-1 lg:border-t-0 border-blue-900 bg-white hover:bg-blue-light lg:odd:bg-stone-200/50 last:rounded-b-lg ${className ? ` ${className}` : ""}`}
+            className={`relative flex flex-col lg:flex-row last:mt-4 lg:mb-0 rounded-lg lg:rounded-none border-1 lg:border-t-0 border-blue-900 bg-white hover:bg-blue-light lg:odd:bg-stone-200/50 last:lg:rounded-b-lg ${className ? ` ${className}` : ""}`}
           >
             {row.map((cell: TableDataRow) => (
               <div

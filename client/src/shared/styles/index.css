@@ -43,7 +43,7 @@
     --trail-size: 25;
     --speed: 12s;
     --size: 45px;
-    --line: color-mix(in lch, canvasText, transparent 70%);
+    --line: color-mix(in lch, canvasText, transparent 95%);
 
     --secondaryColor: var(--color-green-800);
 
@@ -66,6 +66,11 @@
   body {
     font-family: "Roboto", "Arial Black", sans-serif;
     @apply m-0 flex items-stretch justify-center w-full min-w-[320px] min-h-screen;
+    background:
+      linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) 50%
+        50% / var(--size) var(--size),
+      linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% /
+        var(--size) var(--size);
   }
 
   #root {
