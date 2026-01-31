@@ -5,7 +5,7 @@ export const ShiftListItemDetail = ({ id }: { id: number }) => {
   return (
     <div
       className={
-        "flex flex-col gap-2 border-[1px] rounded-md p-4 border-blue-500"
+        "flex flex-col gap-8 py-2"
       }
     >
       <ShiftListItemDetailOrders id={id} />

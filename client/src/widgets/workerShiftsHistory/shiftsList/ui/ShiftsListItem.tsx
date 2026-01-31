@@ -2,6 +2,7 @@ import { ShiftItem } from "@entities/shifts";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { ShiftListItemDetail } from "@widgets/workerShiftsHistory/shiftsList/ui/ShiftListItemDetail.tsx";
 import {MenuIcon} from "@shared/ui/Icons/MenuIcon.tsx";
+import {InProgressIcon} from "@shared/ui/Icons/InProgressIcon.tsx";
 
 interface ShiftsListItemProps {
   item: ShiftItem;
@@ -18,7 +19,7 @@ export const ShiftsListItem = ({
   const closedAt = item.closedAt ? (
     new Date(item.closedAt).toLocaleString("ru-RU")
   ) : (
-    <span className={"text-green-700"}>Смена не закрыта</span>
+    <span className={"text-orange-600"}><InProgressIcon className={'inline-flex w-5 h-5 mr-1'} />Смена не закрыта</span>
   );
   const totalValue = `${+item.totalOrdersSum + +item.totalAdditionalWorksSum} ₽`;
   return (
@@ -30,7 +31,7 @@ export const ShiftsListItem = ({
         if (onClick) onClick();
       }}
     >
-      <span className={"flex"}>
+      <span className={"flex items-center"}>
         <MenuIcon className="h-6 w-6 text-blue-900 inline-flex mr-1" />
         Начало:&nbsp;{createdAt}, Окончание:&nbsp;{closedAt}, Сумма:&nbsp;
         <span className={"text-base font-medium"}>{totalValue}</span>
