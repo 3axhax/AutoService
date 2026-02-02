@@ -74,7 +74,7 @@ export const EditAdditionalWorkForm = ({
       </h2>
       <form
         onSubmit={handlerOnSubmit}
-        className={"grid gap-3 grid-cols-[80%_20%]"}
+        className={"grid gap-5 lg:gap-3 grid-cols-1 lg:grid-cols-[80%_20%]"}
       >
         <InputWithLabel
           className={"self-end"}
@@ -100,7 +100,7 @@ export const EditAdditionalWorkForm = ({
         )}
         <div
           className={
-            "col-span-full flex items-center justify-center gap-2 lg:mt-4"
+            "col-span-full flex items-center justify-center gap-2 mt-4"
           }
         >
           <button className={`btn btn-blue-dark w-1/2`} type={"submit"}>
@@ -111,7 +111,7 @@ export const EditAdditionalWorkForm = ({
             <button
               type={"button"}
               className={
-                "btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
+                "flex-1 lg:flex-auto btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
               }
               onClick={() =>
                 dispatch(deleteActiveAdditionalWork(additionalWorkId))

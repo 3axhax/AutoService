@@ -189,7 +189,7 @@ export const EditOrderForm = ({
           <button
             type={"button"}
             className={
-              "btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
+              "flex-1 lg:flex-auto btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
             }
             onClick={() => dispatch(deleteActiveOrder(orderId))}
           >

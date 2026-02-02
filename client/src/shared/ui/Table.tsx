@@ -37,12 +37,12 @@ export const Table = ({ tableData, className }: TableProps) => {
         tableData.rows.map((row: TableDataRow[], index: number) => (
           <div
             key={index}
-            className={`relative flex flex-col lg:flex-row last:mt-4 lg:last:mt-0 lg:mb-0 rounded-lg lg:rounded-none border-1 lg:border-t-0 border-blue-900 bg-white dark:bg-gray-950 hover:bg-blue-light lg:odd:bg-stone-200/50 dark:lg:odd:bg-gray-950/50 ${index === tableData.rows.length - 1 ? ` lg:rounded-b-lg` : ""} ${className ? ` ${className}` : ""}`}
+            className={`relative flex flex-col lg:flex-row [div+&]:mt-4 lg:[div+&]:mt-4 lg:mb-0 rounded-lg lg:rounded-none border-1 lg:border-t-0 border-blue-900 bg-white dark:bg-gray-950 hover:bg-blue-light lg:odd:bg-stone-200/50 dark:lg:odd:bg-gray-950/50 ${index === tableData.rows.length - 1 ? ` lg:rounded-b-lg` : ""} ${className ? ` ${className}` : ""}`}
           >
             {row.map((cell: TableDataRow) => (
               <div
                 key={cell.name}
-                className={`flex-1 text-left lg:text-center first:bg-stone-200/50 lg:first:bg-transparent first:font-normal border-t-1 lg:border-t-0 first:border-t-0 border-stone-400 px-3 py-1 lg:py-2 text-lg lg:text-base text-gray-900 dark:text-white lg:border-r-1 last:border-r-0 lg:border-blue-900 ${cell.className ? ` ${cell.className}` : ``} ${cell.name === "action" ? `absolute lg:relative top-0 right-0 !border-t-0` : ""}`}
+                className={`flex-1 text-left lg:text-center first:bg-stone-200/50 dark:first:bg-gray-200/10 lg:first:bg-transparent first:font-normal border-t-1 lg:border-t-0 first:border-t-0 border-stone-400 dark:border-gray-200/25 px-3 py-1 lg:py-2 text-lg lg:text-base text-gray-900 dark:text-white lg:border-r-1 last:border-r-0 lg:border-blue-900 ${cell.className ? ` ${cell.className}` : ``} ${cell.name === "action" ? `absolute lg:relative top-0 right-0 !border-t-0` : ""}`}
               >
                 {cell.label ? (
                   <span
