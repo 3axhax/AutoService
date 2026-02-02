@@ -111,7 +111,7 @@ export const EditAdditionalWorkForm = ({
             <button
               type={"button"}
               className={
-                "flex-1 lg:flex-auto btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
+                "flex-grow flex-shrink-0 lg:flex-grow-0 lg:flex-shrink lg:basis-auto btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 hover:shadow-gray-500 dark:hover:shadow-gray-950/20 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
               }
               onClick={() =>
                 dispatch(deleteActiveAdditionalWork(additionalWorkId))

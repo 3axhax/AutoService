@@ -213,7 +213,7 @@
   .form-control,
   .input {
     font-family: "Roboto", "Arial Black", sans-serif;
-    @apply text-blue-900 w-full px-5 py-3 border border-blue-900 bg-white text-base/5 rounded-md shadow-sm hover:shadow-blue-950 focus:outline-none focus:border-blue-900 focus:shadow-gray-400;
+    @apply text-blue-900 dark:text-white/80 w-full px-5 py-3 border border-blue-900 bg-white dark:bg-gray-950 text-base/5 rounded-md shadow-sm hover:shadow-blue-950 focus:outline-none focus:border-blue-900 focus:shadow-gray-400;
   }
 
   .form-label {
@@ -314,6 +314,35 @@
       var(--color-stone-50)
     );
     @apply shadow-gray-700/75;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light) {
+      .btn-beige {
+        background-image: linear-gradient(
+          to right,
+          var(--color-gray-900),
+          var(--color-gray-950),
+          var(--color-gray-900),
+          var(--color-gray-950)
+        );
+        @apply shadow-gray-950/15;
+      }
+    }
+  }
+
+  /* Manual override with .dark class */
+  :root.dark {
+    .btn-beige {
+      background-image: linear-gradient(
+        to right,
+        var(--color-gray-900),
+        var(--color-gray-950),
+        var(--color-gray-900),
+        var(--color-gray-950)
+      );
+      @apply shadow-gray-950/15;
+    }
   }
 
   .btn-green {
