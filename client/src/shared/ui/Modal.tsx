@@ -51,7 +51,7 @@ export const Modal = ({
             transition
             className={`relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:w-full lg:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95${className ? ` ${className}` : ``}`}
           >
-            <div className="bg-white px-4 py-4 lg:py-6 lg:px-6">
+            <div className="bg-white dark:bg-gray-950 px-4 py-4 lg:py-6 lg:px-6">
               <div className="flex w-full">
                 {icon && (
                   <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
@@ -59,7 +59,10 @@ export const Modal = ({
                   </div>
                 )}
                 <div className="lg:mt-3 text-center w-full">
-                  <DialogTitle as="h3" className="text-2xl mt-3 text-gray-700">
+                  <DialogTitle
+                    as="h3"
+                    className="text-2xl mt-3 text-gray-700 dark:text-white/90"
+                  >
                     {title}
                   </DialogTitle>
                   <div className="mt-2 w-full">{body}</div>
@@ -67,7 +70,7 @@ export const Modal = ({
               </div>
             </div>
             {hasButtons && (
-              <div className="bg-gray-50 py-3 flex items-center flex-row-reverse gap-2 px-6 border-t-1 border-gray-200">
+              <div className="bg-gray-50 dark:bg-gray-950/95 py-3 flex items-center flex-row-reverse gap-2 px-6 border-t-1 border-gray-200 dark:border-gray-200/20">
                 <button
                   type="button"
                   onClick={() => setOpen(false)}

@@ -22,7 +22,7 @@ export const Pagination = ({
     ]),
   ].filter((num) => num > 0 && num <= totalPages);
 
-  const buttonsCommonClass = `shadow-sm font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/20 hover:shadow-gray-800/50 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mx-1`;
+  const buttonsCommonClass = `shadow-sm font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/20 dark:shadow-white/20 hover:shadow-gray-800/50 dark:hover:dark:shadow-white/20 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mx-1`;
 
   return (
     <div className={"flex gap-1 justify-center m-2"}>

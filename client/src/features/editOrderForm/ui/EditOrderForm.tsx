@@ -75,7 +75,7 @@ export const EditOrderForm = ({
           aria-label={`Go to slide ${index}`}
           type={"button"}
           onClick={onClick}
-          className={`shadow-sm font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/20 hover:shadow-gray-800/50 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mx-1 ${active ? "bg-blue-900 text-white" : "bg-white"}`}
+          className={`shadow-sm font-medium text-base hover:scale-125 transition-transform duration-200 cursor-pointer shadow-gray-800/20 hover:shadow-gray-800/50 h-7 w-7 rounded-full border-1 border-blue-900 text-blue-900 mx-1 ${active ? "bg-blue-900 text-white dark:bg-white dark:text-blue-900" : "bg-white dark:bg-blue-900/95 dark:text-white"}`}
         >
           {index ? index + 1 : "1"}
         </button>
@@ -96,7 +96,7 @@ export const EditOrderForm = ({
       <button
         onClick={onClick}
         type={"button"}
-        className={`hidden lg:flex absolute cursor-pointer top-1/2 -translate-y-1/2 text-blue-900 hover:text-orange-500 transition-colors duration-200 ${direction === "left" ? "-left-8" : "-right-8 rotate-180"} ${disabled ? "lg:hidden" : ""}`}
+        className={`hidden lg:flex absolute cursor-pointer top-1/2 -translate-y-1/2 text-blue-900 dark:text-white hover:text-orange-500 transition-colors duration-200 ${direction === "left" ? "-left-8" : "-right-8 rotate-180"} ${disabled ? "lg:hidden" : ""}`}
         aria-label={direction === "left" ? "Previous slide" : "Next slide"}
       >
         {direction === "left" ? (
@@ -154,7 +154,7 @@ export const EditOrderForm = ({
             parametersList.map((parameter) => (
               <div
                 className={
-                  "bg-white shadow-gray-800/10 shadow-xs border-gray-800/20 border-1 px-4 lg:mx-2 py-4 rounded-lg h-full"
+                  "bg-white dark:bg-gray-950/75 shadow-gray-800/10 dark:shadow-white shadow-xs border-gray-800/20 dark:border-white/20 border-1 px-4 lg:mx-2 py-4 rounded-lg h-full"
                 }
               >
                 <SwitchParameterType

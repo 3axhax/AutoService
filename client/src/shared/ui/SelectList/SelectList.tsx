@@ -65,7 +65,7 @@ export const SelectList = <T extends string = string>({
       {label ? (
         <label
           htmlFor={name}
-          className="text-lg font-medium text-gray-800 mb-2"
+          className="text-lg font-medium text-gray-800 dark:text-white mb-2"
         >
           {label}
         </label>

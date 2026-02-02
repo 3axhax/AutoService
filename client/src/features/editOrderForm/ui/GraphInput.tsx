@@ -33,7 +33,7 @@ export const GraphInput = ({
   return (
     <>
       <div className={className}>
-        <p className={"text-lg font-medium text-gray-800 mb-2"}>
+        <p className={"text-lg font-medium text-gray-800 dark:text-white mb-2"}>
           Добавьте подпись
         </p>
         {value && <img src={value} alt={label} />}

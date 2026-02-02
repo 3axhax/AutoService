@@ -74,7 +74,7 @@ export const ClosedOrdersList = () => {
           <div className={"container mx-auto px-4 lg:px-8"}>
             <h3
               className={
-                "text-2xl mb-3 lg:mb-6 text-gray-700 text-left lg:text-center"
+                "text-2xl mb-3 lg:mb-6 text-gray-700 dark:text-gray-50 text-left lg:text-center"
               }
             >
               Список выполненных заказов

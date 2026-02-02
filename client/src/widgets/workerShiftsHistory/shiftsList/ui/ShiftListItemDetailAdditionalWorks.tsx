@@ -47,7 +47,7 @@ export const ShiftListItemDetailAdditionalWorks = ({ id }: { id: number }) => {
     <div>
       <h3
         className={
-          "text-xl mb-1 lg:mb-2 text-gray-700 text-left lg:text-center"
+          "text-xl mb-1 lg:mb-2 text-gray-700 dark:text-white text-left lg:text-center"
         }
       >
         Список дополнительных работ

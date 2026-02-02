@@ -27,6 +27,7 @@
 @layer base {
   :root {
     font-family: "Roboto", "Arial Black", sans-serif;
+
     font-weight: 300;
     line-height: 1.5;
     font-synthesis: none;
@@ -34,6 +35,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+    --color-text: #1a1a1a;
+    --bg-color: var(--color-white);
     --accent: black;
     --canvas: color-mix(in lch, canvas, canvasText 1%);
     --border: color-mix(in lch, canvas, canvasText 10%);
@@ -43,7 +46,7 @@
     --trail-size: 25;
     --speed: 12s;
     --size: 45px;
-    --line: color-mix(in lch, canvasText, transparent 95%);
+    --line: color-mix(in lch, var(--color-text), transparent 97%);
 
     --secondaryColor: var(--color-green-800);
 
@@ -58,8 +61,21 @@
     --color-purple: oklch(39.8% 0.057 283.51);
   }
 
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light) {
+      --color-text: #e0e0e0;
+      --bg-color: var(--color-gray-950);
+    }
+  }
+
+  /* Manual override with .dark class */
+  :root.dark {
+    --color-text: #e0e0e0;
+    --bg-color: var(--color-gray-950);
+  }
+
   html {
-    @apply w-full h-full;
+    @apply w-full h-full bg-white dark:bg-gray-900;
     scrollbar-gutter: stable;
   }
 
@@ -242,7 +258,7 @@
     disabled:cursor-not-allowed
     disabled:bg-blue-300
     shadow-md shadow-green-800/75
-    hover:shadow-gray-500;
+    hover:shadow-gray-500 hover:dark:shadow-white/20;
   }
 
   .btn-orange {
@@ -378,7 +394,7 @@
   }
 
   .radio-label {
-    @apply relative;
+    @apply relative text-gray-700 dark:text-white;
   }
   .radio-input:checked:before {
     @apply transform scale-100;
@@ -406,7 +422,7 @@
   }
 
   .colored {
-    @apply even:not-empty:bg-stone-200/25 border-t-1 border-stone-200 py-5 lg:py-10 last:pb-10;
+    @apply even:not-empty:bg-stone-200/25 dark:even:not-empty:bg-gray-950/25 border-t-1 border-stone-200 dark:border-gray-950 py-5 lg:py-10 last:pb-10;
   }
 
   .scrollbar-stable {

@@ -18,7 +18,7 @@ export const SelectedList = ({
           <li
             key={item.id}
             className={
-              "flex justify-between border-b-1 border-gray-400 last:border-b-0 items-center p-2 even:bg-gray-300/20"
+              "flex justify-between border-b-1 border-gray-400 last:border-b-0 items-center p-2 even:bg-gray-300/20 dark:even:bg-gray-950/20 text-gray-700 dark:text-white"
             }
           >
             <SelectedListItem

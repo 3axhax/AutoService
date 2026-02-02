@@ -66,7 +66,7 @@ export const EditAdditionalWorkForm = ({
     <div className={"mb-8"}>
       <h2
         className={
-          "text-2xl mb-3 lg:mb-6 text-gray-700 text-left lg:text-center"
+          "text-2xl mb-3 lg:mb-6 text-gray-700 dark:text-gray-50 text-left lg:text-center"
         }
       >
         <ExtraIcon className={"h-7 w-7 inline-flex mr-2"} />

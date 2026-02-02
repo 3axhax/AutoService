@@ -44,7 +44,7 @@ export const OrdersListActionButton = ({ orderId }: { orderId: number }) => {
         type={"button"}
         onClick={handlerEdit}
         className={
-          "w-8 h-8 inline-flex justify-center items-center text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
+          "w-8 h-8 inline-flex justify-center items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 transition-colors cursor-pointer"
         }
       >
         <span className={"sr-only"}>Редактировать</span>

@@ -56,7 +56,11 @@ export const formatWorkList = (order: OrderItem) => {
     (value) => value.parameter.name === "materials",
   );
   const typeWorkList = (
-    <ul className={"inline-flex flex-col text-left lg:text-center"}>
+    <ul
+      className={
+        "[ul+&]:border-t-1 [ul+&]:mt-1 [ul+&]:pt-1 border-stone-400 inline-flex flex-col text-left lg:text-center"
+      }
+    >
       {type_work.map((item, index) => (
         <li key={index}>
           {item.option?.translationRu ?? ""} x {item.count}
@@ -65,7 +69,11 @@ export const formatWorkList = (order: OrderItem) => {
     </ul>
   );
   const materialsList = (
-    <ul className={"inline-flex flex-col text-left lg:text-center"}>
+    <ul
+      className={
+        "[ul+&]:border-t-1 [ul+&]:mt-1 [ul+&]:pt-1 border-stone-400 inline-flex flex-col text-left lg:text-center"
+      }
+    >
       {materials.map((item, index) => (
         <li key={index}>
           {item.option?.translationRu ?? ""} x {item.count}
@@ -76,9 +84,6 @@ export const formatWorkList = (order: OrderItem) => {
   return (
     <div className={"inline-flex flex-col"}>
       {typeWorkList}
-      {type_work.length > 0 && materials.length > 0 ? (
-        <hr className={"text-stone-400 lg:mx-auto"} />
-      ) : null}
       {materialsList}
     </div>
   );
