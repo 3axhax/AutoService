@@ -30,6 +30,7 @@ import { Shifts } from './shifts/shifts.model';
 import { OrdersModule } from './orders/orders.module';
 import { AdditionalWorks } from './additopnalWorks/additionalWorks.model';
 import { AdditionalWorksModule } from './additopnalWorks/additionalWorks.module';
+import { MigrationService } from './migrations/migrations.service';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { AdditionalWorksModule } from './additopnalWorks/additionalWorks.module'
   controllers: [AppController],
   providers: [
     AppService,
+    MigrationService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,

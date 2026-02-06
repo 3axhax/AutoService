@@ -21,6 +21,7 @@ export interface OrdersCreationAttrs {
   companyId: number;
   shiftId: number;
   totalValue?: number;
+  totalValueWithDiscount?: number;
 }
 
 @Table({
@@ -53,6 +54,12 @@ export class Orders extends Model<Orders, OrdersCreationAttrs> {
     defaultValue: 0,
   })
   declare totalValue: number;
+
+  @Column({
+    type: DataType.FLOAT,
+    defaultValue: 0,
+  })
+  declare totalValueWithDiscount: number;
 
   @HasMany(() => OrdersOptionValues)
   declare optionValues: OrdersOptionValues[];
