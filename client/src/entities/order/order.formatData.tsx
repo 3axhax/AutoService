@@ -58,7 +58,7 @@ export const formatWorkList = (order: OrderItem) => {
   const typeWorkList = (
     <ul
       className={
-        "[ul+&]:border-t-1 [ul+&]:mt-1 [ul+&]:pt-1 border-stone-400 inline-flex flex-col text-left lg:text-center"
+        "[ul+&]:mt-1 [ul+&]:pt-1 inline-flex flex-col text-left lg:text-center"
       }
     >
       {type_work.map((item, index) => (
@@ -70,9 +70,7 @@ export const formatWorkList = (order: OrderItem) => {
   );
   const materialsList = (
     <ul
-      className={
-        "[ul+&]:border-t-1 [ul+&]:mt-1 [ul+&]:pt-1 border-stone-400 inline-flex flex-col text-left lg:text-center"
-      }
+      className={`${type_work.length > 0 && materials.length > 0 ? "[ul+&]:border-t-1 border-stone-400 " : ""}[ul+&]:mt-1 [ul+&]:pt-1 inline-flex flex-col text-left lg:text-center`}
     >
       {materials.map((item, index) => (
         <li key={index}>
@@ -85,6 +83,21 @@ export const formatWorkList = (order: OrderItem) => {
     <div className={"inline-flex flex-col"}>
       {typeWorkList}
       {materialsList}
+    </div>
+  );
+};
+
+export const formatTotalValue = (order: OrderItem) => {
+  return (
+    <div className={"flex flex-col gap-1"}>
+      <span className={"font-medium"}>
+        {order.totalValueWithDiscount ?? 0} ₽
+      </span>
+      {order.totalValueWithDiscount !== order.totalValue ? (
+        <span className={"ml-2 text-sm"}>
+          (без скидки {order.totalValue ?? 0} ₽)
+        </span>
+      ) : null}
     </div>
   );
 };

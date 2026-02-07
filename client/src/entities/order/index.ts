@@ -7,6 +7,7 @@ export {
   activeOrdersListSelect,
   workerActiveShiftClosedOrdersListSelect,
   workerActiveShiftClosedOrdersTotalValueSelect,
+  workerActiveShiftClosedOrdersTotalValueWithDiscountSelect,
   ordersListByShiftIdSelect,
   addNewActiveOrder,
   deleteActiveOrder,
@@ -22,4 +23,5 @@ export {
   formatVehicleName,
   formatClientType,
   formatWorkList,
+  formatTotalValue,
 } from "./order.formatData";

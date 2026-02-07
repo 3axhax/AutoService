@@ -24,7 +24,9 @@ export const ShiftsListItem = ({
       Смена не закрыта
     </span>
   );
-  const totalValue = `${+item.totalOrdersSum + +item.totalAdditionalWorksSum} ₽`;
+  const totalValue = +item.totalOrdersSum + +item.totalAdditionalWorksSum;
+  const totalValueWithDiscount =
+    +item.totalOrdersSumWithDiscount + +item.totalAdditionalWorksSum;
   return (
     <li
       className={
@@ -46,10 +48,16 @@ export const ShiftsListItem = ({
         <span>Окончание:&nbsp;{closedAt},&nbsp;</span>
         <span>
           Сумма:&nbsp;
-          <span className={"text-base font-medium"}>{totalValue}</span>&nbsp;
+          <span className={"text-base font-medium"}>
+            {totalValueWithDiscount} ₽
+          </span>
+          &nbsp;
+          {totalValueWithDiscount !== totalValue ? (
+            <span className={"ml-2 text-sm"}>(без скидки {totalValue} ₽)</span>
+          ) : null}
         </span>
         <ChevronDownIcon
-          className={`absolute lg:relative right-4 inline-flex h-5 w-5 ml-auto mr-2 text-gray-600 dark:text-white/80 transition-transform transition-colors group-hover:text-blue-950 dark:group-hover:text-white duration-200 ${activeItem ? "rotate-180" : ""}`}
+          className={`absolute lg:relative right-4 inline-flex h-5 w-5 ml-auto mr-2 text-gray-600 dark:text-white/80 transition-transform group-hover:text-blue-950 dark:group-hover:text-white duration-200 ${activeItem ? "rotate-180" : ""}`}
         />
       </span>
       {activeItem && <ShiftListItemDetail id={item.id} />}

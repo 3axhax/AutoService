@@ -35,10 +35,11 @@ export class PriceService {
   }: {
     user: User;
     param: Record<string, string | Record<number | string, number>>;
-  }): Promise<number> {
+  }): Promise<{ totalValue: number; totalValueWithDiscount: number }> {
     const companyPrice = await this.getAll({ user });
 
     let total = 0;
+    let totalWithDiscount = 0;
     let discount = 1;
 
     const parametersList = await this.orderParametersService.getAll({ user });
@@ -131,14 +132,22 @@ export class PriceService {
     }, []);
 
     relatedPrice.forEach((price) => {
-      total +=
+      totalWithDiscount +=
         price.value *
         price.conditions.reduce((acc: number, condition) => {
           return acc * +selectedValues[condition.id];
         }, 1) *
         (price.discountImpact ? discount : 1);
+      total +=
+        price.value *
+        price.conditions.reduce((acc: number, condition) => {
+          return acc * +selectedValues[condition.id];
+        }, 1);
     });
 
-    return total;
+    return {
+      totalValue: total,
+      totalValueWithDiscount: totalWithDiscount,
+    };
   }
 }

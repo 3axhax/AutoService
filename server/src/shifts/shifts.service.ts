@@ -127,6 +127,12 @@ export class ShiftsService {
           ],
           [
             literal(
+              `(SELECT COALESCE(SUM("totalValueWithDiscount"), 0) FROM "orders" WHERE "shiftId" = "Shifts"."id")`,
+            ),
+            'totalOrdersSumWithDiscount',
+          ],
+          [
+            literal(
               `(SELECT COALESCE(SUM("totalValue"), 0) FROM "additionalWorks" WHERE "shiftId" = "Shifts"."id")`,
             ),
             'totalAdditionalWorksSum',

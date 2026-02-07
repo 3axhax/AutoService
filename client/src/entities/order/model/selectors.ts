@@ -30,6 +30,14 @@ export const workerActiveShiftClosedOrdersTotalValueSelect = createSelector(
     ordersList.reduce((total, order) => total + order.totalValue, 0),
 );
 
+export const workerActiveShiftClosedOrdersTotalValueWithDiscountSelect =
+  createSelector([workerActiveShiftClosedOrdersListSelect], (ordersList) =>
+    ordersList.reduce(
+      (total, order) => total + order.totalValueWithDiscount,
+      0,
+    ),
+  );
+
 export const ordersListByShiftIdSelect = createSelector(
   [orderListSelect, (_: RootState, shiftId: number) => shiftId],
   (ordersList, shiftId) =>

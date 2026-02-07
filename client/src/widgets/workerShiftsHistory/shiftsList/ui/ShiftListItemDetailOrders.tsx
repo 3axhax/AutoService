@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { useEffect } from "react";
 import {
   formatClientType,
+  formatTotalValue,
   formatVehicleName,
   formatWorkList,
   getOrderByShiftId,
@@ -42,7 +43,7 @@ export const ShiftListItemDetailOrders = ({ id }: { id: number }) => {
       { name: "clientType", data: formatClientType(row) },
       { name: "vehicle", data: formatVehicleName(row) },
       { name: "workList", data: formatWorkList(row) },
-      { name: "totalValue", data: `${row.totalValue.toString()} ₽` },
+      { name: "totalValue", data: formatTotalValue(row) },
     ]);
   }
 

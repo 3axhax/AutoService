@@ -19,6 +19,7 @@ export {
   activeOrdersListSelect,
   workerActiveShiftClosedOrdersListSelect,
   workerActiveShiftClosedOrdersTotalValueSelect,
+  workerActiveShiftClosedOrdersTotalValueWithDiscountSelect,
   ordersListByShiftIdSelect,
 } from "./selectors.ts";
 

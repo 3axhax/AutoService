@@ -15,8 +15,13 @@ const priceList = (state: RootState) => state.price.priceList;
 
 export const orderTotalValue = createSelector(
   [usefulOrderValuesWithOptions, priceList, selectOrderParametersList],
-  (parametersValues, priceList, parametersList) => {
+  (
+    parametersValues,
+    priceList,
+    parametersList,
+  ): { totalValue: number; totalValueWithDiscount: number } => {
     let total = 0;
+    let totalWithDiscount = 0;
     let discount = 1;
 
     const selectedValues = Object.values(parametersValues).reduce(
@@ -89,14 +94,19 @@ export const orderTotalValue = createSelector(
     }, []);
 
     relatedPrice.forEach((price) => {
-      total +=
+      totalWithDiscount +=
         price.value *
         price.conditions.reduce((acc: number, condition) => {
           return acc * (selectedValues[condition.id] ?? 1);
         }, 1) *
         (price.discountImpact ? discount : 1);
+      total +=
+        price.value *
+        price.conditions.reduce((acc: number, condition) => {
+          return acc * (selectedValues[condition.id] ?? 1);
+        }, 1);
     });
 
-    return total;
+    return { totalValue: total, totalValueWithDiscount: totalWithDiscount };
   },
 );

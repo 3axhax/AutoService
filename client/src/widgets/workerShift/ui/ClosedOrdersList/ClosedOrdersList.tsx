@@ -2,10 +2,12 @@ import { useAppSelector } from "@shared/store/hooks.ts";
 import { Table, TableData, TableDataRow } from "@shared/ui";
 import {
   formatClientType,
+  formatTotalValue,
   formatVehicleName,
   formatWorkList,
   workerActiveShiftClosedOrdersListSelect,
   workerActiveShiftClosedOrdersTotalValueSelect,
+  workerActiveShiftClosedOrdersTotalValueWithDiscountSelect,
 } from "@entities/order";
 import { OrdersListActionButton } from "./OrdersListActionButton";
 
@@ -13,6 +15,9 @@ export const ClosedOrdersList = () => {
   const ordersList = useAppSelector(workerActiveShiftClosedOrdersListSelect);
   const shiftTotalValue = useAppSelector(
     workerActiveShiftClosedOrdersTotalValueSelect,
+  );
+  const shiftTotalValueWithDiscount = useAppSelector(
+    workerActiveShiftClosedOrdersTotalValueWithDiscountSelect,
   );
 
   const tableData: TableData = {
@@ -57,7 +62,7 @@ export const ClosedOrdersList = () => {
       },
       {
         name: "totalValue",
-        data: `${row.totalValue.toString()} ₽`,
+        data: formatTotalValue(row),
         label: "Сумма",
       },
       {
@@ -87,8 +92,13 @@ export const ClosedOrdersList = () => {
             >
               Итоговая сумма по заказам:&nbsp;
               <span className={"font-medium text-xl"}>
-                {shiftTotalValue}&nbsp;₽
+                {shiftTotalValueWithDiscount}&nbsp;₽
               </span>
+              {shiftTotalValueWithDiscount !== shiftTotalValue ? (
+                <span className={"ml-2 text-sm"}>
+                  (без скидки {shiftTotalValue} ₽)
+                </span>
+              ) : null}
             </div>
           </div>
         </div>

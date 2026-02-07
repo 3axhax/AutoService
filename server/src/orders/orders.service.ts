@@ -37,13 +37,17 @@ export class OrdersService {
           companyId: user.companyId,
         });
 
+      const { totalValue, totalValueWithDiscount } =
+        await this.priceService.calculateTotalValue({
+          user,
+          param,
+        });
+
       const order = this.ordersRepository.build({
         companyId: user.companyId,
         shiftId: shift.id,
-        totalValue: await this.priceService.calculateTotalValue({
-          user,
-          param,
-        }),
+        totalValue,
+        totalValueWithDiscount,
       });
 
       const parametersOptions = await this._formatParamToOptions(param);
@@ -84,11 +88,14 @@ export class OrdersService {
       const parametersOptions = await this._formatParamToOptions(param);
       existOrder.setOptions(parametersOptions);
       await existOrder.saveOptions();
-      await existOrder.update({
-        totalValue: await this.priceService.calculateTotalValue({
+      const { totalValue, totalValueWithDiscount } =
+        await this.priceService.calculateTotalValue({
           user,
           param,
-        }),
+        });
+      await existOrder.update({
+        totalValue,
+        totalValueWithDiscount,
       });
       await existOrder.save();
       return existOrder;
@@ -106,7 +113,12 @@ export class OrdersService {
       if (shift) {
         return await this.ordersRepository.findAll({
           where: { shiftId: shift.id },
-          attributes: ['id', 'totalValue', 'createdAt'],
+          attributes: [
+            'id',
+            'totalValue',
+            'totalValueWithDiscount',
+            'createdAt',
+          ],
           include: [
             {
               model: OrdersOptionValues,
@@ -193,7 +205,13 @@ export class OrdersService {
       if (shift) {
         return await this.ordersRepository.findAll({
           where: { shiftId: shift.id },
-          attributes: ['id', 'shiftId', 'totalValue', 'createdAt'],
+          attributes: [
+            'id',
+            'shiftId',
+            'totalValue',
+            'totalValueWithDiscount',
+            'createdAt',
+          ],
           include: [
             {
               model: OrdersOptionValues,

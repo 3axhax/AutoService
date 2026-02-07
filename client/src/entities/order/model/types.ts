@@ -6,6 +6,7 @@ export interface OrderValue {
 export interface OrderItem {
   id: number;
   totalValue: number;
+  totalValueWithDiscount: number;
   createdAt: string;
   shiftId?: number;
   optionValues: {
