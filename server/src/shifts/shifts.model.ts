@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -58,4 +59,7 @@ export class Shifts extends Model<Shifts, ShiftsCreationAttrs> {
 
   @HasMany(() => Orders, { foreignKey: 'shiftId' })
   declare orders: Orders[];
+
+  @BelongsTo(() => User)
+  declare user: User;
 }

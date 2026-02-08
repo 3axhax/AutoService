@@ -2,9 +2,16 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useInfoModalData } from "@app/providers/infoModalProvider";
 import { useAppDispatch } from "@shared/store/hooks.ts";
 import { EditOrderForm } from "@features/editOrderForm";
-import { deleteOrder, getOrdersFromActiveShift } from "@entities/order";
+import { deleteOrder } from "@entities/order";
 
-export const OrdersListActionButton = ({ orderId }: { orderId: number }) => {
+interface OrdersListActionButtonProps {
+  orderId: number;
+  onReload?: () => void;
+}
+export const OrdersListActionButton = ({
+  orderId,
+  onReload,
+}: OrdersListActionButtonProps) => {
   const dispatch = useAppDispatch();
 
   const { openModal, closeModal } = useInfoModalData();
@@ -13,8 +20,8 @@ export const OrdersListActionButton = ({ orderId }: { orderId: number }) => {
     openModal({
       onAccess: () => {
         dispatch(deleteOrder(orderId)).then((res) => {
-          if (res.payload) {
-            dispatch(getOrdersFromActiveShift());
+          if (res.payload && onReload) {
+            onReload();
           }
         });
       },
@@ -29,9 +36,12 @@ export const OrdersListActionButton = ({ orderId }: { orderId: number }) => {
         <EditOrderForm
           orderId={orderId}
           edit={true}
-          onSuccess={() =>
-            dispatch(getOrdersFromActiveShift()).then(() => closeModal())
-          }
+          onSuccess={async () => {
+            if (onReload) {
+              await onReload();
+              closeModal();
+            }
+          }}
           carouselMaxItems={3}
         />
       ),

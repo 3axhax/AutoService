@@ -4,6 +4,9 @@ import {
   selectErrorOrderParameters,
 } from "@entities/orderParameters";
 import { useEffect } from "react";
+import { AdminOrdersList } from "@widgets/adminOrdersList";
+import { AdminOrdersListPagination } from "@features/adminOrdersList";
+import { getPriceList } from "@entities/price/model/slice.ts";
 
 export const OrdersPage = () => {
   const dispatch = useAppDispatch();
@@ -12,18 +15,18 @@ export const OrdersPage = () => {
 
   useEffect(() => {
     dispatch(getOrderParametersList());
+    dispatch(getPriceList());
   }, [dispatch]);
 
   return (
     <div className="app">
       <div className="container px-4 lg:px-8">
-        <h1 className="text-4xl font-sans  text-gray-900 dark:text-white mb-4">
-          OrdersPage
-        </h1>
         {error !== "" ? (
           <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>
         ) : null}
       </div>
+      <AdminOrdersList />
+      <AdminOrdersListPagination />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import type { WritableDraft } from "immer";
 import { RootState } from "@shared/store";
 import { ErrorActionType } from "@shared/types";
 import { OrderParametersResponse, OrderParametersState } from "./types.ts";
+import { parseJSONSafely } from "@shared/utils";
 
 export const getOrderParametersList = createAsyncThunk(
   "orderParameters/getList",
@@ -62,13 +63,13 @@ export const orderParametersSlice = createSlice({
           state.pending = false;
           if (action.payload) {
             state.parametersList = action.payload.parameters;
-            const parameterOptionDependence = JSON.parse(
+            const parameterOptionDependence = parseJSONSafely(
               action.payload.options.parameterOptionDependence,
             );
             if (parameterOptionDependence) {
               state.parameterOptionDependence = parameterOptionDependence;
             }
-            const optionOptionDependence = JSON.parse(
+            const optionOptionDependence = parseJSONSafely(
               action.payload.options.optionOptionDependence,
             );
             if (optionOptionDependence) {

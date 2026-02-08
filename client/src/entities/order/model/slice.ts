@@ -6,6 +6,7 @@ import {
   addOrder,
   getOrderByShiftId,
   getOrdersFromActiveShift,
+  getOrdersListForAdmin,
 } from "@entities/order";
 
 const initialState: OrderState = {
@@ -13,6 +14,11 @@ const initialState: OrderState = {
   error: "",
   ordersValue: {},
   ordersList: {},
+  ordersListPagination: {
+    currentPage: 1,
+    recordPerPage: 5,
+    totalRecord: 0,
+  },
 };
 
 export const orderSlice = createSlice({
@@ -78,6 +84,13 @@ export const orderSlice = createSlice({
     clearOrdersList: (state: WritableDraft<OrderState>) => {
       state.ordersList = {};
     },
+    setCurrentPage: (
+      state: WritableDraft<OrderState>,
+      action: PayloadAction<number>,
+    ) => {
+      state.ordersListPagination.currentPage =
+        action.payload > 0 ? action.payload : 1;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -120,6 +133,29 @@ export const orderSlice = createSlice({
           }
         },
       )
+      .addCase(
+        getOrdersListForAdmin.fulfilled,
+        (
+          state: WritableDraft<OrderState>,
+          action: PayloadAction<{
+            totalRecord: number;
+            currentPage: number;
+            rows: OrderItem[] | null;
+          }>,
+        ) => {
+          state.pending = false;
+          if (
+            action.payload &&
+            action.payload.currentPage ===
+              state.ordersListPagination.currentPage
+          ) {
+            state.ordersListPagination.totalRecord = action.payload.totalRecord;
+            state.ordersList = action.payload.rows
+              ? mapOrdersResponseList(action.payload.rows)
+              : {};
+          }
+        },
+      )
       .addMatcher(
         (action) =>
           action.type.endsWith("/rejected") && action.type.startsWith("orders"),
@@ -144,6 +180,7 @@ export const {
   addNewActiveOrder,
   deleteActiveOrder,
   clearOrdersList,
+  setCurrentPage,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

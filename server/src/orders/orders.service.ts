@@ -12,6 +12,9 @@ import { OrderParameters } from '../orderParameters/orderParameters.model';
 import { ShiftsService } from '../shifts/shifts.service';
 import { PriceService } from '../price/price.service';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
+import { GetOrdersListDto } from './dto/orders.dto';
+import { Shifts } from '../shifts/shifts.model';
+import { Order } from 'sequelize';
 
 @Injectable()
 export class OrdersService {
@@ -79,26 +82,32 @@ export class OrdersService {
     user: User | undefined;
     param: Record<string, string | Record<number | string, number>>;
   }): Promise<Orders | null> {
-    const shift = await this.shiftsService.getActiveShiftByUser({ user });
-    const existOrder = await this.ordersRepository.findOne({
-      where: { shiftId: shift?.id, companyId: user?.companyId, id: param.id },
-    });
-    if (existOrder && user) {
-      await existOrder.deleteOptions();
-      const parametersOptions = await this._formatParamToOptions(param);
-      existOrder.setOptions(parametersOptions);
-      await existOrder.saveOptions();
-      const { totalValue, totalValueWithDiscount } =
-        await this.priceService.calculateTotalValue({
-          user,
-          param,
-        });
-      await existOrder.update({
-        totalValue,
-        totalValueWithDiscount,
+    if (user) {
+      const where = { companyId: user?.companyId, id: param.id };
+      if (user.roles.length === 1 && user.roles[0].value === 'WORKER') {
+        const shift = await this.shiftsService.getActiveShiftByUser({ user });
+        where['shiftId'] = shift?.id;
+      }
+      const existOrder = await this.ordersRepository.findOne({
+        where,
       });
-      await existOrder.save();
-      return existOrder;
+      if (existOrder) {
+        await existOrder.deleteOptions();
+        const parametersOptions = await this._formatParamToOptions(param);
+        existOrder.setOptions(parametersOptions);
+        await existOrder.saveOptions();
+        const { totalValue, totalValueWithDiscount } =
+          await this.priceService.calculateTotalValue({
+            user,
+            param,
+          });
+        await existOrder.update({
+          totalValue,
+          totalValueWithDiscount,
+        });
+        await existOrder.save();
+        return existOrder;
+      }
     }
     return null;
   }
@@ -147,11 +156,25 @@ export class OrdersService {
     user: User | undefined;
     id: number;
   }): Promise<boolean> {
-    const shift = await this.shiftsService.getActiveShiftByUser({ user });
-    const deletedCount = await this.ordersRepository.destroy({
-      where: { id, companyId: user?.companyId, shiftId: shift?.id },
-    });
-    return deletedCount > 0;
+    if (user) {
+      if (user.roles.length === 1 && user.roles[0].value === 'WORKER') {
+        const shift = await this.shiftsService.getActiveShiftByUser({ user });
+        const deletedCount = await this.ordersRepository.destroy({
+          where: { id, companyId: user?.companyId, shiftId: shift?.id },
+        });
+        return deletedCount > 0;
+      }
+      if (
+        user.roles.length > 0 &&
+        user.roles.map((role) => role.value).includes('ADMIN')
+      ) {
+        const deletedCount = await this.ordersRepository.destroy({
+          where: { id, companyId: user?.companyId },
+        });
+        return deletedCount > 0;
+      }
+    }
+    return false;
   }
 
   async _formatParamToOptions(
@@ -231,5 +254,72 @@ export class OrdersService {
       }
     }
     return null;
+  }
+
+  async getForAdmin({
+    user,
+    param,
+  }: {
+    user: User | undefined;
+    param: GetOrdersListDto;
+  }) {
+    if (user) {
+      const limit = param.recordPerPage ?? 20;
+      const offset = param.currentPage ? (param.currentPage - 1) * limit : 0;
+
+      const count = await this.ordersRepository.count({
+        where: { companyId: user.companyId },
+      });
+
+      const rows = await this.ordersRepository.findAll({
+        where: { companyId: user.companyId },
+        offset,
+        limit,
+        order: [['createdAt', 'DESC']] as Order,
+        attributes: [
+          'id',
+          'shiftId',
+          'totalValue',
+          'totalValueWithDiscount',
+          'createdAt',
+        ],
+        include: [
+          {
+            model: OrdersOptionValues,
+            include: [
+              {
+                model: OrderParameters,
+                attributes: ['name', 'type'],
+              },
+              {
+                model: OrderParametersOptions,
+                attributes: ['translationRu'],
+              },
+            ],
+          },
+          {
+            model: Shifts,
+            include: [
+              {
+                model: User,
+                attributes: ['name'],
+              },
+            ],
+            attributes: ['id'],
+          },
+        ],
+      });
+      console.log(count);
+      return {
+        totalRecord: count,
+        currentPage: param.currentPage,
+        rows: rows,
+      };
+    }
+    return {
+      totalRecord: 0,
+      currentPage: param.currentPage,
+      rows: null,
+    };
   }
 }

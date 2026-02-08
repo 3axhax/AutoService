@@ -24,7 +24,7 @@ export class OrderParametersController {
     @User() user: UserModel | undefined,
   ): Promise<ResponseParametersWithOptions> {
     return this.orderParametersService.getAll({
-      user: user ? user : null,
+      user,
     });
   }
 }

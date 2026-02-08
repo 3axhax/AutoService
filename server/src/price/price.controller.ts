@@ -12,9 +12,9 @@ export class PriceController {
   @Get()
   @Roles('ADMIN', 'WORKER')
   @UseGuards(RolesGuard)
-  getAll(@User() user: UserModel | undefined): Promise<Price[]> {
+  getAll(@User() user: UserModel | undefined): Promise<Price[] | null> {
     return this.priceService.getAll({
-      user: user ? user : null,
+      user,
     });
   }
 }

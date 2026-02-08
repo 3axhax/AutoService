@@ -139,18 +139,23 @@ export class ShiftsService {
           ],
         ] as FindAttributeOptions,
       };
-      const whereProps =
-        user.roles.length === 1 && user.roles[0].value === 'WORKER'
+      const whereProps = {
+        ...(user.roles.length === 1 && user.roles[0].value === 'WORKER'
           ? { userId: user.id, companyId: user.companyId }
           : user.roles.length > 0 &&
               user.roles.map((role) => role.value).includes('ADMIN')
             ? { companyId: user.companyId }
-            : null;
+            : null),
+        ...this._formatIntervalWhereProps(param),
+      };
 
       if (whereProps) {
-        const { count, rows } = await this.shiftsRepository.findAndCountAll({
+        const count = await this.shiftsRepository.count({
+          where: whereProps,
+        });
+        const rows = await this.shiftsRepository.findAll({
           ...commonProps,
-          where: { ...whereProps, ...this._formatIntervalWhereProps(param) },
+          where: whereProps,
         });
         return {
           totalRecord: count,

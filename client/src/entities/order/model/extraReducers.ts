@@ -100,3 +100,30 @@ export const getOrderByShiftId = createAsyncThunk(
     }
   },
 );
+
+export const getOrdersListForAdmin = createAsyncThunk(
+  "orders/getForAdmin",
+  async (_, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.order.pending) {
+      dispatch(setPending(true));
+      try {
+        const sendData: {
+          currentPage: number;
+          recordPerPage: number;
+          closedAtStart?: string;
+          closedAtEnd?: string;
+        } = {
+          currentPage: state.order.ordersListPagination.currentPage,
+          recordPerPage: state.order.ordersListPagination.recordPerPage,
+        };
+        const response = await Request.get("/orders/getForAdmin", sendData);
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);

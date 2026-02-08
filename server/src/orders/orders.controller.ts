@@ -5,6 +5,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { User } from '../decorators/user.decorator';
 import { User as UserModel } from '../users/users.model';
 import { Orders } from './orders.model';
+import { GetOrdersListDto } from './dto/orders.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -57,5 +58,19 @@ export class OrdersController {
     @Query() param: { shiftId: number },
   ): Promise<Orders[] | null> {
     return this.orderService.getByShiftId({ user, param });
+  }
+
+  @Get('getForAdmin')
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  getForAdmin(
+    @User() user: UserModel | undefined,
+    @Query() param: GetOrdersListDto,
+  ): Promise<{
+    totalRecord: number;
+    currentPage: number;
+    rows: Orders[] | null;
+  }> {
+    return this.orderService.getForAdmin({ user, param });
   }
 }

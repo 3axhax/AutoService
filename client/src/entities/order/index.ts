@@ -12,9 +12,13 @@ export {
   addNewActiveOrder,
   deleteActiveOrder,
   clearOrdersList,
+  setCurrentPage,
   editOrder,
   deleteOrder,
   getOrderByShiftId,
+  getOrdersListForAdmin,
+  SelectOrdersPaginationCurrentPage,
+  SelectOrdersPaginationTotalPage,
 } from "./model";
 
 export type { OrderItem } from "./model";

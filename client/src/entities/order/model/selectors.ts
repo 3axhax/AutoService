@@ -49,3 +49,12 @@ export const ordersListByShiftIdSelect = createSelector(
           )
       : [],
 );
+
+export const SelectOrdersPaginationCurrentPage = (state: RootState) =>
+  state.order.ordersListPagination.currentPage;
+
+export const SelectOrdersPaginationTotalPage = (state: RootState) =>
+  Math.ceil(
+    state.order.ordersListPagination.totalRecord /
+      state.order.ordersListPagination.recordPerPage,
+  );

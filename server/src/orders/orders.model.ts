@@ -1,6 +1,7 @@
 import {
   AfterCreate,
   BeforeDestroy,
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -63,6 +64,9 @@ export class Orders extends Model<Orders, OrdersCreationAttrs> {
 
   @HasMany(() => OrdersOptionValues)
   declare optionValues: OrdersOptionValues[];
+
+  @BelongsTo(() => Shifts)
+  declare shift: Shifts;
 
   declare _optionsData?: Omit<
     OrdersOptionValuesCreationAttrs,

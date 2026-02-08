@@ -29,22 +29,18 @@ export const ClosedAdditionalWorksList = () => {
       {
         name: "id",
         data: row.id.toString(),
-        label: "Заказ номер:",
       },
       {
         name: "createdAt",
         data: new Date(row.createdAt).toLocaleString("ru-RU"),
-        label: "Дата создания:",
       },
       {
         name: "description",
         data: row.description,
-        label: "Описание:",
       },
       {
         name: "totalValue",
         data: `${row.totalValue ? row.totalValue.toString() : "0"} ₽`,
-        label: "Сумма",
       },
       {
         name: "action",

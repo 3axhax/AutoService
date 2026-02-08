@@ -4,6 +4,7 @@ export {
   addNewActiveOrder,
   deleteActiveOrder,
   clearOrdersList,
+  setCurrentPage,
 } from "./slice";
 
 export {
@@ -12,6 +13,7 @@ export {
   editOrder,
   deleteOrder,
   getOrderByShiftId,
+  getOrdersListForAdmin,
 } from "./extraReducers";
 
 export {
@@ -21,6 +23,8 @@ export {
   workerActiveShiftClosedOrdersTotalValueSelect,
   workerActiveShiftClosedOrdersTotalValueWithDiscountSelect,
   ordersListByShiftIdSelect,
+  SelectOrdersPaginationCurrentPage,
+  SelectOrdersPaginationTotalPage,
 } from "./selectors.ts";
 
 export type { OrderItem } from "./types";

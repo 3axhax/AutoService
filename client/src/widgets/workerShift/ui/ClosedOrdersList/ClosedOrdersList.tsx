@@ -1,17 +1,19 @@
-import { useAppSelector } from "@shared/store/hooks.ts";
+import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { Table, TableData, TableDataRow } from "@shared/ui";
 import {
   formatClientType,
   formatTotalValue,
   formatVehicleName,
   formatWorkList,
+  getOrdersFromActiveShift,
   workerActiveShiftClosedOrdersListSelect,
   workerActiveShiftClosedOrdersTotalValueSelect,
   workerActiveShiftClosedOrdersTotalValueWithDiscountSelect,
 } from "@entities/order";
-import { OrdersListActionButton } from "./OrdersListActionButton";
+import { OrdersListActionButton } from "@features/ordersListActionButton";
 
 export const ClosedOrdersList = () => {
+  const dispatch = useAppDispatch();
   const ordersList = useAppSelector(workerActiveShiftClosedOrdersListSelect);
   const shiftTotalValue = useAppSelector(
     workerActiveShiftClosedOrdersTotalValueSelect,
@@ -38,36 +40,35 @@ export const ClosedOrdersList = () => {
       {
         name: "id",
         data: row.id.toString(),
-        label: "Заказ номер:",
       },
       {
         name: "createdAt",
         data: new Date(row.createdAt).toLocaleString("ru-RU"),
-        label: "Дата создания:",
       },
       {
         name: "clientType",
         data: formatClientType(row),
-        label: "Тип клиента:",
       },
       {
         name: "vehicle",
         data: formatVehicleName(row),
-        label: "Автомобиль:",
       },
       {
         name: "workList",
         data: formatWorkList(row),
-        label: "Работы:",
       },
       {
         name: "totalValue",
         data: formatTotalValue(row),
-        label: "Сумма",
       },
       {
         name: "action",
-        data: <OrdersListActionButton orderId={row.id} />,
+        data: (
+          <OrdersListActionButton
+            orderId={row.id}
+            onReload={() => dispatch(getOrdersFromActiveShift())}
+          />
+        ),
       },
     ]);
   }

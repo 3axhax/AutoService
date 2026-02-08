@@ -14,19 +14,22 @@ export class PriceService {
     private orderParametersService: OrderParametersService,
   ) {}
 
-  async getAll({ user }: { user: User | null }): Promise<Price[]> {
-    const params: FindOptions<Price> = {
-      where: { companyId: user?.companyId },
-      attributes: ['value', 'discountImpact'],
-      include: [
-        {
-          model: OrderParametersOptions,
-          attributes: ['id'],
-          through: { attributes: [] },
-        },
-      ],
-    };
-    return await this.priceRepository.findAll(params);
+  async getAll({ user }: { user: User | undefined }): Promise<Price[] | null> {
+    if (user) {
+      const params: FindOptions<Price> = {
+        where: { companyId: user?.companyId },
+        attributes: ['value', 'discountImpact'],
+        include: [
+          {
+            model: OrderParametersOptions,
+            attributes: ['id'],
+            through: { attributes: [] },
+          },
+        ],
+      };
+      return await this.priceRepository.findAll(params);
+    }
+    return null;
   }
 
   async calculateTotalValue({
@@ -110,26 +113,30 @@ export class PriceService {
       }
     }
 
-    const relatedPrice = companyPrice.reduce((acc: Price[], priceDB) => {
-      const price = priceDB?.get({ plain: true });
-      if (
-        price.conditions &&
-        price.conditions
-          .map((item) => item.id)
-          .every((item) => selectedParameters.includes(item))
-      ) {
-        let result = [...acc];
-        result = result.filter((existingPrice) => {
-          return !existingPrice.conditions
-            .map((item) => item.id)
-            .every((item) =>
-              price.conditions.map((condition) => condition.id).includes(item),
-            );
-        });
-        return [...result, price];
-      }
-      return acc;
-    }, []);
+    const relatedPrice = companyPrice
+      ? companyPrice.reduce((acc: Price[], priceDB) => {
+          const price = priceDB?.get({ plain: true });
+          if (
+            price.conditions &&
+            price.conditions
+              .map((item) => item.id)
+              .every((item) => selectedParameters.includes(item))
+          ) {
+            let result = [...acc];
+            result = result.filter((existingPrice) => {
+              return !existingPrice.conditions
+                .map((item) => item.id)
+                .every((item) =>
+                  price.conditions
+                    .map((condition) => condition.id)
+                    .includes(item),
+                );
+            });
+            return [...result, price];
+          }
+          return acc;
+        }, [])
+      : [];
 
     relatedPrice.forEach((price) => {
       totalWithDiscount +=

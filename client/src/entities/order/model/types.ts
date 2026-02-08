@@ -9,6 +9,7 @@ export interface OrderItem {
   totalValueWithDiscount: number;
   createdAt: string;
   shiftId?: number;
+  shift?: { user: { name: string } };
   optionValues: {
     parameterId: number;
     value: string;
@@ -23,4 +24,9 @@ export interface OrderState {
   error: string;
   ordersValue: Record<number, OrderValue>;
   ordersList: Record<number, OrderItem>;
+  ordersListPagination: {
+    currentPage: number;
+    recordPerPage: number;
+    totalRecord: number;
+  };
 }
