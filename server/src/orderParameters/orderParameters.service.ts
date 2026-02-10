@@ -20,13 +20,11 @@ export class OrderParametersService {
     user: User | undefined;
   }): Promise<ResponseParametersWithOptions> {
     if (user) {
-      const attributes =
-        user && user.roles.length === 1 && user.roles[0].value === 'WORKER'
+      const attributes = user.isOnlyWorker
+        ? ['id', 'name', 'translationRu', 'type', 'order']
+        : user.isAdmin
           ? ['id', 'name', 'translationRu', 'type', 'order']
-          : user.roles.length > 0 &&
-              user.roles.map((role) => role.value).includes('ADMIN')
-            ? ['id', 'name', 'translationRu', 'type', 'order']
-            : [];
+          : [];
       const options =
         await this.companiesParametersOptionsService.getOptionsByCompany(
           user.companyId,

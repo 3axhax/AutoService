@@ -97,13 +97,12 @@ export class AdditionalWorksService {
     param: { shiftId: number };
   }): Promise<AdditionalWorks[] | null> {
     if (user) {
-      const shift =
-        user.roles.length === 1 && user.roles[0].value === 'WORKER'
-          ? await this.shiftsService.getShiftByUserAndId({
-              user,
-              shiftId: param.shiftId,
-            })
-          : null;
+      const shift = user.isOnlyWorker
+        ? await this.shiftsService.getShiftByUserAndId({
+            user,
+            shiftId: param.shiftId,
+          })
+        : null;
       if (shift) {
         return await this.additionalWorksRepository.findAll({
           where: { shiftId: shift.id },

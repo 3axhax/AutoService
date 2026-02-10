@@ -57,6 +57,21 @@ export class User extends Model<User, UserCreationAttrs> {
   @BelongsToMany(() => Role, () => UserRole)
   roles: Role[];
 
+  get isOnlyWorker(): boolean {
+    if (!this.roles || this.roles.length === 0) {
+      return false;
+    }
+    return this.roles.some((role) => role.value === 'WORKER');
+  }
+
+  get isAdmin(): boolean {
+    return (
+      this.roles &&
+      this.roles.length > 0 &&
+      this.roles.map((role) => role.value).includes('ADMIN')
+    );
+  }
+
   @AfterSync
   static async addInitialData() {
     try {

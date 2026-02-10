@@ -84,7 +84,7 @@ export class OrdersService {
   }): Promise<Orders | null> {
     if (user) {
       const where = { companyId: user?.companyId, id: param.id };
-      if (user.roles.length === 1 && user.roles[0].value === 'WORKER') {
+      if (user.isOnlyWorker) {
         const shift = await this.shiftsService.getActiveShiftByUser({ user });
         where['shiftId'] = shift?.id;
       }
@@ -157,17 +157,14 @@ export class OrdersService {
     id: number;
   }): Promise<boolean> {
     if (user) {
-      if (user.roles.length === 1 && user.roles[0].value === 'WORKER') {
+      if (user.isOnlyWorker) {
         const shift = await this.shiftsService.getActiveShiftByUser({ user });
         const deletedCount = await this.ordersRepository.destroy({
           where: { id, companyId: user?.companyId, shiftId: shift?.id },
         });
         return deletedCount > 0;
       }
-      if (
-        user.roles.length > 0 &&
-        user.roles.map((role) => role.value).includes('ADMIN')
-      ) {
+      if (user.isAdmin) {
         const deletedCount = await this.ordersRepository.destroy({
           where: { id, companyId: user?.companyId },
         });
@@ -218,13 +215,12 @@ export class OrdersService {
     param: { shiftId: number };
   }): Promise<Orders[] | null> {
     if (user) {
-      const shift =
-        user.roles.length === 1 && user.roles[0].value === 'WORKER'
-          ? await this.shiftsService.getShiftByUserAndId({
-              user,
-              shiftId: param.shiftId,
-            })
-          : null;
+      const shift = user.isOnlyWorker
+        ? await this.shiftsService.getShiftByUserAndId({
+            user,
+            shiftId: param.shiftId,
+          })
+        : null;
       if (shift) {
         return await this.ordersRepository.findAll({
           where: { shiftId: shift.id },

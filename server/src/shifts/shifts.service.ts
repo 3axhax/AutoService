@@ -140,10 +140,9 @@ export class ShiftsService {
         ] as FindAttributeOptions,
       };
       const whereProps = {
-        ...(user.roles.length === 1 && user.roles[0].value === 'WORKER'
+        ...(user.isOnlyWorker
           ? { userId: user.id, companyId: user.companyId }
-          : user.roles.length > 0 &&
-              user.roles.map((role) => role.value).includes('ADMIN')
+          : user.isAdmin
             ? { companyId: user.companyId }
             : null),
         ...this._formatIntervalWhereProps(param),
