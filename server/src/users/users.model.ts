@@ -54,23 +54,36 @@ export class User extends Model<User, UserCreationAttrs> {
   })
   declare companyId: number;
 
+  @Column({
+    type: DataType.VIRTUAL,
+    get() {
+      const roles = this.getDataValue('roles') as Role[];
+      return (
+        roles &&
+        Array.isArray(roles) &&
+        roles.length > 0 &&
+        roles.some((role: Role) => role.value === 'ADMIN')
+      );
+    },
+  })
+  declare isAdmin: boolean;
+
+  @Column({
+    type: DataType.VIRTUAL,
+    get() {
+      const roles = this.getDataValue('roles') as Role[];
+      return (
+        roles &&
+        Array.isArray(roles) &&
+        roles.length === 1 &&
+        roles.some((role: Role) => role.value === 'WORKER')
+      );
+    },
+  })
+  declare isOnlyWorker: boolean;
+
   @BelongsToMany(() => Role, () => UserRole)
   roles: Role[];
-
-  get isOnlyWorker(): boolean {
-    if (!this.roles || this.roles.length === 0) {
-      return false;
-    }
-    return this.roles.some((role) => role.value === 'WORKER');
-  }
-
-  get isAdmin(): boolean {
-    return (
-      this.roles &&
-      this.roles.length > 0 &&
-      this.roles.map((role) => role.value).includes('ADMIN')
-    );
-  }
 
   @AfterSync
   static async addInitialData() {

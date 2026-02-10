@@ -76,7 +76,7 @@ export const AdminOrdersList = () => {
   }
 
   return (
-    <div className={"colored w-full"}>
+    <div className={"w-full"}>
       <div className={"container mx-auto px-4 lg:px-8"}>
         <Table tableData={tableData} className={"overflow-hidden w-full"} />
       </div>

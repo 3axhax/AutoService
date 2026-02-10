@@ -17,6 +17,7 @@ export {
   deleteOrder,
   getOrderByShiftId,
   getOrdersListForAdmin,
+  downloadOrdersList,
   SelectOrdersPaginationCurrentPage,
   SelectOrdersPaginationTotalPage,
 } from "./model";

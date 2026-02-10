@@ -1,4 +1,4 @@
-import axios, { type AxiosResponse } from "axios";
+import axios, { type AxiosResponse, type ResponseType } from "axios";
 import { USER_LS_KEY } from "@entities/user/model/constants.ts";
 
 type method = "GET" | "POST" | "PUT" | "DELETE";
@@ -15,6 +15,7 @@ class RestAPI {
   baseUrl: string = import.meta.env.VITE_BASE_API_URL;
   data: SendingData | FormData = {};
   token: string = "";
+  responseType: ResponseType = "json";
 
   constructor() {}
 
@@ -66,6 +67,7 @@ class RestAPI {
       url: string;
       method: string;
       data: object;
+      responseType: ResponseType;
       headers?: object;
     } = {
       //url: this.baseUrl + this.target,
@@ -77,6 +79,7 @@ class RestAPI {
         this.target,
       method: this.method,
       data: this.data,
+      responseType: this.responseType,
     };
     if (this.token) {
       data.headers = {
@@ -86,20 +89,30 @@ class RestAPI {
     return axios(data);
   };
 
-  get = (url: string = "", data: QueryParams = {}): Promise<AxiosResponse> => {
+  get = (
+    url: string = "",
+    data: QueryParams = {},
+    responseType?: ResponseType,
+  ): Promise<AxiosResponse> => {
     this.method = "GET";
     if (Object.keys(data).length > 0) {
       const queryString = this._buildGetQueryString(data).toString();
       url += `?${queryString}`;
     }
+    this.responseType = responseType ?? "json";
     this._setTarget(url);
     return this._send();
   };
 
-  post<T = SendingData>(url: string = "", data: T): Promise<AxiosResponse> {
+  post<T = SendingData>(
+    url: string = "",
+    data: T,
+    responseType?: ResponseType,
+  ): Promise<AxiosResponse> {
     this.method = "POST";
     this._setTarget(url);
     this.data = data as SendingData;
+    this.responseType = responseType ?? "json";
     return this._send();
   }
 

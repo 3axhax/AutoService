@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { Roles } from '../auth/roles-auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
@@ -6,6 +14,7 @@ import { User } from '../decorators/user.decorator';
 import { User as UserModel } from '../users/users.model';
 import { Orders } from './orders.model';
 import { GetOrdersListDto } from './dto/orders.dto';
+import express from 'express';
 
 @Controller('orders')
 export class OrdersController {
@@ -72,5 +81,15 @@ export class OrdersController {
     rows: Orders[] | null;
   }> {
     return this.orderService.getForAdmin({ user, param });
+  }
+
+  @Post('downloadList')
+  @Roles('ADMIN')
+  @UseGuards(RolesGuard)
+  async downloadList(
+    @Res() res: express.Response,
+    //@Query() param: GetOrdersListDto,
+  ) {
+    await this.orderService.downloadList(res);
   }
 }

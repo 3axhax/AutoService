@@ -3,6 +3,7 @@ import { RootState } from "@shared/store";
 import Request from "@shared/transport/RestAPI.ts";
 import { HandlerAxiosError } from "@shared/transport/RequestHandlersError.ts";
 import { setPending } from "./slice";
+import { downloadExcel } from "@shared/utils";
 
 export const getOrdersFromActiveShift = createAsyncThunk(
   "orders/fromActiveShift",
@@ -119,6 +120,34 @@ export const getOrdersListForAdmin = createAsyncThunk(
         };
         const response = await Request.get("/orders/getForAdmin", sendData);
         return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);
+
+export const downloadOrdersList = createAsyncThunk(
+  "orders/downloadList",
+  async (_, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.order.pending) {
+      dispatch(setPending(true));
+      try {
+        const sendData: {
+          closedAtStart?: string;
+          closedAtEnd?: string;
+        } = {};
+        const response = await Request.post(
+          "/orders/downloadList",
+          sendData,
+          "blob",
+        );
+        const fileName = `orders_list_${new Date().toLocaleDateString("ru-RU")}.xlsx`;
+        downloadExcel(response.data, fileName);
+        return { success: true };
       } catch (e) {
         HandlerAxiosError(e);
       } finally {

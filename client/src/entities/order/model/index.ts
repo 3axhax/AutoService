@@ -14,6 +14,7 @@ export {
   deleteOrder,
   getOrderByShiftId,
   getOrdersListForAdmin,
+  downloadOrdersList,
 } from "./extraReducers";
 
 export {
