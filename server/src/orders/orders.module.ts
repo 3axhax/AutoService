@@ -7,6 +7,7 @@ import { OrdersOptionValues } from './ordersOptionValues.model';
 import { OrderParametersModule } from '../orderParameters/orderParameters.module';
 import { ShiftsModule } from '../shifts/shifts.module';
 import { PriceModule } from '../price/price.module';
+import { DownloadExcelModule } from '../downloadExcel/downloadExcel.module';
 
 @Module({
   providers: [OrdersService],
@@ -16,6 +17,7 @@ import { PriceModule } from '../price/price.module';
     OrderParametersModule,
     ShiftsModule,
     PriceModule,
+    DownloadExcelModule,
   ],
   exports: [OrdersService],
 })

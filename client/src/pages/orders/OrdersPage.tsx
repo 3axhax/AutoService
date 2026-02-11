@@ -26,15 +26,23 @@ export const OrdersPage = () => {
           <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>
         ) : null}
       </div>
-      <button
-        type={"button"}
-        className={"btn"}
-        onClick={() => dispatch(downloadOrdersList())}
-      >
-        Скачать
-      </button>
-      <AdminOrdersList />
-      <AdminOrdersListPagination />
+      <div className={"w-full"}>
+        <div className={"container mx-auto px-4 lg:px-8"}>
+          <div className={"flex justify-end my-2"}>
+            <button
+              type={"button"}
+              className={
+                " bg-underline text-blue-500 cursor-pointer hover:text-blue-700 transition-all duration-200"
+              }
+              onClick={() => dispatch(downloadOrdersList())}
+            >
+              Скачать Excel
+            </button>
+          </div>
+          <AdminOrdersList />
+          <AdminOrdersListPagination />
+        </div>
+      </div>
     </>
   );
 };

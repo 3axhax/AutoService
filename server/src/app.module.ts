@@ -31,6 +31,7 @@ import { OrdersModule } from './orders/orders.module';
 import { AdditionalWorks } from './additopnalWorks/additionalWorks.model';
 import { AdditionalWorksModule } from './additopnalWorks/additionalWorks.module';
 import { MigrationService } from './migrations/migrations.service';
+import { DownloadExcelModule } from './downloadExcel/downloadExcel.module';
 
 @Module({
   imports: [
@@ -62,6 +63,7 @@ import { MigrationService } from './migrations/migrations.service';
       ],
       autoLoadModels: true,
     }),
+    DownloadExcelModule,
     UsersModule,
     RolesModule,
     AuthModule,

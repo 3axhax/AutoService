@@ -5,6 +5,7 @@ import { User } from '../users/users.model';
 import { CompaniesParametersOptionsService } from '../companiesParametersOptions/companiesParametersOptions.service';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
 import { ResponseParametersWithOptions } from './orderParameters.controller';
+import { Order } from 'sequelize';
 
 @Injectable()
 export class OrderParametersService {
@@ -43,6 +44,7 @@ export class OrderParametersService {
             id: parametersList,
           },
           attributes,
+          order: [['order', 'ASC']] as Order,
           include: [
             {
               model: OrderParametersOptions,

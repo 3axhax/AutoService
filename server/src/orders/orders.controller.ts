@@ -87,9 +87,10 @@ export class OrdersController {
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   async downloadList(
+    @User() user: UserModel | undefined,
     @Res() res: express.Response,
     //@Query() param: GetOrdersListDto,
   ) {
-    await this.orderService.downloadList(res);
+    return await this.orderService.downloadList({ user, res });
   }
 }
