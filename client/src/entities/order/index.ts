@@ -20,9 +20,12 @@ export {
   downloadOrdersList,
   SelectOrdersPaginationCurrentPage,
   SelectOrdersPaginationTotalPage,
+  addFilter,
+  removeFilter,
+  SelectOrdersFiltersList,
 } from "./model";
 
-export type { OrderItem } from "./model";
+export type { OrderItem, FilterItem } from "./model";
 
 export {
   formatVehicleName,

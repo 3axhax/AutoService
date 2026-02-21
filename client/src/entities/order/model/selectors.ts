@@ -1,5 +1,8 @@
 import { RootState } from "@shared/store";
 import { createSelector } from "@reduxjs/toolkit";
+import { FilterItem } from "@entities/order";
+
+const NULL_ARRAY: FilterItem[] = [];
 
 export const orderErrorSelect = (state: RootState) => state.order.error;
 
@@ -58,3 +61,10 @@ export const SelectOrdersPaginationTotalPage = (state: RootState) =>
     state.order.ordersListPagination.totalRecord /
       state.order.ordersListPagination.recordPerPage,
   );
+
+export const SelectOrdersFiltersList = (state: RootState) =>
+  state.order.filters.length > 0
+    ? [...state.order.filters].sort((a, b) =>
+        a.filterName.localeCompare(b.filterName) ? -1 : 1,
+      )
+    : NULL_ARRAY;

@@ -1,7 +1,8 @@
 import { RootState } from "@shared/store";
 import { createSelector } from "@reduxjs/toolkit";
-import { OrderValue } from "@entities/order/model/types.ts";
+import { FilterItem, OrderValue } from "@entities/order/model/types.ts";
 import { formatOrderValueFromOrderItemList } from "@entities/order/model/slice.ts";
+import { ParametersType } from "@entities/orderParameters";
 
 const EMPTY_OBJECT = {} as OrderValue;
 
@@ -105,5 +106,28 @@ export const formatedOrderParametersList = createSelector(
         return parameter;
       })
       .sort((a, b) => ((a.order ?? 0) > (b.order ?? 0) ? 1 : -1));
+  },
+);
+
+export const selectFormatedParameterForFilter = createSelector(
+  [selectOrderParametersList, (_, filterItem: FilterItem) => filterItem],
+  (
+    parameterList,
+    filterItem,
+  ): { parameterName: string; value: string } | null => {
+    if (!parameterList || !filterItem) return null;
+    const parameter = parameterList.find(
+      (p) => p.name === filterItem.filterName,
+    );
+    if (!parameter) return null;
+    const parameterName = parameter.translationRu;
+    const value =
+      parameter.type === ParametersType.INPUT
+        ? filterItem.filterValue.toString()
+        : "";
+    return {
+      parameterName,
+      value,
+    };
   },
 );

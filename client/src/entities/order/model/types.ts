@@ -19,6 +19,11 @@ export interface OrderItem {
   }[];
 }
 
+export interface FilterItem {
+  filterName: string;
+  filterValue: string | number;
+}
+
 export interface OrderState {
   pending: boolean;
   error: string;
@@ -29,4 +34,5 @@ export interface OrderState {
     recordPerPage: number;
     totalRecord: number;
   };
+  filters: FilterItem[];
 }

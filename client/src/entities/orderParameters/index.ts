@@ -1,6 +1,7 @@
 export {
   orderParametersSlice,
   getOrderParametersList,
+  selectOrderParametersList,
   selectPendingOrderParameters,
   selectErrorOrderParameters,
   formatedOrderParametersList,

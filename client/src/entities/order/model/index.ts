@@ -5,6 +5,8 @@ export {
   deleteActiveOrder,
   clearOrdersList,
   setCurrentPage,
+  addFilter,
+  removeFilter,
 } from "./slice";
 
 export {
@@ -26,6 +28,7 @@ export {
   ordersListByShiftIdSelect,
   SelectOrdersPaginationCurrentPage,
   SelectOrdersPaginationTotalPage,
+  SelectOrdersFiltersList,
 } from "./selectors.ts";
 
-export type { OrderItem } from "./types";
+export type { OrderItem, FilterItem } from "./types";

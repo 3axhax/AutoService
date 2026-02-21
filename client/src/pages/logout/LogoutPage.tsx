@@ -3,7 +3,7 @@ import useDocumentTitle from "@shared/hooks/useDocumentTitle.tsx";
 import { useAppDispatch } from "@shared/store/hooks.ts";
 import { logoutUser } from "@entities/user";
 import { useNavigate } from "react-router-dom";
-import {clearShiftsList} from "@entities/shifts";
+import { clearShiftsList } from "@entities/shifts";
 
 export const LogoutPage = () => {
   useDocumentTitle("Выйти");

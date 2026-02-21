@@ -8,6 +8,7 @@ import {
   getOrdersFromActiveShift,
   getOrdersListForAdmin,
 } from "@entities/order";
+import { reducers } from "./reducers";
 
 const initialState: OrderState = {
   pending: false,
@@ -16,82 +17,16 @@ const initialState: OrderState = {
   ordersList: {},
   ordersListPagination: {
     currentPage: 1,
-    recordPerPage: 5,
+    recordPerPage: 3,
     totalRecord: 0,
   },
+  filters: [],
 };
 
 export const orderSlice = createSlice({
   name: "order",
   initialState,
-  reducers: {
-    resetError: (state: WritableDraft<OrderState>) => {
-      state.error = "";
-    },
-    setPending: (
-      state: WritableDraft<OrderState>,
-      action: PayloadAction<boolean>,
-    ) => {
-      state.pending = action.payload;
-    },
-    setOrdersValue: (
-      state: WritableDraft<OrderState>,
-      action: PayloadAction<{
-        orderId: number;
-        name: string;
-        value: string | number | Record<string | number, number>;
-      }>,
-    ) => {
-      if (
-        !state.ordersValue[action.payload.orderId] &&
-        state.ordersList[action.payload.orderId]
-      ) {
-        state.ordersValue[action.payload.orderId] = {
-          ...formatOrderValueFromOrderItemList(
-            state.ordersList[action.payload.orderId],
-          ),
-          id: action.payload.orderId,
-        };
-      }
-      if (!state.ordersValue[action.payload.orderId]) {
-        state.ordersValue[action.payload.orderId] = {
-          id: action.payload.orderId,
-        };
-      }
-      state.ordersValue[action.payload.orderId][action.payload.name] =
-        action.payload.value;
-    },
-    addNewActiveOrder: (state: WritableDraft<OrderState>) => {
-      const id =
-        Object.values(state.ordersValue).length > 0
-          ? Math.min(
-              ...Object.keys(state.ordersValue).map((key) => parseInt(key)),
-            ) - 1
-          : -1;
-      state.ordersValue[id] = {
-        id,
-        active: true,
-      };
-    },
-    deleteActiveOrder: (
-      state: WritableDraft<OrderState>,
-      action: PayloadAction<number>,
-    ) => {
-      if (state.ordersValue[action.payload]) {
-        delete state.ordersValue[action.payload];
-      }
-    },
-    clearOrdersList: (state: WritableDraft<OrderState>) => {
-      state.ordersList = {};
-    },
-    setCurrentPage: (
-      state: WritableDraft<OrderState>,
-      action: PayloadAction<number>,
-    ) => {
-      state.ordersListPagination.currentPage =
-        action.payload > 0 ? action.payload : 1;
-    },
-  },
+  reducers: reducers,
   extraReducers: (builder) => {
     builder
       .addCase(
@@ -181,9 +116,9 @@ export const {
   deleteActiveOrder,
   clearOrdersList,
   setCurrentPage,
+  addFilter,
+  removeFilter,
 } = orderSlice.actions;
-
-export default orderSlice.reducer;
 
 export const formatOrderValueFromOrderItemList = (listItem: OrderItem) => {
   const values = {} as OrderValue;

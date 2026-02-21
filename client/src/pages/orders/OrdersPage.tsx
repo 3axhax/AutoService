@@ -8,6 +8,7 @@ import { AdminOrdersList } from "@widgets/adminOrdersList";
 import { AdminOrdersListPagination } from "@features/adminOrdersList";
 import { getPriceList } from "@entities/price/model/slice.ts";
 import { downloadOrdersList } from "@entities/order";
+import { OrdersListFilters } from "@features/ordersListFilters";
 
 export const OrdersPage = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +29,8 @@ export const OrdersPage = () => {
       </div>
       <div className={"w-full"}>
         <div className={"container mx-auto px-4 lg:px-8"}>
-          <div className={"flex justify-end my-2"}>
+          <div className={"flex justify-between my-2"}>
+            <OrdersListFilters />
             <button
               type={"button"}
               className={

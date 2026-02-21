@@ -3,7 +3,7 @@ import { UserCreationAttrs } from './users.model';
 export const userInitialData: UserCreationAttrs[] = [
   {
     email: 'admin@mail.com',
-    name: 'Хозяин',
+    name: 'Босс',
     password: '$2a$05$.U3EHC8wXoW4eSRjhqTJmebtDD8rgmEaAIsrtcOr9f/I75KCkMuJG',
     companyId: 1,
   },
