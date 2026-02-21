@@ -14,7 +14,7 @@ export const FiltersListItem = ({ filter }: FiltersListItemProps) => {
   );
   return (
     <div className={"rounded-md px-3 py-2 btn-white cursor-default"}>
-      {parameter?.parameterName}: {parameter?.value}
+      {parameter?.parameterName}: "{parameter?.value}"
       <XMarkIcon
         className="w-5 h-5 inline-flex ml-1 cursor-pointer text-red-600 hover:text-red-800"
         onClick={() => dispatch(removeFilter(filter.filterName))}

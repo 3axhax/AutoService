@@ -1,5 +1,5 @@
 import { ParametersItem, ParametersType } from "@entities/orderParameters";
-import { InputWithLabel } from "@shared/ui";
+import { InputWithLabel, RadioGroup, SelectUI } from "@shared/ui";
 
 interface AddNewFilterParameterOptionsProps {
   parameter: ParametersItem | undefined;
@@ -24,6 +24,34 @@ export const AddNewFilterParameterOptions = ({
             placeholder={parameter.translationRu}
             value={value ?? ""}
             onChange={(value) => setValue(value)}
+          />
+        ) : [ParametersType.SELECT, ParametersType.SELECT_LIST].includes(
+            parameter.type,
+          ) ? (
+          <SelectUI<string>
+            key={parameter.id}
+            name={parameter.name}
+            label={parameter.translationRu}
+            options={parameter.options.map((option) => ({
+              value: option.id.toString(),
+              label: option.translationRu,
+            }))}
+            value={value ? value.toString() : ""}
+            onChange={setValue}
+          />
+        ) : parameter.type === ParametersType.GRAPH_INPUT ? (
+          <RadioGroup<number>
+            key={parameter.id}
+            name={parameter.name}
+            label={parameter.translationRu}
+            options={[
+              { label: "Есть", value: 1 },
+              { label: "Нет", value: 0 },
+            ]}
+            value={value ? 1 : 0}
+            onChange={setValue}
+            className={"flex-col"}
+            type={"col"}
           />
         ) : null
       ) : null}

@@ -21,7 +21,7 @@ export interface OrderItem {
 
 export interface FilterItem {
   filterName: string;
-  filterValue: string | number;
+  filterValue: string | number | null;
 }
 
 export interface OrderState {

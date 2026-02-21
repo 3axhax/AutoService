@@ -28,7 +28,12 @@ export const AddNewFilter = ({ onCancel }: AddNewFilterProps) => {
   };
 
   useEffect(() => {
-    if (value) {
+    setFilterValue(null);
+    setValue(null);
+  }, [selectedParameter]);
+
+  useEffect(() => {
+    if (value !== undefined) {
       const parameter = parameterList.find(
         (parameter) => parameter.id === selectedParameter,
       );
@@ -40,11 +45,6 @@ export const AddNewFilter = ({ onCancel }: AddNewFilterProps) => {
       }
     }
   }, [value, parameterList, selectedParameter]);
-
-  useEffect(() => {
-    setFilterValue(null);
-    setValue(null);
-  }, [selectedParameter]);
 
   return (
     <div>

@@ -121,10 +121,25 @@ export const selectFormatedParameterForFilter = createSelector(
     );
     if (!parameter) return null;
     const parameterName = parameter.translationRu;
-    const value =
-      parameter.type === ParametersType.INPUT
-        ? filterItem.filterValue.toString()
-        : "";
+    let value = "";
+    switch (parameter.type) {
+      case ParametersType.INPUT:
+        value = filterItem.filterValue ? filterItem.filterValue.toString() : "";
+        break;
+      case ParametersType.SELECT:
+      case ParametersType.SELECT_LIST: {
+        const option = parameter.options.find(
+          (option) => option.id.toString() === filterItem.filterValue,
+        );
+        if (option) {
+          value = option.translationRu;
+        }
+        break;
+      }
+      case ParametersType.GRAPH_INPUT:
+        value = filterItem.filterValue ? "Есть" : "Нет";
+        break;
+    }
     return {
       parameterName,
       value,
