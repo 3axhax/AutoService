@@ -140,7 +140,10 @@ export const downloadOrdersList = createAsyncThunk(
         const sendData: {
           closedAtStart?: string;
           closedAtEnd?: string;
-        } = {};
+          filters: FilterItem[];
+        } = {
+          filters: state.order.filters,
+        };
         const response = await Request.post(
           "/orders/downloadList",
           sendData,

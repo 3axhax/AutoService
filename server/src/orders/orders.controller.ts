@@ -89,8 +89,8 @@ export class OrdersController {
   async downloadList(
     @User() user: UserModel | undefined,
     @Res() res: express.Response,
-    //@Body() param: GetOrdersListDto,
+    @Body() param: GetOrdersListDto,
   ) {
-    return await this.orderService.downloadList({ user, res });
+    return await this.orderService.downloadList({ user, res, param });
   }
 }

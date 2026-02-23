@@ -12,9 +12,9 @@ import { OrderParameters } from '../orderParameters/orderParameters.model';
 import { ShiftsService } from '../shifts/shifts.service';
 import { PriceService } from '../price/price.service';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
-import { GetOrdersListDto, OrderFilterItem } from './dto/orders.dto';
+import { GetOrdersListDto } from './dto/orders.dto';
 import { Shifts } from '../shifts/shifts.model';
-import { Op, Order, WhereOptions } from 'sequelize';
+import { Order } from 'sequelize';
 import { Response } from 'express';
 import { DownloadExcelService } from '../downloadExcel/downloadExcel.service';
 import {
@@ -268,17 +268,25 @@ export class OrdersService {
     param: GetOrdersListDto;
   }) {
     if (user) {
-      const count = await this.ordersRepository.count({
-        where: { companyId: user.companyId },
-      });
-
-      const rows = await this._getOrdersList({ param, withLimits: true, user });
-
-      return {
-        totalRecord: count,
-        currentPage: param.currentPage,
-        rows: rows,
-      };
+      if (param.filters.length > 0) {
+        const { rows, count } = await this._getOrdersListWithFilters({
+          user,
+          param,
+        });
+        return {
+          totalRecord: count,
+          currentPage: param.currentPage,
+          rows: rows,
+        };
+      } else {
+        return {
+          totalRecord: await this.ordersRepository.count({
+            where: { companyId: user.companyId },
+          }),
+          currentPage: param.currentPage,
+          rows: await this._getOrdersList({ param, withLimits: true, user }),
+        };
+      }
     }
     return {
       totalRecord: 0,
@@ -287,7 +295,15 @@ export class OrdersService {
     };
   }
 
-  async downloadList({ user, res }: { user: User | undefined; res: Response }) {
+  async downloadList({
+    user,
+    res,
+    param,
+  }: {
+    user: User | undefined;
+    res: Response;
+    param: GetOrdersListDto;
+  }) {
     if (user) {
       const parametersList = await this.orderParametersService.getAll({ user });
       if (parametersList?.parameters && parametersList.parameters.length > 0) {
@@ -316,14 +332,19 @@ export class OrdersService {
           header,
           rows: [],
         };
-        const ordersList = await this._getOrdersList({
-          user,
-          withLimits: false,
-        });
+        const ordersList =
+          param.filters.length > 0
+            ? (
+                await this._getOrdersListWithFilters({
+                  user,
+                  param,
+                  withLimits: false,
+                })
+              ).rows
+            : await this._getOrdersList({ user, withLimits: false });
         if (ordersList && ordersList.length > 0) {
           ordersList.forEach((order) => {
             const orderPlain = order.get({ plain: true });
-            console.log(orderPlain);
             const row: ExcelTableCellData[] = [
               { name: 'id', value: orderPlain.id },
               {
@@ -393,31 +414,6 @@ export class OrdersService {
     return null;
   }
 
-  async _prepareOptionValuesWhere(
-    filters: OrderFilterItem[] | undefined,
-  ): Promise<WhereOptions> {
-    if (filters) {
-      const andCondition: Record<string, string | number>[] = [];
-      for (const filter of filters) {
-        const parameter = await this.orderParametersService.getParameterByName(
-          filter.filterName,
-        );
-        if (parameter) {
-          andCondition.push({
-            [Op.and]: [
-              { parameterId: parameter.id },
-              { optionId: filter.filterValue },
-            ],
-          });
-        }
-      }
-      if (andCondition.length > 0) {
-        return { [Op.and]: andCondition };
-      }
-    }
-    return {};
-  }
-
   private async _getOrdersList({
     user,
     param,
@@ -474,7 +470,7 @@ export class OrdersService {
     return this.ordersRepository.findAll(requestParam);
   }
 
-  _formatDate = (date: unknown): string => {
+  private _formatDate = (date: unknown): string => {
     if (!date) return '';
 
     if (date instanceof Date) {
@@ -487,4 +483,80 @@ export class OrdersService {
 
     return '';
   };
+
+  private async _getOrdersListWithFilters({
+    user,
+    param,
+    withLimits = true,
+  }: {
+    user: User;
+    param?: GetOrdersListDto;
+    withLimits?: boolean;
+  }): Promise<{ rows: Orders[]; count: number }> {
+    if (param?.filters) {
+      const formatedFilters: {
+        parameterId: number;
+        filterValue: number | string | null;
+        type: ParametersType;
+      }[] = [];
+      for (const filter of param.filters) {
+        const parameter = await this.orderParametersService.getParameterByName(
+          filter.filterName,
+        );
+        if (parameter) {
+          formatedFilters.push({
+            parameterId: parameter.id,
+            filterValue: filter.filterValue,
+            type: parameter.type,
+          });
+        }
+      }
+
+      if (formatedFilters.length > 0) {
+        const ordersList = await this._getOrdersList({
+          user,
+          param,
+          withLimits: false,
+        });
+        const totalRows: Orders[] = [];
+        ordersList.forEach((order) => {
+          const findingFilter = formatedFilters.reduce((acc, filter) => {
+            if (
+              order.optionValues.some((value) => {
+                switch (filter.type) {
+                  case ParametersType.SELECT:
+                  case ParametersType.SELECT_LIST:
+                    return (
+                      value.parameterId === filter.parameterId &&
+                      value.optionId &&
+                      filter.filterValue &&
+                      +value.optionId === +filter.filterValue
+                    );
+                }
+              })
+            ) {
+              return acc + 1;
+            }
+            return acc;
+          }, 0);
+          if (findingFilter === formatedFilters.length) {
+            totalRows.push(order);
+          }
+        });
+        if (withLimits) {
+          const limit = param.recordPerPage ?? 20;
+          const offset = param.currentPage
+            ? (param.currentPage - 1) * limit
+            : 0;
+          return {
+            rows: totalRows.slice(offset, offset + limit),
+            count: totalRows.length,
+          };
+        } else {
+          return { rows: totalRows, count: totalRows.length };
+        }
+      }
+    }
+    return { rows: [], count: 0 };
+  }
 }

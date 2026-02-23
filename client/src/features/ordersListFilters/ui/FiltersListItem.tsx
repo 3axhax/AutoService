@@ -2,6 +2,7 @@ import {
   FilterItem,
   getOrdersListForAdmin,
   removeFilter,
+  setCurrentPage,
 } from "@entities/order";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { selectFormatedParameterForFilter } from "@entities/orderParameters/model";
@@ -18,6 +19,7 @@ export const FiltersListItem = ({ filter }: FiltersListItemProps) => {
   );
   const removeFilterHandler = () => {
     dispatch(removeFilter(filter.filterName));
+    dispatch(setCurrentPage(1));
     dispatch(getOrdersListForAdmin());
   };
   return (
