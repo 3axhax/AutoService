@@ -69,12 +69,12 @@ export class OrdersController {
     return this.orderService.getByShiftId({ user, param });
   }
 
-  @Get('getForAdmin')
+  @Post('getForAdmin')
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   getForAdmin(
     @User() user: UserModel | undefined,
-    @Query() param: GetOrdersListDto,
+    @Body() param: GetOrdersListDto,
   ): Promise<{
     totalRecord: number;
     currentPage: number;
@@ -89,7 +89,7 @@ export class OrdersController {
   async downloadList(
     @User() user: UserModel | undefined,
     @Res() res: express.Response,
-    //@Query() param: GetOrdersListDto,
+    //@Body() param: GetOrdersListDto,
   ) {
     return await this.orderService.downloadList({ user, res });
   }

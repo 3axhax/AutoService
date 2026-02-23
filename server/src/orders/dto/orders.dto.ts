@@ -1,6 +1,11 @@
 import { IsNumber, IsOptional } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
 
+export interface OrderFilterItem {
+  filterName: string;
+  filterValue: string | number | null;
+}
+
 export class GetOrdersListDto {
   @Transform(({ value }: TransformFnParams) => {
     const num = value ? parseInt(value as string, 10) : 0;
@@ -17,4 +22,7 @@ export class GetOrdersListDto {
   @IsNumber()
   @IsOptional()
   recordPerPage: number;
+
+  @IsOptional()
+  filters: OrderFilterItem[];
 }

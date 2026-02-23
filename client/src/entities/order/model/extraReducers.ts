@@ -4,6 +4,7 @@ import Request from "@shared/transport/RestAPI.ts";
 import { HandlerAxiosError } from "@shared/transport/RequestHandlersError.ts";
 import { setPending } from "./slice";
 import { downloadExcel } from "@shared/utils";
+import { FilterItem } from "@entities/order";
 
 export const getOrdersFromActiveShift = createAsyncThunk(
   "orders/fromActiveShift",
@@ -112,13 +113,13 @@ export const getOrdersListForAdmin = createAsyncThunk(
         const sendData: {
           currentPage: number;
           recordPerPage: number;
-          closedAtStart?: string;
-          closedAtEnd?: string;
+          filters: FilterItem[];
         } = {
           currentPage: state.order.ordersListPagination.currentPage,
           recordPerPage: state.order.ordersListPagination.recordPerPage,
+          filters: state.order.filters,
         };
-        const response = await Request.get("/orders/getForAdmin", sendData);
+        const response = await Request.post("/orders/getForAdmin", sendData);
         return response.data;
       } catch (e) {
         HandlerAxiosError(e);

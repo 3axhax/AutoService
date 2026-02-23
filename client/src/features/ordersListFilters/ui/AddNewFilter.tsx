@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { SelectUI } from "@shared/ui";
 import { useEffect, useState } from "react";
 import { AddNewFilterParameterOptions } from "@features/ordersListFilters/ui/AddNewFilterParameterOptions.tsx";
-import { addFilter, FilterItem } from "@entities/order";
+import { addFilter, FilterItem, getOrdersListForAdmin } from "@entities/order";
 
 interface AddNewFilterProps {
   onCancel: () => void;
@@ -23,6 +23,7 @@ export const AddNewFilter = ({ onCancel }: AddNewFilterProps) => {
   const onAccess = () => {
     if (filterValue) {
       dispatch(addFilter(filterValue));
+      dispatch(getOrdersListForAdmin());
       onCancel();
     }
   };

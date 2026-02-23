@@ -12,9 +12,9 @@ import { OrderParameters } from '../orderParameters/orderParameters.model';
 import { ShiftsService } from '../shifts/shifts.service';
 import { PriceService } from '../price/price.service';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
-import { GetOrdersListDto } from './dto/orders.dto';
+import { GetOrdersListDto, OrderFilterItem } from './dto/orders.dto';
 import { Shifts } from '../shifts/shifts.model';
-import { Order } from 'sequelize';
+import { Op, Order, WhereOptions } from 'sequelize';
 import { Response } from 'express';
 import { DownloadExcelService } from '../downloadExcel/downloadExcel.service';
 import {
@@ -268,51 +268,12 @@ export class OrdersService {
     param: GetOrdersListDto;
   }) {
     if (user) {
-      const limit = param.recordPerPage ?? 20;
-      const offset = param.currentPage ? (param.currentPage - 1) * limit : 0;
-
       const count = await this.ordersRepository.count({
         where: { companyId: user.companyId },
       });
 
-      const rows = await this.ordersRepository.findAll({
-        where: { companyId: user.companyId },
-        offset,
-        limit,
-        order: [['createdAt', 'DESC']] as Order,
-        attributes: [
-          'id',
-          'shiftId',
-          'totalValue',
-          'totalValueWithDiscount',
-          'createdAt',
-        ],
-        include: [
-          {
-            model: OrdersOptionValues,
-            include: [
-              {
-                model: OrderParameters,
-                attributes: ['name', 'type'],
-              },
-              {
-                model: OrderParametersOptions,
-                attributes: ['translationRu'],
-              },
-            ],
-          },
-          {
-            model: Shifts,
-            include: [
-              {
-                model: User,
-                attributes: ['name'],
-              },
-            ],
-            attributes: ['id'],
-          },
-        ],
-      });
+      const rows = await this._getOrdersList({ param, withLimits: true, user });
+
       return {
         totalRecord: count,
         currentPage: param.currentPage,
@@ -343,6 +304,7 @@ export class OrdersService {
           [
             { name: 'id', label: '№', width: 5 },
             { name: 'createdAt', label: 'Дата создания' },
+            { name: 'user', label: 'Работник' },
           ],
         );
         header.push({ name: 'totalValue', label: 'Сумма, ₽' });
@@ -354,47 +316,28 @@ export class OrdersService {
           header,
           rows: [],
         };
-        const ordersList = await this.ordersRepository.findAll({
-          where: { companyId: user.companyId },
-          order: [['createdAt', 'DESC']] as Order,
-          attributes: [
-            'id',
-            'totalValue',
-            'totalValueWithDiscount',
-            'createdAt',
-          ],
-          include: [
-            {
-              model: OrdersOptionValues,
-              include: [
-                {
-                  model: OrderParameters,
-                  attributes: ['name', 'type'],
-                },
-                {
-                  model: OrderParametersOptions,
-                  attributes: ['translationRu'],
-                },
-              ],
-            },
-          ],
+        const ordersList = await this._getOrdersList({
+          user,
+          withLimits: false,
         });
         if (ordersList && ordersList.length > 0) {
           ordersList.forEach((order) => {
             const orderPlain = order.get({ plain: true });
+            console.log(orderPlain);
             const row: ExcelTableCellData[] = [
               { name: 'id', value: orderPlain.id },
               {
                 name: 'createdAt',
-                value:
-                  typeof orderPlain.createdAt === 'string'
-                    ? new Date(orderPlain.createdAt).toLocaleString('ru-RU')
-                    : '',
+                value: this._formatDate(orderPlain.createdAt),
               },
               { name: 'totalValue', value: orderPlain.totalValue },
               {
                 name: 'totalValueWithDiscount',
                 value: orderPlain.totalValueWithDiscount,
+              },
+              {
+                name: 'user',
+                value: orderPlain.shift.user.name,
               },
             ];
 
@@ -449,4 +392,99 @@ export class OrdersService {
     }
     return null;
   }
+
+  async _prepareOptionValuesWhere(
+    filters: OrderFilterItem[] | undefined,
+  ): Promise<WhereOptions> {
+    if (filters) {
+      const andCondition: Record<string, string | number>[] = [];
+      for (const filter of filters) {
+        const parameter = await this.orderParametersService.getParameterByName(
+          filter.filterName,
+        );
+        if (parameter) {
+          andCondition.push({
+            [Op.and]: [
+              { parameterId: parameter.id },
+              { optionId: filter.filterValue },
+            ],
+          });
+        }
+      }
+      if (andCondition.length > 0) {
+        return { [Op.and]: andCondition };
+      }
+    }
+    return {};
+  }
+
+  private async _getOrdersList({
+    user,
+    param,
+    withLimits,
+  }: {
+    user: User;
+    param?: GetOrdersListDto;
+    withLimits: boolean;
+  }): Promise<Orders[]> {
+    const requestParam = {
+      where: { companyId: user.companyId },
+      order: [['createdAt', 'DESC']] as Order,
+      attributes: [
+        'id',
+        'shiftId',
+        'totalValue',
+        'totalValueWithDiscount',
+        'createdAt',
+      ],
+      include: [
+        {
+          model: OrdersOptionValues,
+          include: [
+            {
+              model: OrderParameters,
+              attributes: ['name', 'type'],
+            },
+            {
+              model: OrderParametersOptions,
+              attributes: ['translationRu'],
+            },
+          ],
+        },
+        {
+          model: Shifts,
+          include: [
+            {
+              model: User,
+              attributes: ['name'],
+            },
+          ],
+          attributes: ['id'],
+        },
+      ],
+    };
+
+    if (withLimits && param) {
+      const limit = param.recordPerPage ?? 20;
+      const offset = param.currentPage ? (param.currentPage - 1) * limit : 0;
+      requestParam['limit'] = limit;
+      requestParam['offset'] = offset;
+    }
+
+    return this.ordersRepository.findAll(requestParam);
+  }
+
+  _formatDate = (date: unknown): string => {
+    if (!date) return '';
+
+    if (date instanceof Date) {
+      return date.toLocaleString('ru-RU');
+    }
+
+    if (typeof date === 'string' || typeof date === 'number') {
+      return new Date(date).toLocaleString('ru-RU');
+    }
+
+    return '';
+  };
 }
