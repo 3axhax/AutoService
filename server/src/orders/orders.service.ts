@@ -522,6 +522,15 @@ export class OrdersService {
         ordersList.forEach((order) => {
           const findingFilter = formatedFilters.reduce((acc, filter) => {
             if (
+              filter.type === ParametersType.GRAPH_INPUT &&
+              filter.filterValue === null &&
+              !order.optionValues.some((value) => {
+                return value.parameterId === filter.parameterId;
+              })
+            ) {
+              return acc + 1;
+            }
+            if (
               order.optionValues.some((value) => {
                 switch (filter.type) {
                   case ParametersType.SELECT:
@@ -531,6 +540,19 @@ export class OrdersService {
                       value.optionId &&
                       filter.filterValue &&
                       +value.optionId === +filter.filterValue
+                    );
+                  case ParametersType.GRAPH_INPUT:
+                    return (
+                      value.parameterId === filter.parameterId &&
+                      filter.filterValue &&
+                      +filter.filterValue > 0 &&
+                      value.value !== ''
+                    );
+                  case ParametersType.INPUT:
+                    return (
+                      value.parameterId === filter.parameterId &&
+                      filter.filterValue &&
+                      value.value.includes(filter.filterValue.toString())
                     );
                 }
               })

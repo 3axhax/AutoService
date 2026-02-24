@@ -40,10 +40,14 @@ export const formatClientType = (order: OrderItem) => {
   const legal = order.optionValues.find(
     (value) => value.parameter.name === "legal_list",
   );
+  const surname = order.optionValues.find(
+    (value) => value.parameter.name === "surname",
+  );
   return (
     <ul className={"inline-flex flex-col items-start lg:items-center"}>
-      {client_type && <li>{client_type?.option?.translationRu}</li>}
-      {legal && <li>{legal?.option?.translationRu}</li>}
+      {client_type && <li>{client_type.option?.translationRu}</li>}
+      {legal && <li>{legal.option?.translationRu}</li>}
+      {surname && <li>{surname.value}</li>}
     </ul>
   );
 };
