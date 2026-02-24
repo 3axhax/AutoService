@@ -7,6 +7,7 @@ export {
   formatedOrderParametersList,
   selectOrderParametersOrdersValue,
   selectFormatedParameterForFilter,
+  selectOrderParametersListForFilter,
 } from "./selectors";
 
 export { orderTotalValue } from "./selectrors.total";

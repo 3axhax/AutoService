@@ -87,4 +87,27 @@ export const reducers = {
       ...state.filters.filter((filter) => filter.filterName !== action.payload),
     ];
   },
+  setCreatedAtFilter: (
+    state: WritableDraft<OrderState>,
+    action: PayloadAction<{
+      createdAtStart: string | null;
+      createdAtEnd: string | null;
+    }>,
+  ) => {
+    const filters = state.filters.filter(
+      (filter) =>
+        !["createdAtStart", "createdAtEnd"].includes(filter.filterName),
+    );
+    state.filters = [
+      ...filters,
+      {
+        filterName: "createdAtStart",
+        filterValue: action.payload.createdAtStart,
+      },
+      {
+        filterName: "createdAtEnd",
+        filterValue: action.payload.createdAtEnd,
+      },
+    ];
+  },
 };

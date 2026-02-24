@@ -10,6 +10,16 @@ import {
 } from "@entities/order";
 import { reducers } from "./reducers";
 
+const getDateStartMonth = () => {
+  const firstDay = new Date();
+  firstDay.setDate(1);
+  return firstDay.toLocaleString("ru", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  });
+};
+
 const initialState: OrderState = {
   pending: false,
   error: "",
@@ -20,7 +30,17 @@ const initialState: OrderState = {
     recordPerPage: 3,
     totalRecord: 0,
   },
-  filters: [],
+  filters: [
+    { filterName: "createdAtStart", filterValue: getDateStartMonth() },
+    {
+      filterName: "createdAtEnd",
+      filterValue: new Date().toLocaleString("ru", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      }),
+    },
+  ],
 };
 
 export const orderSlice = createSlice({
@@ -118,6 +138,7 @@ export const {
   setCurrentPage,
   addFilter,
   removeFilter,
+  setCreatedAtFilter,
 } = orderSlice.actions;
 
 export const formatOrderValueFromOrderItemList = (listItem: OrderItem) => {

@@ -14,7 +14,7 @@ import { PriceService } from '../price/price.service';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
 import { GetOrdersListDto } from './dto/orders.dto';
 import { Shifts } from '../shifts/shifts.model';
-import { Order } from 'sequelize';
+import { Op, Order, WhereOptions } from 'sequelize';
 import { Response } from 'express';
 import { DownloadExcelService } from '../downloadExcel/downloadExcel.service';
 import {
@@ -24,6 +24,7 @@ import {
   ExcelTableHeaderData,
 } from '../downloadExcel/downloadExcel.types';
 import { ParametersType } from '../orderParameters/orderParametersType.enum';
+import { parseDateFromFormat } from '../utils/parseDateFromFormat';
 
 @Injectable()
 export class OrdersService {
@@ -268,7 +269,12 @@ export class OrdersService {
     param: GetOrdersListDto;
   }) {
     if (user) {
-      if (param.filters.length > 0) {
+      if (
+        param.filters.filter(
+          (filter) =>
+            !['createdAtStart', 'createdAtEnd'].includes(filter.filterName),
+        ).length > 0
+      ) {
         const { rows, count } = await this._getOrdersListWithFilters({
           user,
           param,
@@ -281,7 +287,12 @@ export class OrdersService {
       } else {
         return {
           totalRecord: await this.ordersRepository.count({
-            where: { companyId: user.companyId },
+            where: {
+              [Op.and]: [
+                { companyId: user.companyId },
+                param ? this._formatCreatedAtCondition(param) : {},
+              ],
+            },
           }),
           currentPage: param.currentPage,
           rows: await this._getOrdersList({ param, withLimits: true, user }),
@@ -333,7 +344,10 @@ export class OrdersService {
           rows: [],
         };
         const ordersList =
-          param.filters.length > 0
+          param.filters.filter(
+            (filter) =>
+              !['createdAtStart', 'createdAtEnd'].includes(filter.filterName),
+          ).length > 0
             ? (
                 await this._getOrdersListWithFilters({
                   user,
@@ -341,7 +355,7 @@ export class OrdersService {
                   withLimits: false,
                 })
               ).rows
-            : await this._getOrdersList({ user, withLimits: false });
+            : await this._getOrdersList({ user, param, withLimits: false });
         if (ordersList && ordersList.length > 0) {
           ordersList.forEach((order) => {
             const orderPlain = order.get({ plain: true });
@@ -423,9 +437,15 @@ export class OrdersService {
     param?: GetOrdersListDto;
     withLimits: boolean;
   }): Promise<Orders[]> {
+    const whereCondition: WhereOptions<Orders> = {
+      [Op.and]: [
+        { companyId: user.companyId },
+        param ? this._formatCreatedAtCondition(param) : {},
+      ],
+    };
     const requestParam = {
-      where: { companyId: user.companyId },
       order: [['createdAt', 'DESC']] as Order,
+      where: whereCondition,
       attributes: [
         'id',
         'shiftId',
@@ -580,5 +600,40 @@ export class OrdersService {
       }
     }
     return { rows: [], count: 0 };
+  }
+
+  private _formatCreatedAtCondition(
+    param: GetOrdersListDto,
+  ): WhereOptions<Orders> {
+    if (param) {
+      const createdAtStart = param.filters.find(
+        (filter) => filter.filterName === 'createdAtStart',
+      );
+      const createdAtEnd = param.filters.find(
+        (filter) => filter.filterName === 'createdAtEnd',
+      );
+      if (createdAtStart?.filterValue && createdAtEnd?.filterValue) {
+        return {
+          [Op.and]: [
+            {
+              createdAt: {
+                [Op.gte]: parseDateFromFormat(
+                  createdAtStart.filterValue.toString(),
+                ),
+              },
+            },
+            {
+              createdAt: {
+                [Op.lte]: parseDateFromFormat(
+                  createdAtEnd.filterValue?.toString(),
+                  true,
+                ),
+              },
+            },
+          ],
+        };
+      }
+    }
+    return {};
   }
 }

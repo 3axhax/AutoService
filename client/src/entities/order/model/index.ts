@@ -7,6 +7,7 @@ export {
   setCurrentPage,
   addFilter,
   removeFilter,
+  setCreatedAtFilter,
 } from "./slice";
 
 export {
@@ -29,6 +30,7 @@ export {
   SelectOrdersPaginationCurrentPage,
   SelectOrdersPaginationTotalPage,
   SelectOrdersFiltersList,
+  SelectOrdersFiltersCreatedAt,
 } from "./selectors.ts";
 
 export type { OrderItem, FilterItem } from "./types";

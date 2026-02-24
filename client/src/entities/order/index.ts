@@ -22,7 +22,9 @@ export {
   SelectOrdersPaginationTotalPage,
   addFilter,
   removeFilter,
+  setCreatedAtFilter,
   SelectOrdersFiltersList,
+  SelectOrdersFiltersCreatedAt,
 } from "./model";
 
 export type { OrderItem, FilterItem } from "./model";

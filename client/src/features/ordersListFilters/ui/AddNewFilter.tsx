@@ -1,4 +1,4 @@
-import { selectOrderParametersList } from "@entities/orderParameters";
+import { selectOrderParametersListForFilter } from "@entities/orderParameters";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { SelectUI } from "@shared/ui";
 import { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ interface AddNewFilterProps {
 export const AddNewFilter = ({ onCancel }: AddNewFilterProps) => {
   const dispatch = useAppDispatch();
 
-  const parameterList = useAppSelector(selectOrderParametersList);
+  const parameterList = useAppSelector(selectOrderParametersListForFilter);
   const [selectedParameter, setSelectedParameter] = useState<number>(0);
   const [value, setValue] = useState<string | number | null>(null);
   const [filterValue, setFilterValue] = useState<FilterItem | null>(null);

@@ -1,8 +1,6 @@
 import { RootState } from "@shared/store";
 import { createSelector } from "@reduxjs/toolkit";
-import { FilterItem } from "@entities/order";
-
-const NULL_ARRAY: FilterItem[] = [];
+import { parseDateFromFormat } from "@shared/utils/parseDateFromFormat.ts";
 
 export const orderErrorSelect = (state: RootState) => state.order.error;
 
@@ -62,9 +60,39 @@ export const SelectOrdersPaginationTotalPage = (state: RootState) =>
       state.order.ordersListPagination.recordPerPage,
   );
 
-export const SelectOrdersFiltersList = (state: RootState) =>
-  state.order.filters.length > 0
-    ? [...state.order.filters].sort((a, b) =>
-        a.filterName.localeCompare(b.filterName) ? -1 : 1,
+const SelectOrdersFiltersFullList = (state: RootState) => state.order.filters;
+
+export const SelectOrdersFiltersList = createSelector(
+  [SelectOrdersFiltersFullList],
+  (filtersList) =>
+    filtersList
+      .filter(
+        (filter) =>
+          !["createdAtStart", "createdAtEnd"].includes(filter.filterName),
       )
-    : NULL_ARRAY;
+      .sort((a, b) => a.filterName.localeCompare(b.filterName)),
+);
+
+export const SelectOrdersFiltersCreatedAt = createSelector(
+  [SelectOrdersFiltersFullList],
+  (filtersList) => {
+    const createdAtStart = filtersList.find(
+      (filter) => filter.filterName === "createdAtStart",
+    );
+    const createdAtEnd = filtersList.find(
+      (filter) => filter.filterName === "createdAtEnd",
+    );
+    if (createdAtStart?.filterValue && createdAtEnd?.filterValue) {
+      return {
+        createdAtStart: parseDateFromFormat(
+          createdAtStart.filterValue.toString(),
+        ),
+        createdAtEnd: parseDateFromFormat(createdAtEnd.filterValue.toString()),
+      };
+    }
+    return {
+      createdAtStart: null,
+      createdAtEnd: null,
+    };
+  },
+);
