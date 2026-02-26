@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useAppSelector } from "@shared/store/hooks.ts";
+import { SelectDeviceType } from "@entities/app";
 
 export enum DeviceType {
   desktop = "DESKTOP",
@@ -6,23 +7,7 @@ export enum DeviceType {
 }
 
 export const useDeviceType = () => {
-  const [type, setType] = useState<DeviceType>(DeviceType.desktop);
-
-  const checkWidth = () => {
-    if (window.innerWidth < 1024) {
-      setType(DeviceType.mobile);
-    } else {
-      setType(DeviceType.desktop);
-    }
-  };
-
-  useEffect(() => {
-    checkWidth();
-    window.addEventListener("resize", checkWidth);
-    return () => {
-      window.removeEventListener("resize", checkWidth);
-    };
-  }, []);
+  const type = useAppSelector(SelectDeviceType);
 
   return {
     type,

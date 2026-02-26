@@ -3,4 +3,6 @@ export {
   setHideNavigation,
   checkLSAppSettings,
   SelectHideNavigation,
+  SelectDeviceType,
+  setDeviceType,
 } from "./model";

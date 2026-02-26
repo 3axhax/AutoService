@@ -1,13 +1,16 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { WritableDraft } from "immer";
 import { RootState } from "@shared/store";
+import { DeviceType } from "@shared/hooks/useDeviceType.tsx";
 
 interface AppState {
   hideNavigation: boolean;
+  deviceType: DeviceType;
 }
 
 const initialState: AppState = {
   hideNavigation: true,
+  deviceType: DeviceType.desktop,
 };
 
 export const appSlice = createSlice({
@@ -30,10 +33,17 @@ export const appSlice = createSlice({
         }
       }
     },
+    setDeviceType: (
+      state: WritableDraft<AppState>,
+      action: PayloadAction<DeviceType>,
+    ) => {
+      state.deviceType = action.payload;
+    },
   },
 });
 
-export const { setHideNavigation, checkLSAppSettings } = appSlice.actions;
+export const { setHideNavigation, checkLSAppSettings, setDeviceType } =
+  appSlice.actions;
 
 export default appSlice.reducer;
 
@@ -46,3 +56,5 @@ const updateAppLocalStorage = (key: string, value: boolean) => {
   settings[key] = value;
   localStorage.setItem("appSettings", JSON.stringify(settings));
 };
+
+export const SelectDeviceType = (state: RootState) => state.app.deviceType;
