@@ -3,6 +3,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { FilterItem, OrderValue } from "@entities/order/model/types.ts";
 import { formatOrderValueFromOrderItemList } from "@entities/order/model/slice.ts";
 import { ParametersItem, ParametersType } from "@entities/orderParameters";
+import { UserRole } from "@shared/hooks/useUserType.tsx";
 
 const EMPTY_OBJECT = {} as OrderValue;
 
@@ -109,8 +110,37 @@ export const formatedOrderParametersList = createSelector(
   },
 );
 
+const SelectUsersList = (state: RootState) => state.users.users;
+
+const SelectWorkerUsersList = createSelector([SelectUsersList], (usersList) =>
+  usersList.filter((user) => user.rolesList.includes(UserRole.worker)),
+);
+
+export const selectOrderParametersListForFilter = createSelector(
+  [selectOrderParametersList, SelectWorkerUsersList],
+  (parametersList, workerUsersList): ParametersItem[] => {
+    return [
+      {
+        id: -1,
+        name: "userId",
+        translationRu: "Работник",
+        type: ParametersType.SELECT,
+        order: null,
+        options: workerUsersList.map((user) => ({
+          id: user.id,
+          translationRu: user.name,
+        })),
+      },
+      ...parametersList,
+    ];
+  },
+);
+
 export const selectFormatedParameterForFilter = createSelector(
-  [selectOrderParametersList, (_, filterItem: FilterItem) => filterItem],
+  [
+    selectOrderParametersListForFilter,
+    (_, filterItem: FilterItem) => filterItem,
+  ],
   (
     parameterList,
     filterItem,
@@ -144,22 +174,5 @@ export const selectFormatedParameterForFilter = createSelector(
       parameterName,
       value,
     };
-  },
-);
-
-export const selectOrderParametersListForFilter = createSelector(
-  [selectOrderParametersList],
-  (parametersList): ParametersItem[] => {
-    return [
-      {
-        id: -1,
-        name: "user",
-        translationRu: "Работник",
-        type: ParametersType.SELECT,
-        order: null,
-        options: [],
-      },
-      ...parametersList,
-    ];
   },
 );

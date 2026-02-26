@@ -8,7 +8,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { Role } from '../roles/roles.model';
+import { Role, userRoleType } from '../roles/roles.model';
 import { UserRole } from '../roles/users-roles.model';
 import { userInitialData } from './users.initialData';
 import { Companies } from '../companies/companies.model';
@@ -81,6 +81,15 @@ export class User extends Model<User, UserCreationAttrs> {
     },
   })
   declare isOnlyWorker: boolean;
+
+  @Column({
+    type: DataType.VIRTUAL,
+    get() {
+      const roles = this.getDataValue('roles') as Role[];
+      return roles?.map((role) => role.value);
+    },
+  })
+  declare rolesList: userRoleType[];
 
   @BelongsToMany(() => Role, () => UserRole)
   roles: Role[];

@@ -9,6 +9,7 @@ import { AdminOrdersListPagination } from "@features/adminOrdersList";
 import { getPriceList } from "@entities/price/model/slice.ts";
 import { downloadOrdersList } from "@entities/order";
 import { OrdersListFilters } from "@features/ordersListFilters";
+import { getUsersList } from "@entities/users";
 
 export const OrdersPage = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +19,7 @@ export const OrdersPage = () => {
   useEffect(() => {
     dispatch(getOrderParametersList());
     dispatch(getPriceList());
+    dispatch(getUsersList());
   }, [dispatch]);
 
   return (

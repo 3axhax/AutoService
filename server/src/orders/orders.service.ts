@@ -28,6 +28,8 @@ import { parseDateFromFormat } from '../utils/parseDateFromFormat';
 
 @Injectable()
 export class OrdersService {
+  filterException = ['userId', 'createdAtStart', 'createdAtEnd'];
+
   constructor(
     @InjectModel(Orders)
     private ordersRepository: typeof Orders,
@@ -271,8 +273,7 @@ export class OrdersService {
     if (user) {
       if (
         param.filters.filter(
-          (filter) =>
-            !['createdAtStart', 'createdAtEnd'].includes(filter.filterName),
+          (filter) => !this.filterException.includes(filter.filterName),
         ).length > 0
       ) {
         const { rows, count } = await this._getOrdersListWithFilters({
@@ -285,15 +286,26 @@ export class OrdersService {
           rows: rows,
         };
       } else {
-        return {
-          totalRecord: await this.ordersRepository.count({
-            where: {
-              [Op.and]: [
-                { companyId: user.companyId },
-                param ? this._formatCreatedAtCondition(param) : {},
-              ],
+        const countCondition = {
+          where: {
+            [Op.and]: [
+              { companyId: user.companyId },
+              this._formatCreatedAtCondition(param),
+            ],
+          },
+        };
+        if (param?.filters.find((filter) => filter.filterName === 'userId')) {
+          countCondition['include'] = [
+            {
+              model: Shifts,
+              where: this._formatShiftCondition(param),
+              required: true,
+              attributes: [],
             },
-          }),
+          ];
+        }
+        return {
+          totalRecord: await this.ordersRepository.count(countCondition),
           currentPage: param.currentPage,
           rows: await this._getOrdersList({ param, withLimits: true, user }),
         };
@@ -345,8 +357,7 @@ export class OrdersService {
         };
         const ordersList =
           param.filters.filter(
-            (filter) =>
-              !['createdAtStart', 'createdAtEnd'].includes(filter.filterName),
+            (filter) => !this.filterException.includes(filter.filterName),
           ).length > 0
             ? (
                 await this._getOrdersListWithFilters({
@@ -440,7 +451,7 @@ export class OrdersService {
     const whereCondition: WhereOptions<Orders> = {
       [Op.and]: [
         { companyId: user.companyId },
-        param ? this._formatCreatedAtCondition(param) : {},
+        this._formatCreatedAtCondition(param),
       ],
     };
     const requestParam = {
@@ -469,13 +480,14 @@ export class OrdersService {
         },
         {
           model: Shifts,
+          where: this._formatShiftCondition(param),
           include: [
             {
               model: User,
               attributes: ['name'],
             },
           ],
-          attributes: ['id'],
+          attributes: ['id', 'userId'],
         },
       ],
     };
@@ -603,7 +615,7 @@ export class OrdersService {
   }
 
   private _formatCreatedAtCondition(
-    param: GetOrdersListDto,
+    param: GetOrdersListDto | undefined,
   ): WhereOptions<Orders> {
     if (param) {
       const createdAtStart = param.filters.find(
@@ -633,6 +645,17 @@ export class OrdersService {
           ],
         };
       }
+    }
+    return {};
+  }
+  private _formatShiftCondition(
+    param: GetOrdersListDto | undefined,
+  ): WhereOptions<Shifts> {
+    const userIdFilter = param?.filters.find(
+      (filter) => filter.filterName === 'userId',
+    );
+    if (userIdFilter?.filterValue) {
+      return { userId: +userIdFilter.filterValue };
     }
     return {};
   }

@@ -4,6 +4,7 @@ import { User } from './users.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { RolesService } from '../roles/roles.service';
 import { UsersSessionsService } from './usersSessions/usersSessions.service';
+import { Role } from '../roles/roles.model';
 
 @Injectable()
 export class UsersService {
@@ -40,6 +41,27 @@ export class UsersService {
     const session = await this.userSessionsService.checkUser({ token });
     if (session) {
       return await this.getUserById(session.userId);
+    }
+    return null;
+  }
+
+  async getUsersList({
+    user,
+  }: {
+    user: User | undefined;
+  }): Promise<User[] | null> {
+    if (user) {
+      return await this.userRepository.findAll({
+        where: { companyId: user.companyId },
+        include: [
+          {
+            model: Role,
+            attributes: ['value'],
+            through: { attributes: [] },
+          },
+        ],
+        attributes: ['id', 'name', 'rolesList'],
+      });
     }
     return null;
   }
