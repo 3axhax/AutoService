@@ -4,7 +4,7 @@ import {
   selectOrderParametersOrdersValue,
 } from "@entities/orderParameters";
 import { InputWithLabel, SelectList } from "@shared/ui";
-import { SelectOrRadio } from "@features/editOrderForm/ui/SelectOrRadio.tsx";
+import { SelectOrRadio } from "@shared/ui/SelectOrRadio.tsx";
 import { GraphInput } from "@features/editOrderForm/ui/GraphInput.tsx";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { setOrdersValue } from "@entities/order";
@@ -61,7 +61,12 @@ export const SwitchParameterType = ({
       return (
         <SelectOrRadio
           key={parameter.id}
-          parameter={parameter}
+          label={parameter.translationRu}
+          name={parameter.name}
+          options={parameter.options.map((item) => ({
+            value: item.id.toString(),
+            label: item.translationRu,
+          }))}
           value={(values[parameter.name] as string) ?? ""}
           onChange={(value) => setValue({ name: parameter.name, value })}
         />

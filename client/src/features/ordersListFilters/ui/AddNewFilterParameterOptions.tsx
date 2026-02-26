@@ -1,5 +1,6 @@
 import { ParametersItem, ParametersType } from "@entities/orderParameters";
-import { InputWithLabel, RadioGroup, SelectUI } from "@shared/ui";
+import { InputWithLabel, RadioGroup } from "@shared/ui";
+import { SelectOrRadio } from "@shared/ui/SelectOrRadio.tsx";
 
 interface AddNewFilterParameterOptionsProps {
   parameter: ParametersItem | undefined;
@@ -28,13 +29,13 @@ export const AddNewFilterParameterOptions = ({
         ) : [ParametersType.SELECT, ParametersType.SELECT_LIST].includes(
             parameter.type,
           ) ? (
-          <SelectUI<string>
+          <SelectOrRadio
             key={parameter.id}
-            name={parameter.name}
             label={parameter.translationRu}
-            options={parameter.options.map((option) => ({
-              value: option.id.toString(),
-              label: option.translationRu,
+            name={parameter.name}
+            options={parameter.options.map((item) => ({
+              value: item.id.toString(),
+              label: item.translationRu,
             }))}
             value={value ? value.toString() : ""}
             onChange={setValue}
