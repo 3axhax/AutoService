@@ -1,14 +1,10 @@
 import { useCallback, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
+import { useAppDispatch } from "@shared/store/hooks.ts";
 import { InfoModal } from "@features/infoModal";
 import { Navigation } from "@widgets/navigation";
 import { MainPage } from "@pages/main";
-import {
-  checkLSUser,
-  selectIsUserAdmin,
-  selectIsUserWorker,
-} from "@entities/user";
+import { checkLSUser } from "@entities/user";
 import { checkLSAppSettings, setDeviceType } from "@entities/app";
 import { LogoutPage } from "@pages/logout";
 import { NotFoundPage } from "@pages/404";
@@ -16,10 +12,10 @@ import { WorkerOrderPage } from "@pages/workerOrder";
 import { OrdersPage } from "@pages/orders";
 import { WorkerShiftsHistoryPage } from "@pages/workerShiftsHistory";
 import { DeviceType } from "@shared/hooks/useDeviceType.tsx";
+import { useUserType } from "@shared/hooks/useUserType.tsx";
 
 function AppContainer() {
-  const isUserAdmin = useAppSelector(selectIsUserAdmin);
-  const isUserWorker = useAppSelector(selectIsUserWorker);
+  const { isAdmin: isUserAdmin, isWorker: isUserWorker } = useUserType();
   const dispatch = useAppDispatch();
 
   const handlerResize = useCallback(() => {

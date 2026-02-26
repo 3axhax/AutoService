@@ -1,10 +1,5 @@
 import { useAppSelector } from "@shared/store/hooks.ts";
-import {
-  selectIsUserAuthorized,
-  selectUserName,
-  selectIsUserAdmin,
-  selectIsUserWorker,
-} from "@entities/user";
+import { selectIsUserAuthorized, selectUserName } from "@entities/user";
 import { useInfoModalData } from "@app/providers/infoModalProvider";
 import { LoginForm } from "@features/loginForm";
 import { NavigationUI, NavItem } from "./NavigationUI.tsx";
@@ -14,12 +9,12 @@ import {
   HomeModernIcon,
 } from "@heroicons/react/24/outline";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { useUserType } from "@shared/hooks/useUserType.tsx";
 
 export const Navigation = () => {
   const isUserAuthorized = useAppSelector(selectIsUserAuthorized);
-  const isUserAdmin = useAppSelector(selectIsUserAdmin);
-  const isUserWorker = useAppSelector(selectIsUserWorker);
   const userName = useAppSelector(selectUserName);
+  const { isAdmin: isUserAdmin, isWorker: isUserWorker } = useUserType();
   const { openModal } = useInfoModalData();
 
   const navItems: NavItem[] = [];

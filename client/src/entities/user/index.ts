@@ -7,8 +7,6 @@ export {
   selectPendingUser,
   selectErrorUser,
   selectIsUserAuthorized,
-  selectIsUserAdmin,
-  selectIsUserManager,
-  selectIsUserWorker,
+  selectUserRoles,
   selectUserName,
 } from "./model";

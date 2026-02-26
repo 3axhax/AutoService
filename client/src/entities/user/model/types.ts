@@ -1,3 +1,5 @@
+import { UserType } from "@shared/hooks/useUserType.tsx";
+
 export interface UserAuthorizationType {
   email: string;
   password: string;
@@ -7,7 +9,7 @@ export interface userType {
   id: number;
   name: string;
   token: string;
-  roles: string[];
+  roles: UserType[];
 }
 
 export interface userSliceInitialType extends userType {
