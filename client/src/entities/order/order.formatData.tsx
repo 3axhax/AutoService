@@ -18,13 +18,13 @@ export const formatVehicleName = (order: OrderItem) => {
   return (
     <ul className={"inline-flex flex-col"}>
       {(carMakeName || car_number) && (
-        <ul className={"flex flex-wrap gap-x-1.5 justify-center"}>
+        <ul className={"flex flex-wrap wrap-anywhere gap-x-1.5 justify-center"}>
           {carMakeName && <li>{carMakeName}</li>}
           {car_number && <li>№{car_number.value}</li>}
         </ul>
       )}
       {(car_type || wheel_diameter) && (
-        <ul className={"flex flex-wrap gap-x-1.5 justify-center"}>
+        <ul className={"flex flex-wrap wrap-anywhere gap-x-1.5 justify-center"}>
           {car_type && <li>{car_type.option?.translationRu}</li>}
           {wheel_diameter && <li>Ø{wheel_diameter.option?.translationRu}</li>}
         </ul>
