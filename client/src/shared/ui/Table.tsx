@@ -30,7 +30,7 @@ export const Table = ({ tableData, className }: TableProps) => {
         {tableData.header.map((th) => (
           <div
             key={th.name}
-            className={`flex-1 border-r border-blue-200 last:border-0 px-4 py-3 text-center text-sm font-medium${th.className ? ` ${th.className}` : ``}`}
+            className={`border-r border-blue-200 last:border-0 px-4 py-3 text-center text-sm font-medium${th.className ? ` ${th.className}` : ``} ${th.name === "actions" ? `w-[100px]` : "flex-1"}`}
           >
             {th.label}
           </div>
@@ -50,7 +50,7 @@ export const Table = ({ tableData, className }: TableProps) => {
               return (
                 <div
                   key={cell.name}
-                  className={`flex-1 text-left lg:text-center first:bg-stone-200/50 dark:first:bg-gray-200/10 lg:first:bg-transparent dark:lg:first:bg-transparent first:font-normal border-t-1 lg:border-t-0 first:border-t-0 border-stone-400 dark:border-gray-200/25 px-3 py-1 lg:py-2 text-lg lg:text-base text-gray-900 dark:text-white lg:border-r-1 last:border-r-0 lg:border-blue-900 ${cell.className ? ` ${cell.className}` : ``} ${cell.name === "action" ? `absolute lg:relative top-0 right-0 !border-t-0` : ""}`}
+                  className={`text-left lg:text-center first:bg-stone-200/50 dark:first:bg-gray-200/10 lg:first:bg-transparent dark:lg:first:bg-transparent first:font-normal border-t-1 lg:border-t-0 first:border-t-0 border-stone-400 dark:border-gray-200/25 px-3 py-1 lg:py-2 text-lg lg:text-base text-gray-900 dark:text-white lg:border-r-1 last:border-r-0 lg:border-blue-900 ${cell.className ? ` ${cell.className}` : ``} ${cell.name === "action" ? `absolute lg:relative top-0 right-0 !border-t-0 w-[100px]` : "flex-1"}`}
                 >
                   {label ? (
                     <span

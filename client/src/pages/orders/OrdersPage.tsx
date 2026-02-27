@@ -10,6 +10,7 @@ import { getPriceList } from "@entities/price/model/slice.ts";
 import { downloadOrdersList } from "@entities/order";
 import { OrdersListFilters } from "@features/ordersListFilters";
 import { getUsersList } from "@entities/users";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 
 export const OrdersPage = () => {
   const dispatch = useAppDispatch();
@@ -36,11 +37,12 @@ export const OrdersPage = () => {
             <button
               type={"button"}
               className={
-                " bg-underline text-blue-500 cursor-pointer hover:text-blue-700 transition-all duration-200"
+                "text-blue-500 cursor-pointer hover:text-blue-700 transition-all duration-200"
               }
               onClick={() => dispatch(downloadOrdersList())}
             >
-              Скачать Excel
+              <ArrowDownTrayIcon className={"w-5 h-5 inline-flex mr-1"} />
+              <span className={'bg-underline'}>Скачать Excel</span>
             </button>
           </div>
           <AdminOrdersList />
