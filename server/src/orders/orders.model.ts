@@ -16,11 +16,13 @@ import {
   OrdersOptionValuesCreationAttrs,
 } from './ordersOptionValues.model';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
+import { User } from '../users/users.model';
 
 export interface OrdersCreationAttrs {
   id?: number;
   companyId: number;
   shiftId: number;
+  userId: number;
   totalValue?: number;
   totalValueWithDiscount?: number;
 }
@@ -50,6 +52,12 @@ export class Orders extends Model<Orders, OrdersCreationAttrs> {
   })
   declare shiftId: number;
 
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  declare userId: number;
+
   @Column({
     type: DataType.FLOAT,
     defaultValue: 0,
@@ -67,6 +75,9 @@ export class Orders extends Model<Orders, OrdersCreationAttrs> {
 
   @BelongsTo(() => Shifts)
   declare shift: Shifts;
+
+  @BelongsTo(() => User)
+  declare user: User;
 
   declare _optionsData?: Omit<
     OrdersOptionValuesCreationAttrs,

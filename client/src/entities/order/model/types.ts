@@ -10,6 +10,7 @@ export interface OrderItem {
   createdAt: string;
   shiftId?: number;
   shift?: { user: { name: string } };
+  user?: { name: string };
   optionValues: {
     parameterId: number;
     value: string;

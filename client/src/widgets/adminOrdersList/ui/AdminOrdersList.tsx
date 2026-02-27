@@ -41,7 +41,7 @@ export const AdminOrdersList = () => {
       },
       {
         name: "worker",
-        data: row.shift ? row.shift.user.name.toString() : "",
+        data: row.user ? row.user.name.toString() : "",
       },
       {
         name: "createdAt",

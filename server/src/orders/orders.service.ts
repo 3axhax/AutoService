@@ -64,6 +64,7 @@ export class OrdersService {
         shiftId: shift.id,
         totalValue,
         totalValueWithDiscount,
+        userId: user.id,
       });
 
       const parametersOptions = await this._formatParamToOptions(param);
@@ -100,6 +101,7 @@ export class OrdersService {
       if (user.isOnlyWorker) {
         const shift = await this.shiftsService.getActiveShiftByUser({ user });
         where['shiftId'] = shift?.id;
+        where['userId'] = user.id;
       }
       const existOrder = await this.ordersRepository.findOne({ where });
       if (existOrder) {
@@ -171,7 +173,12 @@ export class OrdersService {
       if (user.isOnlyWorker) {
         const shift = await this.shiftsService.getActiveShiftByUser({ user });
         const deletedCount = await this.ordersRepository.destroy({
-          where: { id, companyId: user?.companyId, shiftId: shift?.id },
+          where: {
+            id,
+            companyId: user?.companyId,
+            shiftId: shift?.id,
+            userId: user.id,
+          },
         });
         return deletedCount > 0;
       }
@@ -297,8 +304,8 @@ export class OrdersService {
         if (param?.filters.find((filter) => filter.filterName === 'userId')) {
           countCondition['include'] = [
             {
-              model: Shifts,
-              where: this._formatShiftCondition(param),
+              model: User,
+              where: this._formatUserCondition(param),
               required: true,
               attributes: [],
             },
@@ -480,7 +487,6 @@ export class OrdersService {
         },
         {
           model: Shifts,
-          where: this._formatShiftCondition(param),
           include: [
             {
               model: User,
@@ -488,6 +494,11 @@ export class OrdersService {
             },
           ],
           attributes: ['id', 'userId'],
+        },
+        {
+          model: User,
+          where: this._formatUserCondition(param),
+          attributes: ['id', 'name'],
         },
       ],
     };
@@ -648,14 +659,14 @@ export class OrdersService {
     }
     return {};
   }
-  private _formatShiftCondition(
+  private _formatUserCondition(
     param: GetOrdersListDto | undefined,
-  ): WhereOptions<Shifts> {
+  ): WhereOptions<User> {
     const userIdFilter = param?.filters.find(
       (filter) => filter.filterName === 'userId',
     );
     if (userIdFilter?.filterValue) {
-      return { userId: +userIdFilter.filterValue };
+      return { id: +userIdFilter.filterValue };
     }
     return {};
   }

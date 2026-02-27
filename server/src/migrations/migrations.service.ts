@@ -1,11 +1,13 @@
-// src/migrations/migration.service.ts
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
-import { QueryTypes } from 'sequelize';
+import { MigrationsOrders } from './migrations.orders';
 
 @Injectable()
 export class MigrationService implements OnModuleInit {
-  constructor(private readonly sequelize: Sequelize) {}
+  constructor(
+    private readonly sequelize: Sequelize,
+    private migrationOrders: MigrationsOrders,
+  ) {}
 
   async onModuleInit() {
     await this.runMigrations();
@@ -19,24 +21,7 @@ export class MigrationService implements OnModuleInit {
         executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    await this.addTotalValueWithDiscountColumn();
-  }
-
-  private async addTotalValueWithDiscountColumn() {
-    const [results] = await this.sequelize.query(
-      `SELECT * FROM migrations WHERE name = 'add_totalValueWithDiscount_to_orders'`,
-      { type: QueryTypes.SELECT },
-    );
-
-    if (!results) {
-      await this.sequelize.query(`
-          ALTER TABLE orders 
-          ADD COLUMN IF NOT EXISTS "totalValueWithDiscount" FLOAT DEFAULT 0;
-        `);
-      await this.sequelize.query(
-        `INSERT INTO migrations (name) VALUES ('add_totalValueWithDiscount_to_orders')`,
-      );
-      console.log('Migration add_totalValueWithDiscount_to_orders executed');
-    }
+    await this.migrationOrders.addTotalValueWithDiscountColumn();
+    await this.migrationOrders.addUserIdColumn();
   }
 }

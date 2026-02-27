@@ -32,6 +32,7 @@ import { AdditionalWorks } from './additopnalWorks/additionalWorks.model';
 import { AdditionalWorksModule } from './additopnalWorks/additionalWorks.module';
 import { MigrationService } from './migrations/migrations.service';
 import { DownloadExcelModule } from './downloadExcel/downloadExcel.module';
+import { MigrationsOrders } from './migrations/migrations.orders';
 
 @Module({
   imports: [
@@ -80,6 +81,7 @@ import { DownloadExcelModule } from './downloadExcel/downloadExcel.module';
   providers: [
     AppService,
     MigrationService,
+    MigrationsOrders,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
