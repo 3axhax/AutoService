@@ -9,13 +9,14 @@ import {
   AddNewAdditionalWorkDto,
   EditAdditionalWorkDto,
 } from './dto/additionalWorks.dto';
+import { UserRoleEnum } from '../roles/roles.types';
 
 @Controller('additionalWorks')
 export class AdditionalWorksController {
   constructor(private additionalWorksService: AdditionalWorksService) {}
 
   @Get('fromActiveShift')
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   fromActiveShift(
     @User() user: UserModel | undefined,
@@ -24,7 +25,7 @@ export class AdditionalWorksController {
   }
 
   @Post('add')
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   addAdditionalWork(
     @User() user: UserModel | undefined,
@@ -34,7 +35,7 @@ export class AdditionalWorksController {
   }
 
   @Post('edit')
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   editAdditionalWork(
     @User() user: UserModel | undefined,
@@ -44,7 +45,7 @@ export class AdditionalWorksController {
   }
 
   @Post('delete')
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   deleteAdditionalWork(
     @User() user: UserModel | undefined,
@@ -54,7 +55,7 @@ export class AdditionalWorksController {
   }
 
   @Get('getByShiftId')
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   byShiftId(
     @User() user: UserModel | undefined,

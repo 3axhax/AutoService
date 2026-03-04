@@ -1,12 +1,14 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { MigrationsOrders } from './migrations.orders';
+import { MigrationsUsers } from './migrations.users';
 
 @Injectable()
 export class MigrationService implements OnModuleInit {
   constructor(
     private readonly sequelize: Sequelize,
     private migrationOrders: MigrationsOrders,
+    private migrationsUsers: MigrationsUsers,
   ) {}
 
   async onModuleInit() {
@@ -21,7 +23,21 @@ export class MigrationService implements OnModuleInit {
         executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    await this.migrationOrders.addTotalValueWithDiscountColumn();
-    await this.migrationOrders.addUserIdColumn();
+    await Promise.all(
+      ['orders', 'users'].map(async (model) => {
+        switch (model) {
+          case 'orders':
+            await this.migrationOrders.addTotalValueWithDiscountColumn();
+            await this.migrationOrders.addUserIdColumn();
+            break;
+          case 'users':
+            await this.migrationsUsers.addConfirmedColumn();
+            await this.migrationsUsers.addConfirmedDateColumn();
+            await this.migrationsUsers.addConfirmedTokenColumn();
+            await this.migrationsUsers.addAdminTokenColumn();
+            break;
+        }
+      }),
+    );
   }
 }

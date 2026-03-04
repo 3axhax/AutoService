@@ -6,9 +6,9 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { roleInitialData } from './roles.initialData';
+import { UserRoleEnum } from './roles.types';
 
-const userRoleList: string[] = ['ADMIN', 'MANAGER', 'WORKER'] as const;
-export type userRoleType = (typeof userRoleList)[number];
+export type userRoleType = UserRoleEnum;
 
 export interface RoleCreationAttrs {
   id?: number;
@@ -28,13 +28,11 @@ export class Role extends Model<Role, RoleCreationAttrs> {
   declare id: number;
 
   @Column({
-    type: DataType.ENUM({
-      values: userRoleList,
-    }),
+    type: DataType.ENUM(...Object.values(UserRoleEnum)),
     unique: true,
     allowNull: false,
   })
-  declare value: string;
+  declare value: UserRoleEnum;
 
   @AfterSync
   static async addInitialData() {

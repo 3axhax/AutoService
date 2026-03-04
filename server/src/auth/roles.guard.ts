@@ -7,9 +7,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ROLES_KEY } from './roles-auth.decorator';
+import { ROLES_KEY, SCIP_CONFIRMED } from './roles-auth.decorator';
 import { UsersService } from '../users/users.service';
 import { UsersSessionsService } from '../users/usersSessions/usersSessions.service';
+import { UserRoleEnum } from '../roles/roles.types';
 
 interface IUser {
   id: number;
@@ -33,8 +34,12 @@ export class RolesGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req: IRequest = context.switchToHttp().getRequest();
     try {
-      const requiredRoles = this.reflector.getAllAndOverride<string[]>(
+      const requiredRoles = this.reflector.getAllAndOverride<UserRoleEnum[]>(
         ROLES_KEY,
+        [context.getHandler(), context.getClass()],
+      );
+      const scipConfirmed = this.reflector.getAllAndOverride<boolean>(
+        SCIP_CONFIRMED,
         [context.getHandler(), context.getClass()],
       );
       if (!requiredRoles) {
@@ -60,6 +65,13 @@ export class RolesGuard implements CanActivate {
       const userDB = await this.userService.getUserById(session.userId);
       if (!userDB) {
         this.unauthorizedError();
+        return false;
+      }
+      if (
+        requiredRoles.includes(UserRoleEnum.ADMIN) &&
+        !scipConfirmed &&
+        !userDB.confirmed
+      ) {
         return false;
       }
       const plainUserDB = userDB.get({ plain: true });

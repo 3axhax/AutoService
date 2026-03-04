@@ -9,15 +9,20 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Role, userRoleType } from '../roles/roles.model';
-import { UserRole } from '../roles/users-roles.model';
 import { userInitialData } from './users.initialData';
 import { Companies } from '../companies/companies.model';
+import { UserRoleEnum } from '../roles/roles.types';
+import {UserRole} from "../roles/users-roles.model";
 
 export interface UserCreationAttrs {
   email: string;
   name?: string;
   companyId?: number;
   password: string;
+  confirmed: boolean;
+  confirmedDate: Date | null;
+  confirmedToken: string | null;
+  adminToken: string;
 }
 @Table({
   tableName: 'users',
@@ -39,12 +44,6 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
-  })
-  declare password: string;
-
-  @Column({
-    type: DataType.STRING,
   })
   declare name: string;
 
@@ -55,6 +54,38 @@ export class User extends Model<User, UserCreationAttrs> {
   declare companyId: number;
 
   @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  declare password: string;
+
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+  })
+  declare confirmed: boolean;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    defaultValue: null,
+  })
+  declare confirmedDate: Date | null;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    defaultValue: null,
+  })
+  declare confirmedToken: string | null;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  declare adminToken: string;
+
+  @Column({
     type: DataType.VIRTUAL,
     get() {
       const roles = this.getDataValue('roles') as Role[];
@@ -62,7 +93,7 @@ export class User extends Model<User, UserCreationAttrs> {
         roles &&
         Array.isArray(roles) &&
         roles.length > 0 &&
-        roles.some((role: Role) => role.value === 'ADMIN')
+        roles.some((role: Role) => role.value === UserRoleEnum.ADMIN)
       );
     },
   })
@@ -76,7 +107,7 @@ export class User extends Model<User, UserCreationAttrs> {
         roles &&
         Array.isArray(roles) &&
         roles.length === 1 &&
-        roles.some((role: Role) => role.value === 'WORKER')
+        roles.some((role: Role) => role.value === UserRoleEnum.WORKER)
       );
     },
   })

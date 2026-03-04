@@ -5,6 +5,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { User } from '../decorators/user.decorator';
 import { User as UserModel } from '../users/users.model';
 import { OrderParameters } from './orderParameters.model';
+import { UserRoleEnum } from '../roles/roles.types';
 
 export interface ResponseParametersWithOptions {
   parameters: OrderParameters[] | null;
@@ -18,7 +19,7 @@ export interface ResponseParametersWithOptions {
 export class OrderParametersController {
   constructor(private orderParametersService: OrderParametersService) {}
   @Get()
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   getAll(
     @User() user: UserModel | undefined,

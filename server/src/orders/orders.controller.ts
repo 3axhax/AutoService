@@ -15,13 +15,14 @@ import { User as UserModel } from '../users/users.model';
 import { Orders } from './orders.model';
 import { GetOrdersListDto } from './dto/orders.dto';
 import express from 'express';
+import { UserRoleEnum } from '../roles/roles.types';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private orderService: OrdersService) {}
 
   @Post('add')
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   addNewOrder(
     @User() user: UserModel | undefined,
@@ -31,7 +32,7 @@ export class OrdersController {
   }
 
   @Post('edit')
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   editOrder(
     @User() user: UserModel | undefined,
@@ -41,7 +42,7 @@ export class OrdersController {
   }
 
   @Get('fromActiveShift')
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   fromActiveShift(
     @User() user: UserModel | undefined,
@@ -50,7 +51,7 @@ export class OrdersController {
   }
 
   @Post('delete')
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   deleteOrder(
     @User() user: UserModel | undefined,
@@ -60,7 +61,7 @@ export class OrdersController {
   }
 
   @Get('getByShiftId')
-  @Roles('ADMIN', 'WORKER')
+  @Roles(UserRoleEnum.ADMIN, UserRoleEnum.WORKER)
   @UseGuards(RolesGuard)
   byShiftId(
     @User() user: UserModel | undefined,
@@ -70,7 +71,7 @@ export class OrdersController {
   }
 
   @Post('getForAdmin')
-  @Roles('ADMIN')
+  @Roles(UserRoleEnum.ADMIN)
   @UseGuards(RolesGuard)
   getForAdmin(
     @User() user: UserModel | undefined,
@@ -84,7 +85,7 @@ export class OrdersController {
   }
 
   @Post('downloadList')
-  @Roles('ADMIN')
+  @Roles(UserRoleEnum.ADMIN)
   @UseGuards(RolesGuard)
   async downloadList(
     @User() user: UserModel | undefined,

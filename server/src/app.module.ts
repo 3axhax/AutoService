@@ -33,6 +33,7 @@ import { AdditionalWorksModule } from './additopnalWorks/additionalWorks.module'
 import { MigrationService } from './migrations/migrations.service';
 import { DownloadExcelModule } from './downloadExcel/downloadExcel.module';
 import { MigrationsOrders } from './migrations/migrations.orders';
+import { MigrationsUsers } from './migrations/migrations.users';
 
 @Module({
   imports: [
@@ -82,6 +83,7 @@ import { MigrationsOrders } from './migrations/migrations.orders';
     AppService,
     MigrationService,
     MigrationsOrders,
+    MigrationsUsers,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,

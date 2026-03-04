@@ -23,14 +23,6 @@ export class AuthService {
     };
   }
 
-  async createNewUser(userDto: CreateUserDto) {
-    const hashPassword: string = await bcrypt.hash(userDto.password, 5);
-    return await this.userService.createUser({
-      ...userDto,
-      password: hashPassword,
-    });
-  }
-
   private async validateUser(userDto: CreateUserDto) {
     const user = await this.userService.getUserByEmail(userDto.email);
     if (user) {
