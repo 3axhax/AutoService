@@ -1,15 +1,15 @@
 import { useAppSelector } from "@shared/store/hooks.ts";
 import { selectIsUserAuthorized, selectUserName } from "@entities/user";
 import { useInfoModalData } from "@app/providers/infoModalProvider";
-import { LoginForm } from "@features/loginForm";
-import { NavigationUI, NavItem } from "./NavigationUI.tsx";
+import { NavigationUI, NavItem } from "./NavigationUI";
 import {
   ArchiveBoxArrowDownIcon,
   ArrowRightEndOnRectangleIcon,
   HomeModernIcon,
 } from "@heroicons/react/24/outline";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
-import { useUserType } from "@shared/hooks/useUserType.tsx";
+import { useUserType } from "@shared/hooks/useUserType";
+import { LoginRegistration } from "./LoginRegistration";
 
 export const Navigation = () => {
   const isUserAuthorized = useAppSelector(selectIsUserAuthorized);
@@ -49,17 +49,16 @@ export const Navigation = () => {
     navItems.push({
       key: "login",
       path: "#",
-      label: "Вход",
+      label: "Вход/Регистрация",
       isButton: true,
       iconLink: (
         <ArrowRightEndOnRectangleIcon className="inline-flex h-5 w-5 mr-1" />
       ),
       onClick: () => {
         openModal({
-          title: "Войти",
           type: "standard",
           hasButtons: false,
-          body: <LoginForm />,
+          body: <LoginRegistration />,
         });
       },
     });

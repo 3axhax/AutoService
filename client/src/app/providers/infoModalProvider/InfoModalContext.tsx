@@ -14,6 +14,7 @@ export interface InfoModalConstructor {
 interface InfoModalContextType {
   open: boolean;
   openModal: (data: InfoModalConstructor) => void;
+  setTitle: (title: string) => void;
   closeModal: () => void;
   onAccess: (() => void) | null;
   title: string;

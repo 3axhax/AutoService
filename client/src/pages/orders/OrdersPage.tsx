@@ -42,7 +42,7 @@ export const OrdersPage = () => {
               onClick={() => dispatch(downloadOrdersList())}
             >
               <ArrowDownTrayIcon className={"w-5 h-5 inline-flex mr-1"} />
-              <span className={'bg-underline'}>Скачать Excel</span>
+              <span className={"bg-underline"}>Скачать Excel</span>
             </button>
           </div>
           <AdminOrdersList />

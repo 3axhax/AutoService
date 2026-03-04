@@ -42,6 +42,7 @@ export const InfoModalProvider = ({ children }: { children: ReactNode }) => {
         open,
         openModal,
         closeModal,
+        setTitle,
         onAccess,
         title,
         type,
