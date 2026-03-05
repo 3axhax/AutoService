@@ -12,9 +12,10 @@ import { Role, userRoleType } from '../roles/roles.model';
 import { userInitialData } from './users.initialData';
 import { Companies } from '../companies/companies.model';
 import { UserRoleEnum } from '../roles/roles.types';
-import {UserRole} from "../roles/users-roles.model";
+import { UserRole } from '../roles/users-roles.model';
 
 export interface UserCreationAttrs {
+  id?: number;
   email: string;
   name?: string;
   companyId?: number;

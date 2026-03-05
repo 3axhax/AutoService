@@ -2,6 +2,7 @@ import { UserCreationAttrs } from './users.model';
 
 export const userInitialData: UserCreationAttrs[] = [
   {
+    id: 1,
     email: 'admin@mail.com',
     name: 'Босс',
     password: '$2a$05$.U3EHC8wXoW4eSRjhqTJmebtDD8rgmEaAIsrtcOr9f/I75KCkMuJG',
@@ -12,6 +13,7 @@ export const userInitialData: UserCreationAttrs[] = [
     adminToken: 'U3EHC8wXoW4eSRjhqTJmebtDD8rgm',
   },
   {
+    id: 2,
     email: 'manager@mail.com',
     name: 'Начальника',
     password: '$2a$05$.U3EHC8wXoW4eSRjhqTJmebtDD8rgmEaAIsrtcOr9f/I75KCkMuJG',
@@ -22,6 +24,7 @@ export const userInitialData: UserCreationAttrs[] = [
     adminToken: 'U3EHC8wXoW4jhqTJmebtDD8rgm',
   },
   {
+    id: 3,
     email: 'worker@mail.com',
     name: 'Джамшут',
     password: '$2a$05$.U3EHC8wXoW4eSRjhqTJmebtDD8rgmEaAIsrtcOr9f/I75KCkMuJG',
@@ -32,6 +35,7 @@ export const userInitialData: UserCreationAttrs[] = [
     adminToken: 'U3EHC8wXoW4eSRjhqTJbtDD8rgm',
   },
   {
+    id: 4,
     email: 'worker1@mail.com',
     name: 'Равшан',
     password: '$2a$05$.U3EHC8wXoW4eSRjhqTJmebtDD8rgmEaAIsrtcOr9f/I75KCkMuJG',
@@ -42,6 +46,7 @@ export const userInitialData: UserCreationAttrs[] = [
     adminToken: 'U3EHC8wXoW4eSRjhqTJmebtDD8rg',
   },
   {
+    id: 5,
     email: 'admin2@mail.com',
     name: 'AdminOther',
     password: '$2a$05$.U3EHC8wXoW4eSRjhqTJmebtDD8rgmEaAIsrtcOr9f/I75KCkMuJG',
