@@ -1,6 +1,7 @@
 export {
   userSlice,
   loginUser,
+  registerUser,
   resetError,
   checkLSUser,
   logoutUser,

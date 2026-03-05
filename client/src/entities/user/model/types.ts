@@ -5,6 +5,14 @@ export interface UserAuthorizationType {
   password: string;
 }
 
+export interface UserRegistrationType {
+  email: string;
+  name: string;
+  companyName: string;
+  password: string;
+  confirmedPassword: string;
+}
+
 export interface userType {
   id: number;
   name: string;

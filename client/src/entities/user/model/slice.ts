@@ -4,9 +4,10 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import {
-  type UserAuthorizationType,
-  type userSliceInitialType,
-  type userType,
+  UserAuthorizationType,
+  UserRegistrationType,
+  userSliceInitialType,
+  userType,
 } from "./types.ts";
 import Request from "@shared/transport/RestAPI.ts";
 import { HandlerAxiosError } from "@shared/transport/RequestHandlersError.ts";
@@ -14,15 +15,40 @@ import type { WritableDraft } from "immer";
 import { saveUser } from "./helpers.ts";
 import { USER_LS_KEY } from "./constants.ts";
 import { RootState } from "@shared/store";
+import { ErrorActionType } from "@shared/types";
 
 export const loginUser = createAsyncThunk(
   "user/login",
-  async (userData: UserAuthorizationType) => {
-    try {
-      const response = await Request.post("/auth/login", userData);
-      return response.data;
-    } catch (e) {
-      HandlerAxiosError(e);
+  async (userData: UserAuthorizationType, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.shifts.pending) {
+      dispatch(setPending(true));
+      try {
+        const response = await Request.post("/auth/login", userData);
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
+    }
+  },
+);
+
+export const registerUser = createAsyncThunk(
+  "user/register",
+  async (userData: UserRegistrationType, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    if (!state.shifts.pending) {
+      dispatch(setPending(true));
+      try {
+        const response = await Request.post("/auth/register", userData);
+        return response.data;
+      } catch (e) {
+        HandlerAxiosError(e);
+      } finally {
+        dispatch(setPending(false));
+      }
     }
   },
 );
@@ -62,6 +88,12 @@ export const userSlice = createSlice({
         }
       }
     },
+    setPending: (
+      state: WritableDraft<userSliceInitialType>,
+      action: PayloadAction<boolean>,
+    ) => {
+      state.pending = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -74,27 +106,41 @@ export const userSlice = createSlice({
           if (action.payload.token) {
             saveUser(state, action.payload);
           }
-          state.pending = false;
         },
       )
       .addCase(
-        loginUser.rejected,
-        (state: WritableDraft<userSliceInitialType>, action) => {
-          state.pending = false;
+        registerUser.fulfilled,
+        (
+          state: WritableDraft<userSliceInitialType>,
+          action: PayloadAction<userType>,
+        ) => {
+          if (action.payload.token) {
+            saveUser(state, action.payload);
+          }
+        },
+      )
+      .addMatcher(
+        (action) =>
+          action.type.endsWith("/rejected") && action.type.startsWith("user"),
+        (
+          state: WritableDraft<userSliceInitialType>,
+          action: ErrorActionType,
+        ) => {
           state.error = action.error.message ? action.error.message : "";
         },
       )
-      .addCase(
-        loginUser.pending,
+      .addMatcher(
+        (action) =>
+          action.type.endsWith("/pending") && action.type.startsWith("user"),
         (state: WritableDraft<userSliceInitialType>) => {
-          state.pending = true;
           state.error = "";
         },
       );
   },
 });
 
-export const { resetError, checkLSUser, logoutUser } = userSlice.actions;
+export const { resetError, checkLSUser, logoutUser, setPending } =
+  userSlice.actions;
 
 export const selectPendingUser = (state: RootState) => state.user.pending;
 export const selectErrorUser = (state: RootState) => state.user.error;
@@ -103,5 +149,3 @@ export const selectIsUserAuthorized = (state: RootState) =>
   !!(state.user.token && state.user.name);
 
 export const selectUserRoles = (state: RootState) => state.user.roles;
-
-export default userSlice.reducer;
