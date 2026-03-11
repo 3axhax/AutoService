@@ -36,7 +36,7 @@ export const RegistrationForm = () => {
         `Слишком короткий пароль, минимальная длина - ${minPasswordLength}`,
       );
     } else if (password !== confirmedPassword) {
-      setValidateError("Несовпадение паролей");
+      setValidateError("Пароли не совпадают");
     } else {
       dispatch(
         registerUser({
