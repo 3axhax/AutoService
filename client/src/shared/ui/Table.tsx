@@ -1,5 +1,4 @@
 import { JSX } from "react";
-import { useDeviceType } from "@shared/hooks/useDeviceType.tsx";
 
 export type TableDataRow = {
   name: string;
@@ -19,8 +18,6 @@ interface TableProps {
 }
 
 export const Table = ({ tableData, className }: TableProps) => {
-  const { isMobile } = useDeviceType();
-  console.log("isMobile", isMobile);
 
   return (
     <>

@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from './users.model';
+import { User, UserCreationAttrs } from './users.model';
 import { RolesService } from '../roles/roles.service';
 import { UsersSessionsService } from './usersSessions/usersSessions.service';
 import { Role } from '../roles/roles.model';
+import { UserRoleEnum } from '../roles/roles.types';
 
 @Injectable()
 export class UsersService {
@@ -14,13 +15,23 @@ export class UsersService {
     private userSessionsService: UsersSessionsService,
   ) {}
 
-  /*  async createUser(dto: CreateUserDto) {
+  async createUser(
+    dto: UserCreationAttrs,
+    userRole: UserRoleEnum = UserRoleEnum.WORKER,
+  ) {
     const user = await this.userRepository.create(dto);
-    const role = await this.roleService.getRole('USER');
+    const role = await this.roleService.getRole(userRole);
     await user.$set('roles', [role.id]);
     user.roles = [role];
-    return user;
-  }*/
+    const newUser = await this.getUserById(user.id);
+    if (newUser) {
+      return newUser;
+    }
+    throw new HttpException(
+      'Ошибка при создании пользователя',
+      HttpStatus.BAD_REQUEST,
+    );
+  }
 
   async getUserByEmail(email: string) {
     return await this.userRepository.findOne({

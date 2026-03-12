@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Companies } from './companies.model';
+import { Companies, CompaniesCreationAttrs } from './companies.model';
 
 @Injectable()
 export class CompaniesService {
@@ -11,5 +11,9 @@ export class CompaniesService {
 
   async getAll(): Promise<Companies[] | null> {
     return this.companiesRepository.findAll();
+  }
+
+  async createCompany(company: CompaniesCreationAttrs): Promise<Companies> {
+    return this.companiesRepository.create(company);
   }
 }

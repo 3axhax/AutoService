@@ -6,6 +6,7 @@ import { UsersSessionsService } from '../users/usersSessions/usersSessions.servi
 import { UsersSessionsModule } from '../users/usersSessions/usersSessions.module';
 import { UsersSessions } from '../users/usersSessions/usersSessions.model';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { CompaniesModule } from '../companies/companies.module';
 
 @Module({
   controllers: [AuthController],
@@ -14,6 +15,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
     forwardRef(() => UsersModule),
     SequelizeModule.forFeature([UsersSessions]),
     UsersSessionsModule,
+    CompaniesModule,
   ],
   exports: [AuthModule],
 })
