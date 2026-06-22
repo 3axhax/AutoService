@@ -21,6 +21,7 @@ export class OrderParametersService {
     user: User | undefined;
   }): Promise<ResponseParametersWithOptions> {
     if (user) {
+
       const attributes = user.isOnlyWorker
         ? ['id', 'name', 'translationRu', 'type', 'order']
         : user.isAdmin

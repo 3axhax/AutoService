@@ -4,7 +4,7 @@ import { Roles } from '../auth/roles-auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { UserRoleEnum } from '../roles/roles.types';
 
-@Controller('orderParameters')
+@Controller('orderParametersOptions')
 export class OrderParametersOptionsController {
   constructor(
     private orderParametersOptionsService: OrderParametersOptionsService,
