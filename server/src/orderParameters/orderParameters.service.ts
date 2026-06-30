@@ -53,6 +53,8 @@ export class OrderParametersService {
                 id: optionsList,
               },
               attributes: ['id', 'translationRu'],
+              separate: true,
+              order: [['id', 'ASC']] as Order,
               required: false,
             },
           ],

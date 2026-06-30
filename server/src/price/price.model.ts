@@ -18,6 +18,7 @@ export interface PriceCreationAttrs {
   companyId: number;
   value: number;
   discountImpact: boolean;
+  mainOptionId: number;
 }
 @Table({
   tableName: 'price',
@@ -49,6 +50,13 @@ export class Price extends Model<Price, PriceCreationAttrs> {
     defaultValue: false,
   })
   declare discountImpact: boolean;
+
+  @ForeignKey(() => OrderParametersOptions)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  declare mainOptionId: number;
 
   @BelongsToMany(
     () => OrderParametersOptions,

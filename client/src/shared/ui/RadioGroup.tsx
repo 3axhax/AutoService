@@ -45,7 +45,7 @@ export const RadioGroup = <T = string,>({
         {options.map((option) => (
           <label
             key={option.value as string}
-            className={`radio-label cursor-pointer flex gap-2 items-center ${option.disabled ? "disabled" : ""}`}
+            className={`radio-label cursor-pointer flex gap-2 items-center text-start ${option.disabled ? "disabled" : ""}`}
           >
             <input
               type="radio"

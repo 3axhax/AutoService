@@ -82,7 +82,7 @@ export const formatedOrderParametersList = createSelector(
     return parametersList
       .filter((parameter) => {
         if (parameterDependenceIds.includes(parameter.id)) {
-          return parameterOptionDependence[parameter.id].every((id) =>
+          return parameterOptionDependence[parameter.id].some((id) =>
             values.includes(id),
           );
         }
