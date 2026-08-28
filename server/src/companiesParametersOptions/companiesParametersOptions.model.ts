@@ -93,7 +93,7 @@ export class CompaniesParametersOptions extends Model<
         const maxIdNumber = Number(maxId);
         if (!isNaN(maxIdNumber)) {
           await CompaniesParametersOptions.sequelize.query(
-            `SELECT setval('"orderParametersOptions_id_seq"', ${maxIdNumber}, true)`,
+            `SELECT setval('"companiesParametersOptions_id_seq"', ${maxIdNumber}, true)`,
           );
           console.log(`Sequence updated to ${maxIdNumber}`);
         }
