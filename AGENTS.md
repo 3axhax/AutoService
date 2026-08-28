@@ -105,7 +105,7 @@ AutoService — веб-приложение для автосервиса: ад�
 - CORS разрешает только `GET` и `POST`; при добавлении методов нужно обновлять конфигурацию в `server/src/main.ts`.
 - API-клиент сейчас жёстко использует порт `5050`, несмотря на наличие `VITE_BASE_API_URL`.
 - В моделях есть ручное обновление sequence после initial data; при добавлении новой модели/таблицы проверять имя sequence и отсутствие конфликтов.
-- `companiesParametersOptions.model.ts` содержит исторически подозрительное имя sequence `orderParametersOptions_id_seq`; не исправлять автоматически без проверки реальной схемы БД.
+- `companiesParametersOptions.model.ts` обновляет sequence `companiesParametersOptions_id_seq`; при изменении схемы сверять имя sequence с реальной БД.
 - В `orders.model.ts` хуки `AfterCreate`/`BeforeDestroy` синхронизируют записи `ordersOptionValues`; изменения жизненного цикла заказа проверять вместе с этими хуками.
 
 ## Команды проверки
