@@ -4,93 +4,100 @@ import { ParametersType } from './orderParametersType.enum';
 export const orderParametersInitialData: OrderParametersCreationAttrs[] = [
   {
     id: 1,
-    name: 'client_type',
+    name: "client_type",
     type: ParametersType.SELECT,
-    translationRu: 'Тип клиента',
-    order: 1,
+    translationRu: "Тип клиента",
+    order: 1
   },
   {
     id: 2,
-    name: 'legal_list',
+    name: "legal_list",
     type: ParametersType.SELECT,
-    translationRu: 'Юр. лицо',
-    order: 2,
+    translationRu: "Юр. лицо",
+    order: 2
   },
   {
     id: 3,
-    name: 'car_make',
+    name: "car_make",
     type: ParametersType.SELECT,
-    translationRu: 'Марка автомобиля',
-    order: 3,
+    translationRu: "Марка автомобиля",
+    order: 3
   },
   {
     id: 4,
-    name: 'car_number',
+    name: "car_number",
     type: ParametersType.INPUT,
-    translationRu: 'Гос. номер',
-    order: 4,
+    translationRu: "Гос. номер",
+    order: 4
   },
   {
     id: 5,
-    name: 'car_type',
+    name: "car_type",
     type: ParametersType.SELECT,
-    translationRu: 'Тип автомобиля',
-    order: 5,
+    translationRu: "Тип автомобиля",
+    order: 5
   },
   {
     id: 6,
-    name: 'car_subtype',
+    name: "car_subtype",
     type: ParametersType.SELECT,
-    translationRu: 'Подтип автомобиля',
-    order: 6,
+    translationRu: "Подтип автомобиля",
+    order: 6
   },
   {
     id: 7,
-    name: 'wheel_diameter',
+    name: "wheel_diameter",
     type: ParametersType.SELECT,
-    translationRu: 'Диаметр колеса',
-    order: 7,
+    translationRu: "Диаметр колеса",
+    order: 7
   },
   {
     id: 8,
-    name: 'type_work',
+    name: "type_work",
     type: ParametersType.SELECT_LIST,
-    translationRu: 'Виды работ',
-    order: 8,
+    translationRu: "Виды работ",
+    order: 8
   },
   {
     id: 9,
-    name: 'materials',
+    name: "materials",
     type: ParametersType.SELECT_LIST,
-    translationRu: 'Материалы',
-    order: 9,
+    translationRu: "Материалы",
+    order: 9
   },
   {
     id: 10,
-    name: 'surname',
+    name: "surname",
     type: ParametersType.INPUT,
-    translationRu: 'Фамилия',
-    order: 10,
+    translationRu: "Фамилия",
+    order: 10
   },
   {
     id: 11,
-    name: 'signature',
+    name: "signature",
     type: ParametersType.GRAPH_INPUT,
-    translationRu: 'Подпись',
-    order: 11,
+    translationRu: "Подпись",
+    order: 11
   },
   {
     id: 12,
-    name: 'discount',
+    name: "discount",
     type: ParametersType.SELECT,
-    translationRu: 'Скидка',
-    order: 12,
+    translationRu: "Скидка",
+    order: 12
   },
   {
     id: 13,
-    name: 'payment_method',
+    name: "payment_method",
     type: ParametersType.SELECT,
-    translationRu: 'Способ оплаты',
-    order: 13,
+    translationRu: "Способ оплаты",
+    order: 13
   },
+  {
+    id: 14,
+    name: "car_make_text",
+    type: ParametersType.INPUT,
+    translationRu: "Марка автомобиля",
+    order: 3
+  }
 ];
