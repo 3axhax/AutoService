@@ -1,4 +1,5 @@
 # Project exclude paths
 /.idea
 /DumpDB
-/.DS_Store
+/testData
+.DS_Store
