@@ -3,11 +3,15 @@ export enum ParametersType {
   SELECT_LIST = "SELECT_LIST",
   INPUT = "INPUT",
   GRAPH_INPUT = "GRAPH_INPUT",
+  COMPOSITE_LIST = "COMPOSITE_LIST",
 }
 
 export interface ParametersItemOption {
   id: number;
   translationRu: string;
+  optionGroup?: string;
+  optionGroupTranslationRu?: string;
+  optionGroupOrder?: number;
 }
 
 export interface ParametersItem {

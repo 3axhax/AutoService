@@ -6,6 +6,13 @@ export interface PricingItem {
   value: number;
   conditions: PricingCondition[];
   discountImpact: boolean;
+  mainOptionId?: number;
+}
+
+export interface PricingCompositeOperation {
+  id?: string;
+  optionIds: number[];
+  count?: number;
 }
 
 export interface PricingParameterOption {
@@ -15,6 +22,7 @@ export interface PricingParameterOption {
 
 export interface PricingParameter {
   name: string;
+  type?: string;
   options: PricingParameterOption[];
 }
 

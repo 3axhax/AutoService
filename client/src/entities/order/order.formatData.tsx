@@ -59,6 +59,22 @@ export const formatWorkList = (order: OrderItem) => {
   const materials = order.optionValues.filter(
     (value) => value.parameter.name === "materials",
   );
+  const compositeItems = order.optionValues.filter(
+    (value) => value.parameter.type === "COMPOSITE_LIST",
+  );
+  const compositeOperations = [
+    ...new Set(
+      compositeItems
+        .filter((item) => Boolean(item.compositeOperationId))
+        .map(
+          (item) => `${item.parameterId}:${item.compositeOperationId as string}`,
+        ),
+    ),
+  ].map((key) =>
+    compositeItems.filter(
+      (item) => `${item.parameterId}:${item.compositeOperationId}` === key,
+    ),
+  );
   const typeWorkList = (
     <ul
       className={
@@ -83,10 +99,21 @@ export const formatWorkList = (order: OrderItem) => {
       ))}
     </ul>
   );
+  const compositeList = (
+    <ul className="[ul+&]:mt-1 [ul+&]:border-t-1 [ul+&]:border-stone-400 [ul+&]:pt-1 inline-flex flex-col text-left lg:text-center">
+      {compositeOperations.map((items) => (
+        <li key={items[0]?.compositeOperationId}>
+          {items.map((item) => item.option?.translationRu).join(" + ")} x{" "}
+          {items[0]?.count ?? 1}
+        </li>
+      ))}
+    </ul>
+  );
   return (
     <div className={"inline-flex flex-col"}>
       {typeWorkList}
       {materialsList}
+      {compositeList}
     </div>
   );
 };

@@ -143,7 +143,16 @@ export const {
 
 export const formatOrderValueFromOrderItemList = (listItem: OrderItem) => {
   const values = {} as OrderValue;
+  const compositeGroups = new Map<string, OrderItem["optionValues"]>();
   listItem.optionValues.forEach((item) => {
+    if (item.compositeOperationId) {
+      const groupKey = `${item.parameterId}:${item.compositeOperationId}`;
+      compositeGroups.set(groupKey, [
+        ...(compositeGroups.get(groupKey) ?? []),
+        item,
+      ]);
+      return;
+    }
     const parameter = item.parameter;
     if (parameter) {
       if (Object.prototype.hasOwnProperty.call(values, parameter.name)) {
@@ -163,6 +172,24 @@ export const formatOrderValueFromOrderItemList = (listItem: OrderItem) => {
       }
     }
   });
+  if (compositeGroups.size > 0) {
+    compositeGroups.forEach((items) => {
+      const parameterName = items[0]?.parameter.name;
+      const id = items[0]?.compositeOperationId;
+      if (!parameterName || !id) return;
+      const current = Array.isArray(values[parameterName])
+        ? values[parameterName]
+        : [];
+      values[parameterName] = [
+        ...current,
+        {
+          id,
+          optionIds: items.map((item) => Number(item.value)),
+          count: items[0]?.count ?? 1,
+        },
+      ];
+    });
+  }
   return values;
 };
 

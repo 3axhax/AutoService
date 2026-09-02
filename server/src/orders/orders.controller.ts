@@ -26,7 +26,7 @@ export class OrdersController {
   @UseGuards(RolesGuard)
   addNewOrder(
     @User() user: UserModel | undefined,
-    @Body() param: Record<string, string | Record<number | string, number>>,
+    @Body() param: Record<string, unknown>,
   ): Promise<Orders | null> {
     return this.orderService.addNew({ user, param });
   }
@@ -36,7 +36,7 @@ export class OrdersController {
   @UseGuards(RolesGuard)
   editOrder(
     @User() user: UserModel | undefined,
-    @Body() param: Record<string, string | Record<number | string, number>>,
+    @Body() param: Record<string, unknown>,
   ): Promise<Orders | null> {
     return this.orderService.edit({ user, param });
   }

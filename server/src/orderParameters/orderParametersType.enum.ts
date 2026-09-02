@@ -4,4 +4,5 @@ export enum ParametersType {
   INPUT = 'INPUT',
   RADIO = 'RADIO',
   GRAPH_INPUT = 'GRAPH_INPUT',
+  COMPOSITE_LIST = 'COMPOSITE_LIST',
 }

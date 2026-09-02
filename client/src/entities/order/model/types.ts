@@ -1,6 +1,17 @@
 export interface OrderValue {
   id: number;
-  [key: string]: boolean | number | string | Record<number | string, number>;
+  [key: string]:
+    | boolean
+    | number
+    | string
+    | Record<number | string, number>
+    | CompositeOperation[];
+}
+
+export interface CompositeOperation {
+  id: string;
+  optionIds: number[];
+  count: number;
 }
 
 export interface OrderItem {
@@ -15,6 +26,7 @@ export interface OrderItem {
     parameterId: number;
     value: string;
     count: number;
+    compositeOperationId?: string;
     parameter: { name: string; type: string };
     option?: { translationRu: string };
   }[];
