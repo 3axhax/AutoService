@@ -8,6 +8,7 @@ export default defineConfig({
     tailwindcss()
   ],
   resolve: {
+    preserveSymlinks: true,
     alias: {
       '@': '/src',
       '@app': '/src/app',

@@ -3,3 +3,6 @@
 /DumpDB
 /testData
 .DS_Store
+/client/dist
+/server/dist
+/packages/*/dist
