@@ -93,3 +93,42 @@ test('replaces an earlier less specific price with a matching specific row', () 
     totalValueWithDiscount: 1100,
   });
 });
+
+test('calculates a composite operation from the full client order state', () => {
+  const result = calculateOrderPrice({
+    orderValues: {
+      id: -1,
+      active: true,
+      tire_repair: [{ id: 'repair-1', optionIds: [185, 179], count: 1 }],
+    },
+    parameters: [
+      {
+        name: 'tire_repair',
+        type: 'COMPOSITE_LIST',
+        options: [
+          { id: 185, translationRu: 'R-10' },
+          { id: 179, translationRu: 'Вулканизация холодная' },
+        ],
+      },
+    ],
+    priceList: [
+      {
+        value: 250,
+        conditions: [{ id: 185 }],
+        discountImpact: true,
+        mainOptionId: 185,
+      },
+      {
+        value: 1000,
+        conditions: [{ id: 179 }, { id: 185 }],
+        discountImpact: true,
+        mainOptionId: 179,
+      },
+    ],
+  });
+
+  assert.deepEqual(result, {
+    totalValue: 1250,
+    totalValueWithDiscount: 1250,
+  });
+});

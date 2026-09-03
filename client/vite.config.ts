@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
+  optimizeDeps: {
+    force: true,
+  },
   plugins: [
       react(),
     tailwindcss()
