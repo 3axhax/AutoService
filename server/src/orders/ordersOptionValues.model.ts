@@ -16,6 +16,7 @@ export interface OrdersOptionValuesCreationAttrs {
   count?: number;
   value: string;
   optionId?: number;
+  compositeOperationId?: string;
 }
 @Table({
   tableName: 'ordersOptionValues',
@@ -66,6 +67,12 @@ export class OrdersOptionValues extends Model<
     allowNull: true,
   })
   declare optionId?: number;
+
+  @Column({
+    type: DataType.STRING(64),
+    allowNull: true,
+  })
+  declare compositeOperationId?: string;
 
   @BelongsTo(() => OrderParameters, { foreignKey: 'parameterId' })
   declare parameter: OrderParameters;

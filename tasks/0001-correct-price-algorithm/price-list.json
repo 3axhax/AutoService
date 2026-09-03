@@ -1,0 +1,247 @@
+{
+  "source": {
+    "file": "testData/Стоимость услуг.xlsx",
+    "sheet": "Лист1",
+    "range": "A1:F59"
+  },
+  "rules": {
+    "stripFromPrefix": true,
+    "repairCalculation": "material + selectedWork",
+    "separateMaterialAndWorkPositions": true,
+    "singleWorkTypePerRepair": true,
+    "emptyCellMeansUnavailable": true
+  },
+  "vehicleCategories": {
+    "A": "R15-R17,5: ПАЗ, ГАЗ, ЗИЛ, МКСМ",
+    "B": "R19,5-R22,5 ЕВРО 9.00-10.00",
+    "C": "Китайские грузовики R20, 11.00-12.00",
+    "D": "Трактора, фронтальные погрузчики и другая строительная техника",
+    "E": "Тяжёлые трактора, тяжёлая спецтехника, комбайны, вездеходы"
+  },
+  "wheelServices": [
+    {
+      "id": "remove_install",
+      "name": "Снятие-установка колеса",
+      "unit": "wheel",
+      "prices": {
+        "A": { "single": 400, "dual": 550 },
+        "B": { "single": 500, "dual": 650 },
+        "C": { "single": 500, "dual": 650 },
+        "D": { "single": 700, "dual": 850 },
+        "E": { "standard": 1500 }
+      }
+    },
+    {
+      "id": "demount",
+      "name": "Демонтаж",
+      "unit": "wheel",
+      "prices": {
+        "A": { "tubeless": 400, "tube": 550 },
+        "B": { "tubeless": 450, "tube": 600 },
+        "C": { "tubeless": 500, "tube": 750 },
+        "D": { "tubeless": 750, "tube": 900 },
+        "E": { "standard": 2500 }
+      }
+    },
+    {
+      "id": "mount",
+      "name": "Монтаж",
+      "unit": "wheel",
+      "prices": {
+        "A": { "tubeless": 400, "tube": 550 },
+        "B": { "tubeless": 450, "tube": 600 },
+        "C": { "tubeless": 500, "tube": 750 },
+        "D": { "tubeless": 750, "tube": 900 },
+        "E": { "standard": 2500 }
+      }
+    },
+    {
+      "id": "balance_weights",
+      "name": "Балансировка с грузами",
+      "unit": "wheel",
+      "prices": {
+        "A": { "work": 500, "material": 450, "total": 950 },
+        "B": { "work": 500, "material": 450, "total": 950 },
+        "C": { "work": 500, "material": 450, "total": 950 },
+        "D": { "work": 500, "material": 450, "total": 950 },
+        "E": { "work": 500, "material": 450, "total": 950 }
+      }
+    },
+    {
+      "id": "balance_granules",
+      "name": "Балансировка гранулами",
+      "unit": "wheel",
+      "prices": {
+        "A": { "work": 500, "material": 650, "total": 1150 },
+        "B": { "work": 500, "material": 650, "total": 1150 },
+        "C": { "work": 500, "material": 650, "total": 1150 },
+        "D": { "work": 500, "material": 650, "total": 1150 },
+        "E": { "work": 500, "material": 650, "total": 1150 }
+      }
+    },
+    {
+      "id": "spare_remove_install",
+      "name": "Снятие-установка запасного колеса",
+      "unit": "wheel",
+      "prices": { "A": 500, "B": 600, "C": 600, "D": 750, "E": 750 }
+    },
+    {
+      "id": "bead_sealant",
+      "name": "Обработка герметиком борта",
+      "unit": "tire",
+      "prices": { "A": 400, "B": 600, "C": 600, "D": 600, "E": 600 }
+    },
+    {
+      "id": "talc",
+      "name": "Обработка тальком",
+      "unit": "tire",
+      "prices": { "A": 100, "B": 100, "C": 100, "D": 100, "E": 100 }
+    },
+    {
+      "id": "disk_cleaning",
+      "name": "Очистка диска",
+      "unit": "disk",
+      "prices": {
+        "A": { "standard": 150, "severe": 250 },
+        "B": { "standard": 150, "severe": 250 },
+        "C": { "standard": 150, "severe": 250 },
+        "D": { "standard": 150, "severe": 250 },
+        "E": { "standard": 150, "severe": 250 }
+      }
+    },
+    {
+      "id": "tube_puncture_repair",
+      "name": "Ремонт камеры за один прокол",
+      "unit": "puncture",
+      "prices": { "A": 450, "B": 450, "C": 450, "D": 450, "E": 450 }
+    },
+    {
+      "id": "nut_tightening",
+      "name": "Протяжка гаек",
+      "unit": "nut",
+      "prices": { "A": 25, "B": 25, "C": 25, "D": 25, "E": 25 }
+    },
+    {
+      "id": "pressure_check",
+      "name": "Проверка и выравнивание давления",
+      "unit": "wheel",
+      "prices": { "A": 50, "B": 50, "C": 50, "D": 50, "E": 50 }
+    },
+    {
+      "id": "puncture_search",
+      "name": "Проверка и поиск прокола",
+      "unit": "operation",
+      "prices": { "A": 100, "B": 100, "C": 100, "D": 100, "E": 100 }
+    },
+    {
+      "id": "tire_disposal",
+      "name": "Утилизация автошины",
+      "unit": "tire",
+      "prices": { "A": 500, "B": 500, "C": 500, "D": 700, "E": 700 }
+    },
+    {
+      "id": "tire_storage_day",
+      "name": "Ответственное хранение шины за сутки",
+      "unit": "tire_day",
+      "prices": { "A": 100, "B": 100, "C": 100, "D": 100, "E": 100 }
+    },
+    {
+      "id": "tread_cutting",
+      "name": "Нарезка протектора",
+      "unit": "wheel",
+      "prices": { "A": 2000, "B": 2000, "C": 2000, "D": 2000, "E": 2000 }
+    },
+    {
+      "id": "patch_removal",
+      "name": "Удаление пластыря",
+      "unit": "operation",
+      "prices": { "A": 400, "B": 400, "C": 400, "D": 400, "E": 400 }
+    },
+    {
+      "id": "wheel_loading",
+      "name": "Погрузка/выгрузка колеса",
+      "unit": "wheel",
+      "prices": { "A": 100, "B": 100, "C": 100, "D": 100, "E": 100 }
+    }
+  ],
+  "tireRepairs": [
+    { "id": "R-10", "name": "Пластырь кордовый 55x75 мм, 1 слой", "material": 250, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1250 },
+    { "id": "R-11", "name": "Пластырь кордовый 69x95 мм, 1 слой", "material": 300, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1300 },
+    { "id": "R-12", "name": "Пластырь кордовый 70x120 мм, 1 слой", "material": 300, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1300 },
+    { "id": "R-13", "name": "Пластырь кордовый 75x90 мм, 1 слой", "material": 350, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1350 },
+    { "id": "R-14", "name": "Пластырь кордовый 85x130 мм, 1 слой", "material": 350, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1350 },
+    { "id": "R-15", "name": "Пластырь кордовый 90x105 мм, 1 слой", "material": 350, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1350 },
+    { "id": "R-18", "name": "Пластырь кордовый 75x110 мм, 2 слоя", "material": 400, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1400 },
+    { "id": "R-19", "name": "Пластырь кордовый 105x120 мм, 2 слоя", "material": 450, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1450 },
+    { "id": "R-20", "name": "Пластырь кордовый 90x135 мм, 2 слоя", "material": 450, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1450 },
+    { "id": "R-22", "name": "Пластырь кордовый 80x175 мм, 2 слоя", "material": 450, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1450 },
+    { "id": "R-23", "name": "Пластырь кордовый 110x185 мм, 2 слоя", "material": 550, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1550 },
+    { "id": "R-25", "name": "Пластырь кордовый 125x145 мм, 3 слоя", "material": 650, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1650 },
+    { "id": "R-33", "name": "Пластырь кордовый 100x125 мм, 3 слоя", "material": 600, "work": { "cold": 1000, "hot": null }, "sourceTotal": 1600 },
+    { "id": "R-35", "name": "Пластырь кордовый 130x180 мм, 4 слоя", "material": 800, "work": { "cold": 1200, "hot": 2500 }, "sourceTotal": 4500 },
+    { "id": "R-40", "name": "Пластырь кордовый 115x200 мм, 3 слоя", "material": 900, "work": { "cold": 1200, "hot": 2500 }, "sourceTotal": 4600 },
+    { "id": "R-42", "name": "Пластырь кордовый 130x260 мм, 4 слоя", "material": 950, "work": { "cold": 1200, "hot": 2500 }, "sourceTotal": 4650 },
+    { "id": "RS-35", "name": "Пластырь металлокордовый 130x260 мм, 4 слоя", "material": 1200, "work": { "cold": 1200, "hot": 2500 }, "sourceTotal": 4900 },
+    { "id": "RS-42", "name": "Пластырь металлокордовый 130x260 мм, 4 слоя", "material": 1400, "work": { "cold": 1200, "hot": 2500 }, "sourceTotal": 5100 },
+    { "id": "RS-45", "name": "Пластырь металлокордовый 130x260 мм, 4 слоя", "material": 1500, "work": { "cold": 1200, "hot": 2500 }, "sourceTotal": 5200 },
+    { "id": "D-2", "name": "Пластырь кордовый 80 мм, 2 слоя", "material": 300, "work": { "cold": 1200, "hot": null }, "sourceTotal": 1500 },
+    { "id": "D-3", "name": "Пластырь кордовый 100 мм, 2 слоя", "material": 350, "work": { "cold": 1200, "hot": null }, "sourceTotal": 1550 },
+    { "id": "D-4", "name": "Пластырь кордовый 120 мм, 2 слоя", "material": 450, "work": { "cold": 1200, "hot": null }, "sourceTotal": 1650 },
+    { "id": "D-5", "name": "Пластырь кордовый 160 мм, 4 слоя", "material": 500, "work": { "cold": 1200, "hot": null }, "sourceTotal": 1700 },
+    { "id": "D-6", "name": "Пластырь кордовый 235 мм, 6 слоёв", "material": 1200, "work": { "cold": 1200, "hot": 3500 }, "sourceTotal": 5900 },
+    { "id": "D-7", "name": "Пластырь кордовый 295 мм, 6 слоёв", "material": 1700, "work": { "cold": 1200, "hot": 3500 }, "sourceTotal": 6400 },
+    { "id": "D-8", "name": "Пластырь кордовый 345 мм, 6 слоёв", "material": 2300, "work": { "cold": 1200, "hot": 3500 }, "sourceTotal": 7000 },
+    { "id": "D-9", "name": "Пластырь кордовый 390 мм, 8 слоёв", "material": 3000, "work": { "cold": 1200, "hot": 3500 }, "sourceTotal": 7700 }
+  ],
+  "repairConsumables": [
+    {
+      "id": "tube_valve",
+      "name": "Вентиль камерный с гайкой",
+      "variants": {
+        "truck": { "material": 1000, "work": 450, "total": 1450 },
+        "tractor": { "material": 1300, "work": 450, "total": 1750 },
+        "all_terrain": { "material": 1500, "work": 450, "total": 1950 }
+      }
+    },
+    {
+      "id": "tubeless_valve",
+      "name": "Вентиль бескамерный",
+      "variants": {
+        "truck": { "material": 500, "work": 350, "total": 850 },
+        "tractor": { "material": 600, "work": 350, "total": 950 }
+      }
+    },
+    {
+      "id": "valve_extension",
+      "name": "Удлинитель вентиля",
+      "variants": {
+        "plastic": { "material": 200, "work": 100, "total": 300 },
+        "metal": { "material": 350, "work": 100, "total": 450 }
+      }
+    },
+    {
+      "id": "mushroom_g12",
+      "name": "Грибок/ножка Г12",
+      "variants": {
+        "mushroom": { "material": 350, "work": 750, "total": 1100 },
+        "stem": { "material": 200, "work": 250, "total": 450 }
+      }
+    },
+    {
+      "id": "mushroom_g15",
+      "name": "Грибок/ножка Г15",
+      "variants": {
+        "mushroom": { "material": 400, "work": 750, "total": 1150 },
+        "stem": { "material": 200, "work": 250, "total": 450 }
+      }
+    },
+    {
+      "id": "mushroom_g18",
+      "name": "Грибок/ножка Г18",
+      "variants": {
+        "mushroom": { "material": 450, "work": 750, "total": 1200 },
+        "stem": { "material": 200, "work": 250, "total": 450 }
+      }
+    }
+  ]
+}

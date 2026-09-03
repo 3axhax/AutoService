@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Price } from './price.model';
 import { FindOptions } from 'sequelize';
 import { User } from '../users/users.model';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
 import { OrderParametersService } from '../orderParameters/orderParameters.service';
+import { calculateOrderPrice } from '@autoservice/pricing';
+import { ParametersType } from '../orderParameters/orderParametersType.enum';
 
 @Injectable()
 export class PriceService {
@@ -18,7 +20,7 @@ export class PriceService {
     if (user) {
       const params: FindOptions<Price> = {
         where: { companyId: user?.companyId },
-        attributes: ['value', 'discountImpact'],
+        attributes: ['value', 'discountImpact', 'mainOptionId'],
         include: [
           {
             model: OrderParametersOptions,
@@ -37,124 +39,118 @@ export class PriceService {
     param,
   }: {
     user: User;
-    param: Record<string, string | Record<number | string, number>>;
+    param: Record<string, unknown>;
   }): Promise<{ totalValue: number; totalValueWithDiscount: number }> {
     const companyPrice = await this.getAll({ user });
-
-    let total = 0;
-    let totalWithDiscount = 0;
-    let discount = 1;
-
     const parametersList = await this.orderParametersService.getAll({ user });
+    const plainPrice =
+      companyPrice?.map((price) => price.get({ plain: true })) ?? [];
 
-    const parametersListWithOptions = parametersList.parameters
-      ?.filter(
-        (parameter) => parameter.get({ plain: true }).options?.length > 0,
-      )
-      .map((parameter) => parameter.name);
-
-    const usefulParam = {} as Record<
-      string,
-      string | Record<number | string, number>
-    >;
-
-    if (parametersListWithOptions) {
-      Object.entries(param).forEach(([key, value]) => {
-        if (parametersListWithOptions.includes(key)) {
-          usefulParam[key] = value;
-        }
-      });
-    }
-
-    const selectedValues = Object.values(usefulParam).reduce(
-      (acc: Record<number, number>, value) => {
-        if (typeof value === 'object' && value !== null) {
-          let values = {};
-          for (const k in value) {
-            if (+value[k] > 0) {
-              values = { ...values, [+k]: +value[k] };
-            }
-          }
-          return { ...acc, ...values };
-        }
-        return { ...acc, [+value]: 1 };
-      },
-      {},
-    );
-
-    const selectedParameters = Object.values(usefulParam).reduce(
-      (acc: number[], value) => {
-        if (typeof value === 'object' && value !== null) {
-          const values: number[] = [];
-          for (const k in value) {
-            if (+value[k] > 0) {
-              values.push(+k);
-            }
-          }
-          return [...acc, ...values];
-        }
-        return [...acc, +value];
-      },
-      [],
-    );
-
-    if (parametersList && parametersList.parameters) {
-      const discountParameter = parametersList.parameters
-        .find((parameter) => parameter.name === 'discount')
-        ?.get({ plain: true });
-
-      if (discountParameter && discountParameter.options) {
-        const selectedDiscount = discountParameter.options.find((option) =>
-          selectedParameters.includes(option.id),
-        );
-        if (selectedDiscount) {
-          discount = 1 - parseInt(selectedDiscount.translationRu) / 100;
-        }
-      }
-    }
-
-    const relatedPrice = companyPrice
-      ? companyPrice.reduce((acc: Price[], priceDB) => {
-          const price = priceDB?.get({ plain: true });
-          if (
-            price.conditions &&
-            price.conditions
-              .map((item) => item.id)
-              .every((item) => selectedParameters.includes(item))
-          ) {
-            let result = [...acc];
-            result = result.filter((existingPrice) => {
-              return !existingPrice.conditions
-                .map((item) => item.id)
-                .every((item) =>
-                  price.conditions
-                    .map((condition) => condition.id)
-                    .includes(item),
-                );
-            });
-            return [...result, price];
-          }
-          return acc;
-        }, [])
-      : [];
-
-    relatedPrice.forEach((price) => {
-      totalWithDiscount +=
-        price.value *
-        price.conditions.reduce((acc: number, condition) => {
-          return acc * +selectedValues[condition.id];
-        }, 1) *
-        (price.discountImpact ? discount : 1);
-      total +=
-        price.value *
-        price.conditions.reduce((acc: number, condition) => {
-          return acc * +selectedValues[condition.id];
-        }, 1);
+    this.validateCompositeParameters({
+      param,
+      priceList: plainPrice,
+      parameters: parametersList.parameters,
     });
 
-    return {
-      totalValue: total,
-      totalValueWithDiscount: totalWithDiscount,
-    };
+    return calculateOrderPrice({
+      orderValues: param,
+      priceList: plainPrice,
+      parameters:
+        parametersList.parameters?.map((parameter) =>
+          parameter.get({ plain: true }),
+        ) ?? [],
+    });
+  }
+
+  private validateCompositeParameters({
+    param,
+    priceList,
+    parameters,
+  }: {
+    param: Record<string, unknown>;
+    priceList: Price[];
+    parameters: Awaited<
+      ReturnType<OrderParametersService['getAll']>
+    >['parameters'];
+  }) {
+    const baseIds = new Set<number>();
+    Object.values(param).forEach((value) => {
+      if (
+        (typeof value === 'string' || typeof value === 'number') &&
+        Number.isFinite(Number(value))
+      ) {
+        baseIds.add(Number(value));
+      } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+        Object.keys(value).forEach((optionId) => {
+          if (Number.isFinite(Number(optionId))) baseIds.add(Number(optionId));
+        });
+      }
+    });
+
+    (parameters ?? [])
+      .filter((parameter) => parameter.type === ParametersType.COMPOSITE_LIST)
+      .forEach((parameter) => {
+        const operations = param[parameter.name];
+        if (operations === undefined) return;
+        if (!Array.isArray(operations)) {
+          throw new BadRequestException(`${parameter.name} must be an array`);
+        }
+        const groups = new Map<string, Set<number>>();
+        parameter.options.forEach((option) => {
+          if (!option.optionGroup) return;
+          groups.set(
+            option.optionGroup,
+            new Set([...(groups.get(option.optionGroup) ?? []), option.id]),
+          );
+        });
+
+        operations.forEach((operation, index) => {
+          if (
+            !operation ||
+            typeof operation !== 'object' ||
+            Array.isArray(operation)
+          ) {
+            throw new BadRequestException(
+              `Invalid ${parameter.name} operation ${index + 1}`,
+            );
+          }
+          const candidate = operation as Record<string, unknown>;
+          const optionIds = Array.isArray(candidate.optionIds)
+            ? candidate.optionIds.map(Number)
+            : [];
+          const count = Number(candidate.count ?? 1);
+          const hasOneOptionFromEveryGroup =
+            optionIds.length === groups.size &&
+            [...groups.values()].every(
+              (groupOptionIds) =>
+                optionIds.filter((id) => groupOptionIds.has(id)).length === 1,
+            );
+          if (
+            !hasOneOptionFromEveryGroup ||
+            !Number.isInteger(count) ||
+            count < 1
+          ) {
+            throw new BadRequestException(
+              `Invalid ${parameter.name} operation ${index + 1}`,
+            );
+          }
+
+          const selectedIds = new Set([...baseIds, ...optionIds]);
+          const everyOptionHasPrice = optionIds.every((optionId) =>
+            priceList.some(
+              (price) =>
+                price.mainOptionId === optionId &&
+                price.conditions.every((condition) =>
+                  selectedIds.has(condition.id),
+                ),
+            ),
+          );
+          if (!everyOptionHasPrice) {
+            throw new BadRequestException(
+              `Unavailable option combination in ${parameter.name} operation ${index + 1}`,
+            );
+          }
+        });
+      });
   }
 }

@@ -2,8 +2,8 @@ services:
   server_auto_service:
     container_name: serverAutoService
     build:
-      context: ./server
-      dockerfile: DockerfileServer
+      context: .
+      dockerfile: server/DockerfileServer
     env_file:
       - ./server/.development.env
     volumes:
@@ -34,8 +34,8 @@ services:
   client_auto_service:
     container_name: clientAutoService
     build:
-      context: ./client
-      dockerfile: DockerfileClient
+      context: .
+      dockerfile: client/DockerfileClient
     ports:
       - "5173:5173"
     volumes:

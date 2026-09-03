@@ -1,5 +1,5 @@
 import type { WritableDraft } from "immer";
-import { FilterItem, OrderState } from "./types";
+import { CompositeOperation, FilterItem, OrderState } from "./types";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { formatOrderValueFromOrderItemList } from "./slice.ts";
 
@@ -18,7 +18,11 @@ export const reducers = {
     action: PayloadAction<{
       orderId: number;
       name: string;
-      value: string | number | Record<string | number, number>;
+      value:
+        | string
+        | number
+        | Record<string | number, number>
+        | CompositeOperation[];
     }>,
   ) => {
     if (

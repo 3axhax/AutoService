@@ -44,7 +44,7 @@ export class OrdersService {
     param,
   }: {
     user: User | undefined;
-    param: Record<string, string | Record<number | string, number>>;
+    param: Record<string, unknown>;
   }): Promise<Orders | null> {
     if (param && user) {
       const shift =
@@ -79,7 +79,11 @@ export class OrdersService {
             include: [
               {
                 model: OrderParameters,
-                attributes: ['name', 'translationRu'],
+                attributes: ['name', 'translationRu', 'type'],
+              },
+              {
+                model: OrderParametersOptions,
+                attributes: ['translationRu'],
               },
             ],
           },
@@ -94,10 +98,10 @@ export class OrdersService {
     param,
   }: {
     user: User | undefined;
-    param: Record<string, string | Record<number | string, number>>;
+    param: Record<string, unknown>;
   }): Promise<Orders | null> {
     if (user) {
-      const where = { companyId: user?.companyId, id: param.id };
+      const where = { companyId: user?.companyId, id: Number(param.id) };
       if (user.isOnlyWorker) {
         const shift = await this.shiftsService.getActiveShiftByUser({ user });
         where['shiftId'] = shift?.id;
@@ -105,15 +109,15 @@ export class OrdersService {
       }
       const existOrder = await this.ordersRepository.findOne({ where });
       if (existOrder) {
-        await existOrder.deleteOptions();
-        const parametersOptions = await this._formatParamToOptions(param);
-        existOrder.setOptions(parametersOptions);
-        await existOrder.saveOptions();
         const { totalValue, totalValueWithDiscount } =
           await this.priceService.calculateTotalValue({
             user,
             param,
           });
+        await existOrder.deleteOptions();
+        const parametersOptions = await this._formatParamToOptions(param);
+        existOrder.setOptions(parametersOptions);
+        await existOrder.saveOptions();
         await existOrder.update({
           totalValue,
           totalValueWithDiscount,
@@ -193,7 +197,7 @@ export class OrdersService {
   }
 
   async _formatParamToOptions(
-    param: Record<string, string | Record<number | string, number>>,
+    param: Record<string, unknown>,
   ): Promise<Omit<OrdersOptionValuesCreationAttrs, 'orderId'>[]> {
     const parametersOptions = [] as Omit<
       OrdersOptionValuesCreationAttrs,
@@ -205,18 +209,51 @@ export class OrdersService {
         await this.orderParametersService.getParameterByName(k);
       if (parameters) {
         if (param[k]) {
+          if (
+            parameters.type === ParametersType.COMPOSITE_LIST &&
+            Array.isArray(param[k])
+          ) {
+            param[k].forEach((operation, index) => {
+              if (!isObject(operation)) return;
+              const compositeOperation = operation as Record<string, unknown>;
+              const compositeOperationId =
+                typeof compositeOperation.id === 'string' &&
+                compositeOperation.id.length > 0
+                  ? compositeOperation.id.slice(0, 64)
+                  : `${parameters.name}-${index + 1}`;
+              const count = Number(compositeOperation.count ?? 1);
+              if (!Array.isArray(compositeOperation.optionIds)) return;
+              compositeOperation.optionIds.forEach((optionId) => {
+                parametersOptions.push({
+                  parameterId: parameters.id,
+                  value: String(optionId),
+                  count,
+                  compositeOperationId,
+                });
+              });
+            });
+            continue;
+          }
           if (isObject(param[k])) {
             for (const n in param[k]) {
               parametersOptions.push({
                 parameterId: parameters.id,
                 value: n,
-                count: param[k][n],
+                count: Number((param[k] as Record<string, unknown>)[n]),
               });
             }
           } else {
+            const scalarValue = param[k];
+            if (
+              typeof scalarValue !== 'string' &&
+              typeof scalarValue !== 'number' &&
+              typeof scalarValue !== 'boolean'
+            ) {
+              continue;
+            }
             parametersOptions.push({
               parameterId: parameters.id,
-              value: param[k],
+              value: String(scalarValue),
             });
           }
         }

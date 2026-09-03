@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { MigrationsOrders } from './migrations.orders';
 import { MigrationsUsers } from './migrations.users';
+import { MigrationsPriceTests } from './migrations.price-tests';
 
 @Injectable()
 export class MigrationService implements OnModuleInit {
@@ -9,6 +10,7 @@ export class MigrationService implements OnModuleInit {
     private readonly sequelize: Sequelize,
     private migrationOrders: MigrationsOrders,
     private migrationsUsers: MigrationsUsers,
+    private migrationsPriceTests: MigrationsPriceTests,
   ) {}
 
   async onModuleInit() {
@@ -39,5 +41,8 @@ export class MigrationService implements OnModuleInit {
         }
       }),
     );
+    await this.migrationsPriceTests.addCompositeOperationIdColumn();
+    await this.migrationsPriceTests.addCompanyThreePriceTestCoverage();
+    await this.migrationsPriceTests.makeTireRepairConfigurableParameter();
   }
 }

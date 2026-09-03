@@ -9,6 +9,7 @@ import { GraphInput } from "@features/editOrderForm/ui/GraphInput.tsx";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { setOrdersValue } from "@entities/order";
 import Carousel from "react-multi-carousel";
+import { CompositeParameterList } from "./CompositeParameterList";
 
 interface SwitchParameterTypeProps {
   parameter: ParametersItem;
@@ -99,5 +100,7 @@ export const SwitchParameterType = ({
           }}
         />
       );
+    case ParametersType.COMPOSITE_LIST:
+      return <CompositeParameterList parameter={parameter} orderId={orderId} />;
   }
 };

@@ -21,7 +21,6 @@ export class OrderParametersService {
     user: User | undefined;
   }): Promise<ResponseParametersWithOptions> {
     if (user) {
-
       const attributes = user.isOnlyWorker
         ? ['id', 'name', 'translationRu', 'type', 'order']
         : user.isAdmin
@@ -52,7 +51,13 @@ export class OrderParametersService {
               where: {
                 id: optionsList,
               },
-              attributes: ['id', 'translationRu'],
+              attributes: [
+                'id',
+                'translationRu',
+                'optionGroup',
+                'optionGroupTranslationRu',
+                'optionGroupOrder',
+              ],
               separate: true,
               order: [['id', 'ASC']] as Order,
               required: false,

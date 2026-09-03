@@ -34,6 +34,7 @@ import { MigrationService } from './migrations/migrations.service';
 import { DownloadExcelModule } from './downloadExcel/downloadExcel.module';
 import { MigrationsOrders } from './migrations/migrations.orders';
 import { MigrationsUsers } from './migrations/migrations.users';
+import { MigrationsPriceTests } from './migrations/migrations.price-tests';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { MigrationsUsers } from './migrations/migrations.users';
     MigrationService,
     MigrationsOrders,
     MigrationsUsers,
+    MigrationsPriceTests,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,

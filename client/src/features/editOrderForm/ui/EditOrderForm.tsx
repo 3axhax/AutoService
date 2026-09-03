@@ -153,6 +153,7 @@ export const EditOrderForm = ({
           {parametersList &&
             parametersList.map((parameter) => (
               <div
+                key={parameter.id}
                 className={
                   "bg-white dark:bg-gray-950/75 shadow-gray-800/10 dark:shadow-white shadow-xs border-gray-800/20 dark:border-white/20 border-1 px-4 lg:mx-2 py-4 rounded-lg h-full"
                 }

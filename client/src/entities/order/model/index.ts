@@ -33,4 +33,4 @@ export {
   SelectOrdersFiltersCreatedAt,
 } from "./selectors.ts";
 
-export type { OrderItem, FilterItem } from "./types";
+export type { OrderItem, FilterItem, CompositeOperation } from "./types";

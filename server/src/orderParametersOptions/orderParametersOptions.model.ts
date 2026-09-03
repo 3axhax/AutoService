@@ -14,6 +14,9 @@ export interface OrderParametersOptionsCreationAttrs {
   id?: number;
   parametersId: number;
   translationRu: string;
+  optionGroup?: string;
+  optionGroupTranslationRu?: string;
+  optionGroupOrder?: number;
 }
 @Table({
   tableName: 'orderParametersOptions',
@@ -43,6 +46,15 @@ export class OrderParametersOptions extends Model<
     allowNull: false,
   })
   declare translationRu: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare optionGroup?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  declare optionGroupTranslationRu?: string;
+
+  @Column({ type: DataType.INTEGER, allowNull: true })
+  declare optionGroupOrder?: number;
 
   @AfterSync
   static async addInitialData() {

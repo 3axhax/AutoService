@@ -27,7 +27,7 @@ export {
   SelectOrdersFiltersCreatedAt,
 } from "./model";
 
-export type { OrderItem, FilterItem } from "./model";
+export type { OrderItem, FilterItem, CompositeOperation } from "./model";
 
 export {
   formatVehicleName,
