@@ -60,7 +60,7 @@ export const NavigationUI = ({
             "container px-4 lg:px-8 flex flex-col lg:flex-row py-4 lg:py-2 lg:mx-auto"
           }
         >
-          <Logo />
+          <Logo onClick={handleItemSelect} />
           <nav className="navigation mt-4 py-2 lg:py-0 border-t-1 lg:border-t-0 border-white/50 lg:mt-0 lg:ml-auto">
             <ul className="flex flex-col lg:flex-row lg:inline-flex space-x-6 lg:justify-center">
               {navItems.map((item) => (

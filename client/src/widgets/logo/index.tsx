@@ -1,9 +1,14 @@
 import { Link } from "react-router-dom";
 import { Tire } from "@shared/ui/Icons/Tire.tsx";
 
-export const Logo = () => {
+export const Logo = ({ onClick }: { onClick?: () => void }) => {
   return (
-    <Link to={"/"} title={"Главная"} className={"flex items-center lg:mr-8"}>
+    <Link
+      to={"/"}
+      title={"Главная"}
+      className={"flex items-center lg:mr-8"}
+      onClick={onClick}
+    >
       <Tire className="h-8 w-8 mr-1 text-white dark:text-white" />
       <span
         className={
