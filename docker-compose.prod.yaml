@@ -1,0 +1,62 @@
+name: autoservice-prod
+
+services:
+  postgres_auto_service:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in production env file}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in production env file}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in production env file}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  server_auto_service:
+    build:
+      context: .
+      dockerfile: server/DockerfileServer
+      target: production
+    environment:
+      NODE_ENV: production
+      PORT: 5050
+      POSTGRES_HOST: postgres_auto_service
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in production env file}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in production env file}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in production env file}
+    depends_on:
+      postgres_auto_service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5050/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      start_period: 60s
+      retries: 5
+    init: true
+    restart: unless-stopped
+
+  client_auto_service:
+    build:
+      context: .
+      dockerfile: client/DockerfileClient
+      target: production
+    ports:
+      - "${AUTOSERVICE_BIND_ADDRESS:-0.0.0.0}:${AUTOSERVICE_HTTP_PORT:-8080}:80"
+    depends_on:
+      server_auto_service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  pgdata:

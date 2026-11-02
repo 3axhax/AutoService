@@ -12,7 +12,7 @@ type SendingData = Record<string, string | number | File | Blob | object>;
 class RestAPI {
   method: method = "GET";
   target: string = "";
-  baseUrl: string = import.meta.env.VITE_BASE_API_URL;
+  baseUrl: string = import.meta.env.VITE_BASE_API_URL || "/api";
   data: SendingData | FormData = {};
   token: string = "";
   responseType: ResponseType = "json";
@@ -70,13 +70,7 @@ class RestAPI {
       responseType: ResponseType;
       headers?: object;
     } = {
-      //url: this.baseUrl + this.target,
-      url:
-        window.location.protocol +
-        "//" +
-        window.location.hostname +
-        ":5050" +
-        this.target,
+      url: this.baseUrl.replace(/\/$/, "") + "/" + this.target.replace(/^\//, ""),
       method: this.method,
       data: this.data,
       responseType: this.responseType,

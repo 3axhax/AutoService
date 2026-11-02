@@ -7,3 +7,4 @@
 /client/dist
 /server/dist
 /packages/*/dist
+/deploy/.env.production

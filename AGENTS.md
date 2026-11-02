@@ -9,7 +9,8 @@ AutoService — веб-приложение для автосервиса: ад�
 - `server/` — NestJS 11 + TypeScript + Sequelize/`sequelize-typescript`.
 - `client/` — React 19 + Vite + TypeScript, Redux Toolkit, React Router, Tailwind CSS.
 - `postgres_auto_service` — PostgreSQL 12.
-- `docker-compose.yaml` поднимает контейнеры `serverAutoService`, `clientAutoService`, `postgresAutoService`.
+- `docker-compose.yaml` — локальная разработка, development targets; контейнеры `serverAutoService`, `clientAutoService`, `postgresAutoService`.
+- `docker-compose.prod.yaml` — отдельный production-стек `autoservice-prod`: Nginx на порту 8080, собранный backend, внутренняя БД. Инструкция: `deploy/README.md`.
 - Локальные адреса: клиент `http://localhost:5173`, API `http://localhost:5050`, PostgreSQL `localhost:5432`.
 
 ### Backend-модули
@@ -59,7 +60,7 @@ AutoService — веб-приложение для автосервиса: ад�
 - worker → `WorkerOrderPage`;
 - остальные/неавторизованные → `MainPage`.
 
-`client/src/shared/transport/RestAPI.ts` — singleton-обёртка над Axios. Токен берётся из localStorage; фактический URL собирается как текущий host + порт `5050`, поэтому при изменении API-порта нужно проверить этот файл, а не только `client/.env`.
+`client/src/shared/transport/RestAPI.ts` — singleton-обёртка над Axios. Токен берётся из localStorage; URL использует `VITE_BASE_API_URL` с fallback `/api`. Контейнерные окружения явно задают `/api`: Vite proxy локально и Nginx в production направляют запросы в backend.
 
 ## Модель данных
 
@@ -104,7 +105,7 @@ AutoService — веб-приложение для автосервиса: ад�
 ## Известные технические особенности
 
 - CORS разрешает только `GET` и `POST`; при добавлении методов нужно обновлять конфигурацию в `server/src/main.ts`.
-- API-клиент сейчас жёстко использует порт `5050`, несмотря на наличие `VITE_BASE_API_URL`.
+- API proxy использует префикс `/api` и удаляет его перед передачей в backend; Vite и production Nginx должны сохранять одинаковое поведение.
 - В моделях есть ручное обновление sequence после initial data; при добавлении новой модели/таблицы проверять имя sequence и отсутствие конфликтов.
 - `companiesParametersOptions.model.ts` обновляет sequence `companiesParametersOptions_id_seq`; при изменении схемы сверять имя sequence с реальной БД.
 - В `orders.model.ts` хуки `AfterCreate`/`BeforeDestroy` синхронизируют записи `ordersOptionValues`; изменения жизненного цикла заказа проверять вместе с этими хуками.
@@ -138,6 +139,17 @@ docker exec postgresAutoService psql -U postgres -d auto_service_db
 ```
 
 Перед завершением задачи проверять `git diff --check`, статус контейнеров и `git status`; коммитить только явно относящиеся к задаче файлы.
+
+## Доставка на рабочий сервер
+
+- Доставляй изменения только через Git. По умолчанию разворачивай ветку `main`; другую ветку используй только по прямому указанию пользователя.
+- Порядок доставки: подготовь изменения → выполни проверки → закоммить относящиеся к задаче файлы → получи актуальное состояние origin → слей рабочую ветку с `main`, разреши конфликты и проверь результат → отправь рабочую ветку и `main` в origin → подключись к серверу по SSH → обнови серверный checkout → пересобери и перезапусти затронутые контейнеры AutoService → проверь их состояние и доступность приложения.
+- Данные подключения бери из локального файла `tmp/.prod.secrets` относительно корня AutoService. Файл игнорируется Git; его содержимое не выводи в терминал, ответы, документацию, логи или коммиты.
+- Перед обновлением проверь ветку и `git status --short` на сервере. Для обычной доставки переключись на `main` и выполни `git pull --ff-only origin main`; при явно выбранной другой ветке используй её и соответствующий upstream.
+- Не перезаписывай серверные `.env`, secrets, persistent volumes и пользовательские изменения. При расхождениях сначала разберись с ними; не применяй `reset --hard`, `clean` или автоматический stash.
+- Источник сборки на сервере — Git checkout после pull. Не переноси исходники через SCP, rsync, Base64, отдельные файлы или патчи поверх серверного дерева.
+- Перезапуск без пересборки не обновляет код, включённый в образ: пересобери изменённые сервисы и пересоздай соответствующие контейнеры через серверную Compose-конфигурацию. Не выполняй `down -v`.
+- Деплой Analysis на общем сервере не меняй: не редактируй его конфигурацию и не перезапускай его контейнеры.
 
 ## Рабочие задачи
 

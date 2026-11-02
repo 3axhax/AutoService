@@ -4,14 +4,19 @@ services:
     build:
       context: .
       dockerfile: server/DockerfileServer
+      target: development
     env_file:
       - ./server/.development.env
+    environment:
+      NODE_ENV: development
+      PORT: 5050
+      POSTGRES_HOST: postgres_auto_service
+      POSTGRES_PORT: 5432
     volumes:
       - ./server:/app/server
       - /app/server/node_modules
     ports:
-      - "5050:5050"
-      - "9229:9229"
+      - "127.0.0.1:5050:5050"
     depends_on:
       postgres_auto_service:
         condition: service_healthy
@@ -22,7 +27,7 @@ services:
     env_file:
       - ./server/.postgres.env
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -36,13 +41,16 @@ services:
     build:
       context: .
       dockerfile: client/DockerfileClient
+      target: development
     ports:
-      - "5173:5173"
+      - "127.0.0.1:5173:5173"
     volumes:
       - ./client:/app/client
       - /app/client/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+      - VITE_BASE_API_URL=/api
+      - API_PROXY_TARGET=http://server_auto_service:5050
 volumes:
   pgdata:

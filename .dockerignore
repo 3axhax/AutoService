@@ -9,3 +9,11 @@
 DumpDB
 tasks
 testData
+tmp
+.agents
+.codex
+**/.env.*
+**/*.secrets
+**/*.dump
+**/*.sql
+**/*.tsbuildinfo

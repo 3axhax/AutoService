@@ -1,28 +1,28 @@
 ARG NODE_VERSION=22.14.0
-
-FROM node:${NODE_VERSION}-alpine
-
+FROM node:${NODE_VERSION}-alpine AS dependencies
 WORKDIR /app/packages/pricing
-
 COPY packages/pricing/package*.json ./
-
-RUN npm install
-
-COPY packages/pricing .
-
+RUN npm ci
+COPY packages/pricing/tsconfig.json ./
+COPY packages/pricing/src ./src
 RUN npm run build
 
 WORKDIR /app/client
-
 COPY client/package*.json ./
+RUN npm ci
 
-RUN npm install
-
+FROM dependencies AS development
 COPY client .
-
 ENV CHOKIDAR_USEPOLLING=true
 ENV WATCHPACK_POLLING=true
-
 EXPOSE 5173
-
 CMD ["npm", "run", "dev"]
+
+FROM development AS build
+ENV VITE_BASE_API_URL=/api
+RUN npm run build
+
+FROM nginx:alpine AS production
+COPY --from=build /app/client/dist /usr/share/nginx/html
+COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
