@@ -25,3 +25,13 @@ Backend/БД/API и production не менялись, приложение на 
 Проверка во встроенном браузере: на 390px выбор Вход/Регистрация оставляет модалку открытой и aria-expanded=false у меню после завершения анимации. На 1280px тот же выбор открывает модалку, но сохраняет aria-expanded=true; гостевой desktop header не сворачивается. Поля/пароли не изменялись, формы не отправлялись. Screenshot результата сохранён вне Git с обрезкой до полей, без личных данных. После проверки модалка закрыта, меню скрыто, viewport override сброшен.
 
 Повторный client build успешен. Пункты обычных ссылок/dropdown проверены по обработчикам и сборке; гостевой сценарий открытия модального входа — в браузере. Production и БД не изменялись.
+
+## Production поставка после приёмки
+
+2026-11-02 пользователь принял задачу и явно запросил обновление рабочего окружения. Реализация commit 38dd31c слита fast-forward в main, рабочая ветка и main отправлены в origin. В /var/AutoService выполнен Git pull; исходники вне Git не переносились.
+
+Перед поставкой сохранены baseline семи нетронутых контейнеров (backend/БД AutoService и пять Analysis) и прежний frontend image для отката в tmp/0004-before.json на сервере. Только client image собран существующим Buildx builder с ограничением 512 MiB/0.5 CPU; builder остановлен после сборки. Новый образ autoservice-prod-client_auto_service:0004-38dd31c (также latest). Пересоздан только client_auto_service через up --no-build --no-deps --wait.
+
+Проверки: frontend healthy; frontend и /api/ HTTP200; Analysis HTTPS200. Baseline всех семи остальных контейнеров совпал по id/image/StartedAt/restartCount/ports/networks/mounts; backend и БД не перезапускались, миграции и изменение данных не выполнялись. Production browser smoke на 390×844: вход открывает модальное окно, меню aria-expanded=false, модалка остаётся открытой после анимации. Формы не отправлялись; viewport override сброшен. Screenshot без данных пользователя сохранён вне Git.
+
+Rollback: вернуть latest на rollbackImage из защищённого server tmp/0004-before.json и пересоздать только client_auto_service с --no-build --no-deps. БД и остальные сервисы не затрагивать. Задача принята и поставлена; итоговый отчёт также доставляется через Git без дополнительного пересоздания контейнеров.
