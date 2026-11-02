@@ -78,4 +78,4 @@ PostgreSQL 12 сохранён ради совместимости текуще�
 
 ## Ограничение ресурсов на общем сервере
 
-Production Compose ограничивает память backend 256 MiB (Node heap 192 MiB), PostgreSQL 128 MiB и Nginx 64 MiB; CPU — 0.5/0.5/0.25 соответственно. Для сервера с 2 GiB RAM образы собирайте последовательно, в отдельном docker-container Buildx builder с лимитом 512 MiB и половины CPU; после сборки остановите builder. При росте нагрузки меняйте лимиты только после проверки запаса ресурсов Analysis. OOM в AutoService не должен вытеснять процесс Analysis; лимиты не являются гарантией отсутствия конкуренции за диск/сеть.
+Production Compose ограничивает память backend 256 MiB (Node heap 192 MiB), PostgreSQL 128 MiB (shared_buffers 32 MiB, max_connections 40) и Nginx 64 MiB; CPU — 0.5/0.5/0.25 соответственно. Для сервера с 2 GiB RAM образы собирайте последовательно, в отдельном docker-container Buildx builder с лимитом 512 MiB и половины CPU; после сборки остановите builder. При росте нагрузки меняйте лимиты только после проверки запаса ресурсов Analysis. OOM в AutoService не должен вытеснять процесс Analysis; лимиты не являются гарантией отсутствия конкуренции за диск/сеть.

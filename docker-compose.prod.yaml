@@ -3,6 +3,7 @@ name: autoservice-prod
 services:
   postgres_auto_service:
     image: postgres:12
+    command: ["postgres", "-c", "shared_buffers=32MB", "-c", "max_connections=40"]
     mem_limit: 128m
     cpus: 0.50
     environment:
