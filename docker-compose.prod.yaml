@@ -3,6 +3,8 @@ name: autoservice-prod
 services:
   postgres_auto_service:
     image: postgres:12
+    mem_limit: 128m
+    cpus: 0.50
     environment:
       POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in production env file}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in production env file}
@@ -23,6 +25,7 @@ services:
       target: production
     environment:
       NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=192
       PORT: 5050
       POSTGRES_HOST: postgres_auto_service
       POSTGRES_PORT: 5432
@@ -38,10 +41,14 @@ services:
       timeout: 5s
       start_period: 60s
       retries: 5
+    mem_limit: 256m
+    cpus: 0.50
     init: true
     restart: unless-stopped
 
   client_auto_service:
+    mem_limit: 64m
+    cpus: 0.25
     build:
       context: .
       dockerfile: client/DockerfileClient
