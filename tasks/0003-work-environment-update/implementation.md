@@ -44,3 +44,33 @@
 ## Последующий локальный запуск
 
 2026-11-02 по отдельному запросу пользователя выполнено `docker compose up -d --build --renew-anon-volumes`. Все три локальных контейнера работают; PostgreSQL healthy. Frontend на localhost:5173, backend на localhost:5050 и API proxy на localhost:5173/api/ ответили HTTP 200. Именованный volume БД сохранён. Это обычный запуск backend с существующим startup-механизмом миграций; прежнее ограничение «backend на существующей БД не запускался» относится к этапу подготовки образов. Production и Analysis не затронуты.
+
+## Первая production поставка
+
+2026-11-02 пользователь явно разрешил commit/merge/push, создание /var/AutoService, развёртывание и полный перенос локальной БД. Это отменяет ограничение предыдущего этапа «перенос не выполнять» только для текущей поставки.
+
+Подготовка закоммичена (31cf426), слита fast-forward в main, обе ветки отправлены в origin. После read-only аудита сервера добавлена ресурсная изоляция (89b5e3a, d6b4e62): backend 256 MiB/0.5 CPU с heap 192 MiB, PostgreSQL 128 MiB/0.5 CPU с shared_buffers 32 MiB/max_connections 40, Nginx 64 MiB/0.25 CPU. На сервере 2 GiB RAM и 1 CPU; образы собраны последовательно из Git checkout через отдельный Docker-container builder с лимитами 512 MiB и 0.5 CPU. Глобальный builder не переключался, после сборки новый builder остановлен. Образы помечены latest и d6b4e62; изменения этого commit относительно исходного build checkout касались только PostgreSQL command и документации, application sources/Dockerfile не менялись.
+
+Репозиторий клонирован в /var/AutoService, ветка main, выполнен git pull --ff-only. Production credentials сгенерированы отдельно на сервере в игнорируемый deploy/.env.production (0600); dev env-файлы не использованы для подключения production. Порт 8080 и целевой volume до поставки были свободны/отсутствовали.
+
+### Перенос данных
+
+Локальный backend кратко остановлен для согласованного снимка и сразу запущен обратно. Создан custom pg_dump без владельцев/ACL в игнорируемом DumpDB (0600), pg_restore --list успешен; дамп передан по SSH в защищённый tmp каталога AutoService, SHA-256 совпал. Перед записью подтверждено, что новая БД AutoService не содержит public tables. pg_restore выполнен --single-transaction --exit-on-error --no-owner --no-privileges до первого запуска backend.
+
+Все 15 public tables совпали с локальным снимком по counts и fingerprints всего содержимого; повторная проверка после startup migrations также полностью совпала. Пользователи/пароли и операционные данные перенесены из БД, initialData их не подменили. По итогам проверки входа создано ровно две новые production sessions; остальные 14 таблиц не изменились. Секретные данные и хеши не включались в отчёт/Git/вывод инструмента. Проверенные локальный и серверный dump сохранены для отката; restore log имеет ограниченный доступ и не публикуется.
+
+### Приёмка и отсутствие конфликтов с Analysis
+
+- Все три production контейнера healthy, RestartCount 0, OOMKilled false. Nginx, /health, /api/ и SPA fallback проверены как с сервера, так и снаружи по публичному IP:8080, HTTP 200.
+- Через SSH/localhost проверен вход двух пользователей из dev.json, admin-доступ к companies, отсутствие admin-доступа у worker, отказ без токена и при неверном пароле. Пароли и выданные токены не выводились.
+- AutoService имеет отдельные autoservice-prod_default (CIDR не пересекается с сетями Analysis) и autoservice-prod_pgdata. Нет общих сетей, volumes или bind mounts с Analysis; порты backend/DB не опубликованы. Реальный pg Client из backend подключился к PostgreSQL IP именно контейнера AutoService, своей database и role.
+- Все 5 Analysis контейнеров до/после совпали по ID, image, StartedAt, RestartCount, port bindings, network settings и mounts. Порядок mounts нормализован, поскольку Docker inspect может выдавать его произвольно. Никакие restart/reload/config/DB команды к Analysis не применялись. Его HTTPS отвечает 200 до, во время и после поставки.
+- После запуска потребление AutoService: nginx ~3 MiB, backend ~116 MiB, DB ~62 MiB; сервер имеет ~673 MiB available RAM и ~11 GiB свободного диска. Ресурсные лимиты установлены и проверены. Общие физические CPU/диск/сеть сервера остаются общими ресурсами; это не обещание отсутствия конкуренции при любой будущей нагрузке.
+
+Production migration теперь выполнена, поэтому ограничения предыдущих этапов «real backend/DB/auth не проверялись» описывают только состояние до этой поставки. Новых migrations/DDL/массовых исправлений данных в исходники не добавлено; использован штатный startup приложения.
+
+### Последующие релизы и rollback
+
+README обновлён: на общем сервере использовать последовательный ограниченный builder и up --no-build, чтобы случайная параллельная сборка не конкурировала с Analysis. После изменения только документации достаточно Git pull, контейнеры перезапускать не нужно.
+
+Для отката первой поставки остановить только autoservice-prod через его production Compose; volume и проверенный dump сохранить. Не применять down -v, не затрагивать Analysis. Локальные данные сохранены и local stack продолжает работать. При восстановлении dump в уже используемую production БД сначала согласовать план и сохранить её текущую копию; первоначальный dump — снимок на момент переноса, не непрерывная репликация.

@@ -44,11 +44,16 @@ chmod 600 deploy/.env.production
 
 До запуска проверьте свободный порт, RAM/диск сервера и firewall. Если публичный HTTP не нужен, задайте `AUTOSERVICE_BIND_ADDRESS=127.0.0.1` и используйте SSH-туннель/VPN. HTTP сам по себе не шифрует пароли и токены; для публичного рабочего доступа требуется отдельная настройка TLS или защищённого канала.
 
-Проверка и сборка без запуска сервисов:
+Проверка и последовательная сборка без запуска сервисов (без параллельного Compose build на общем сервере):
 
 ```bash
 docker compose --env-file deploy/.env.production -f docker-compose.prod.yaml config --quiet
-docker compose --env-file deploy/.env.production -f docker-compose.prod.yaml build
+# Create the dedicated builder once; do not change the global default builder.
+docker buildx create --name autoservice-prod-builder --driver docker-container --driver-opt memory=512m,memory-swap=512m,cpu-period=100000,cpu-quota=50000 --bootstrap
+# On subsequent releases, reuse the builder instead of creating it again.
+docker buildx build --builder autoservice-prod-builder --target production --load -t autoservice-prod-server_auto_service:latest -f server/DockerfileServer .
+docker buildx build --builder autoservice-prod-builder --target production --load -t autoservice-prod-client_auto_service:latest -f client/DockerfileClient .
+docker buildx stop autoservice-prod-builder
 ```
 
 Первый запуск **не переносит локальную БД**. При пустой БД существующий backend выполняет sync/initialData/startup migrations. Учётные записи из `testData/dev.json` и их обновлённые пароли автоматически не импортируются. Перед первым запуском отдельно согласуйте начальные данные/аккаунты и план миграций; при обновлении существующей БД — резервную копию и порядок её изменения. Подготовка контейнеров не означает, что такая миграция уже выполнена.
@@ -56,7 +61,7 @@ docker compose --env-file deploy/.env.production -f docker-compose.prod.yaml bui
 После согласования запуска и данных:
 
 ```bash
-docker compose --env-file deploy/.env.production -f docker-compose.prod.yaml up -d --build --wait
+docker compose --env-file deploy/.env.production -f docker-compose.prod.yaml up -d --no-build --wait
 docker compose --env-file deploy/.env.production -f docker-compose.prod.yaml ps
 curl --fail http://127.0.0.1:8080/health
 curl --fail http://127.0.0.1:8080/api/
@@ -69,7 +74,8 @@ curl --fail http://127.0.0.1:8080/api/
 Следуйте `AGENTS.md`: проверки → commit → merge в `main` (если не указана другая ветка) → push → SSH по локальному `tmp/.prod.secrets` → проверка чистоты серверного checkout → `git pull --ff-only origin main` → пересборка и пересоздание изменённых сервисов через production Compose. Простой `restart` не подхватывает новую сборку образа. БД и Analysis при изменении только client/server не пересоздавайте:
 
 ```bash
-docker compose --env-file deploy/.env.production -f docker-compose.prod.yaml up -d --build --no-deps --wait server_auto_service client_auto_service
+# First build changed images using the limited builder described above.
+docker compose --env-file deploy/.env.production -f docker-compose.prod.yaml up -d --no-build --no-deps --wait server_auto_service client_auto_service
 ```
 
 До обновления зафиксируйте SHA и предыдущие образы. При необходимости верните согласованный предыдущий Git commit и пересоберите client/server; env-файл и volume сохраняйте. Откат схемы/данных — отдельный согласованный план, он не заменяется откатом образа. Не выполняйте `down -v`.
