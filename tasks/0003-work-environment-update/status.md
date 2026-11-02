@@ -38,3 +38,6 @@
 - Принят: отдельная сеть/подсеть autoservice-prod_default и volume autoservice-prod_pgdata, единственный внешний порт 8080; backend соединяется со своим PostgreSQL IP/DB/role. Analysis baseline совпал для всех пяти контейнеров по id/image/StartedAt/restarts/ports/networks/mounts (mounts сравнивались независимо от порядка Docker inspect). Analysis HTTPS 200 до, во время и после поставки.
 - Ресурсы после поставки: AutoService nginx ~3 MiB, backend ~116 MiB, DB ~62 MiB; доступно ~673 MiB RAM, свободно ~11 GiB диска. Заданы memory/CPU limits, shared_buffers 32 MiB, max_connections 40.
 - Принят: итоговый отчёт и инструкция дальнейшей ограниченной сборки подготовлены; перезапуск приложения для изменения только документации не требуется. Все этапы production поставки приняты по проверкам выше.
+
+2026-11-02 — приёмка пользователем:
+- Принят: пользователь подтвердил завершение задачи («Задача принята»). Локальное окружение, production развёртывание, перенос БД и изоляция от Analysis приняты. Оставшихся работ в рамках задачи нет.
