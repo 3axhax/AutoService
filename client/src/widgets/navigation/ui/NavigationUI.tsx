@@ -22,11 +22,13 @@ export interface NavItem {
 interface NavigationUIProps {
   navItems: NavItem[];
   canCollapsed: boolean;
+  canCollapsedOnMobile?: boolean;
 }
 
 export const NavigationUI = ({
   navItems,
   canCollapsed = false,
+  canCollapsedOnMobile = false,
 }: NavigationUIProps) => {
   const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState<string>("");
@@ -34,10 +36,21 @@ export const NavigationUI = ({
   const dispatch = useAppDispatch();
 
   const collapsed = useAppSelector(SelectHideNavigation);
+  const canCollapseOnMobile = canCollapsed || canCollapsedOnMobile;
+
+  const handleItemSelect = () => {
+    setIsDropdownOpen("");
+    if (
+      canCollapseOnMobile &&
+      !window.matchMedia("(min-width: 1024px)").matches
+    ) {
+      dispatch(setHideNavigation(true));
+    }
+  };
 
   return (
     <header
-      className={`w-full h-14 lg:h-auto fixed lg:sticky top-0 opacity-95 flex justify-end lg:items-center lg:justify-center z-11 lg:shadow-lg transition-transform duration-300 ease-in-out lg:translate-x-0 ${canCollapsed && collapsed ? "translate-x-7/8" : "translate-x-0 bg-gray-900/55 h-full"}`}
+      className={`w-full h-14 lg:h-auto fixed lg:sticky top-0 opacity-95 flex justify-end lg:items-center lg:justify-center z-11 lg:shadow-lg transition-transform duration-300 ease-in-out lg:translate-x-0 ${canCollapseOnMobile && collapsed ? "translate-x-7/8" : "translate-x-0 bg-gray-900/55 h-full"}`}
     >
       <div
         className={`w-7/8 lg:w-full h-full relative bg-blue-dark z-11 overflow-hidden lg:transition-max-height duration-300 ease-linear ${canCollapsed && collapsed ? "lg:max-h-0" : "lg:max-h-18"}`}
@@ -76,7 +89,10 @@ export const NavigationUI = ({
                                 <Link
                                   key={dropdownItem.path}
                                   to={dropdownItem.path}
-                                  onClick={() => setIsDropdownOpen("")}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    handleItemSelect();
+                                  }}
                                   className={`block text-left px-4 py-2 text-sm transition-colors${
                                     location.pathname === dropdownItem.path
                                       ? " bg-green-900 text-white"
@@ -102,7 +118,10 @@ export const NavigationUI = ({
                         "cursor-pointer flex justify-center items-center lg:px-4 py-2 text-white"
                       }
                       key={item.key}
-                      onClick={item.onClick}
+                      onClick={() => {
+                        handleItemSelect();
+                        item.onClick?.();
+                      }}
                     >
                       {item.iconLink && item.iconLink}
                       <span className={"bg-underline"}>{item.label}</span>
@@ -110,6 +129,7 @@ export const NavigationUI = ({
                   ) : (
                     <Link
                       to={item.path}
+                      onClick={handleItemSelect}
                       className={`flex items-center flex-gap-2 lg:px-4 py-2 ${
                         location.pathname === item.path
                           ? "text-white"
@@ -132,14 +152,15 @@ export const NavigationUI = ({
           </nav>
         </div>
       </div>
-      {canCollapsed && (
+      {canCollapseOnMobile && (
         <>
           <button
-            className={`bg-blue-dark w-12 h-10 text-white dark:text-white cursor-pointer shadow-lg group absolute right-7/8 lg:right-3 lg:left-auto top-4 lg:top-auto lg:-bottom-8 flex justify-center items-center rounded-l-md lg:rounded-b-md z-12`}
+            className={`bg-blue-dark w-12 h-10 text-white dark:text-white cursor-pointer shadow-lg group absolute right-7/8 lg:right-3 lg:left-auto top-4 lg:top-auto lg:-bottom-8 flex justify-center items-center rounded-l-md lg:rounded-b-md z-12 ${canCollapsed ? "" : "lg:hidden"}`}
+            aria-label={collapsed ? "Показать меню" : "Скрыть меню"}
+            aria-expanded={!collapsed}
             onClick={() => dispatch(setHideNavigation(!collapsed))}
           >
             <span className={"relative"}>
-              <span className={"sr-only"}>Open or close navigation menu</span>
               <Bars3Icon className={"inline-flex h-6 w-6"} />
               <ArrowDownIcon
                 className={`rounded-full bg-blue-dark h-4 w-4 lg:h-3 lg:w-3 absolute -right-1.5 duration-200 transition-all ${!collapsed ? "-rotate-90 lg:rotate-180 bottom-1.5 group-hover:bottom-3" : "rotate-90 lg:rotate-0 bottom-1.5 lg:bottom-3 group-hover:bottom-1.5"}`}
@@ -147,6 +168,7 @@ export const NavigationUI = ({
             </span>
           </button>
           <button
+            aria-label="Закрыть меню"
             className={`bg-transparent text-white w-12 h-10 dark:text-white cursor-pointer absolute right-0 top-4 z-12 lg:hidden`}
             onClick={() => dispatch(setHideNavigation(!collapsed))}
           >
