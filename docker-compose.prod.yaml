@@ -26,6 +26,7 @@ services:
       target: production
     environment:
       NODE_ENV: production
+      TRUST_PROXY: "1"
       NODE_OPTIONS: --max-old-space-size=192
       PORT: 5050
       POSTGRES_HOST: postgres_auto_service

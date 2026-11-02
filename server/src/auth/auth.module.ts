@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { RegistrationRateLimitGuard } from './registration-rate-limit.guard';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { UsersSessionsService } from '../users/usersSessions/usersSessions.service';
@@ -10,7 +11,7 @@ import { CompaniesModule } from '../companies/companies.module';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, UsersSessionsService],
+  providers: [AuthService, UsersSessionsService, RegistrationRateLimitGuard],
   imports: [
     forwardRef(() => UsersModule),
     SequelizeModule.forFeature([UsersSessions]),

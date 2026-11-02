@@ -50,7 +50,6 @@ export class AuthService {
   }
 
   async register(userDto: CreateUserDto) {
-    console.log(userDto);
     const userDb = await this.userService.getUserByEmail(userDto.email);
     if (userDb) {
       throw new ConflictException('Пользователь с такой почтой уже существует');
@@ -86,8 +85,7 @@ export class AuthService {
         roles: plainUser.roles.map((role) => role.value),
         token: session.token,
       };
-    } catch (e) {
-      console.log(e);
+    } catch {
       throw new HttpException(
         'Ошибка при создании пользователя',
         HttpStatus.BAD_REQUEST,

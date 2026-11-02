@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { RegistrationRateLimitGuard } from './registration-rate-limit.guard';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from '../users/dto';
 
@@ -12,6 +13,7 @@ export class AuthController {
   }
 
   @Post('/register')
+  @UseGuards(RegistrationRateLimitGuard)
   register(@Body() userDto: CreateUserDto) {
     return this.authService.register(userDto);
   }
