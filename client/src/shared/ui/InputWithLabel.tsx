@@ -9,6 +9,7 @@ interface InputWithLabelProps {
   value?: string | number;
   type?: HTMLInputTypeAttribute;
   required?: boolean;
+  step?: string | number;
   hint?: string;
 }
 
@@ -21,6 +22,7 @@ export const InputWithLabel = ({
   value,
   type = "text",
   required = false,
+  step,
   hint,
 }: InputWithLabelProps) => {
   const handlerOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +42,7 @@ export const InputWithLabel = ({
       <input
         autoComplete={"on"}
         type={type}
+        step={step}
         placeholder={placeholder}
         name={name}
         id={name}

@@ -5,6 +5,7 @@ export {
   resetError,
   checkLSUser,
   logoutUser,
+  logoutCurrentSession,
   selectPendingUser,
   selectErrorUser,
   selectIsUserAuthorized,

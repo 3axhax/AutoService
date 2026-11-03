@@ -1,3 +1,4 @@
+import { OperationErrors } from "@features/operationErrors/OperationErrors";
 import { ShiftsList } from "@widgets/workerShiftsHistory";
 import { useAppDispatch } from "@shared/store/hooks.ts";
 import { useEffect } from "react";
@@ -25,6 +26,7 @@ export const WorkerShiftsHistoryPage = () => {
         />
         Смены
       </h2>
+      <OperationErrors />
       <WorkerShiftsHistoryFilters />
       <ShiftsList />
       <WorkerShiftsHistoryPagination />

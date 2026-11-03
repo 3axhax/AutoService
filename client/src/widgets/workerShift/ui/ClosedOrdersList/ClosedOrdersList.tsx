@@ -1,11 +1,10 @@
-import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
+import { useAppSelector } from "@shared/store/hooks.ts";
 import { Table, TableData, TableDataRow } from "@shared/ui";
 import {
   formatClientType,
   formatTotalValue,
   formatVehicleName,
   formatWorkList,
-  getOrdersFromActiveShift,
   workerActiveShiftClosedOrdersListSelect,
   workerActiveShiftClosedOrdersTotalValueSelect,
   workerActiveShiftClosedOrdersTotalValueWithDiscountSelect,
@@ -13,7 +12,6 @@ import {
 import { OrdersListActionButton } from "@features/ordersListActionButton";
 
 export const ClosedOrdersList = () => {
-  const dispatch = useAppDispatch();
   const ordersList = useAppSelector(workerActiveShiftClosedOrdersListSelect);
   const shiftTotalValue = useAppSelector(
     workerActiveShiftClosedOrdersTotalValueSelect,
@@ -63,12 +61,7 @@ export const ClosedOrdersList = () => {
       },
       {
         name: "action",
-        data: (
-          <OrdersListActionButton
-            orderId={row.id}
-            onReload={() => dispatch(getOrdersFromActiveShift())}
-          />
-        ),
+        data: <OrdersListActionButton orderId={row.id} />,
       },
     ]);
   }

@@ -2,37 +2,35 @@ import {
   PriceCalculationInput,
   PriceCalculationResult,
   PricingItem,
-} from './types';
+} from "./types";
 
-const DEFAULT_DISCOUNT_PARAMETER_NAME = 'discount';
+const DEFAULT_DISCOUNT_PARAMETER_NAME = "discount";
 
 const isQuantityMap = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
+  typeof value === "object" && value !== null && !Array.isArray(value);
 
 const getMatchingPrices = (
   priceList: PricingItem[],
   selectedOptionIds: number[],
 ): PricingItem[] =>
-  priceList.reduce<PricingItem[]>((result, price) => {
-    const conditionIds = price.conditions.map((condition) => condition.id);
-    const matches = conditionIds.every((conditionId) =>
-      selectedOptionIds.includes(conditionId),
-    );
-
-    if (!matches) {
-      return result;
-    }
-
-    const pricesWithoutLessSpecificMatches = result.filter(
-      (existingPrice) =>
-        existingPrice.mainOptionId !== price.mainOptionId ||
-        !existingPrice.conditions
-          .map((condition) => condition.id)
-          .every((conditionId) => conditionIds.includes(conditionId)),
-    );
-
-    return [...pricesWithoutLessSpecificMatches, price];
-  }, []);
+  priceList.filter((price, index) => {
+    const ids = new Set(price.conditions.map((condition) => condition.id));
+    if (![...ids].every((id) => selectedOptionIds.includes(id))) return false;
+    return !priceList.some((other, otherIndex) => {
+      if (other.mainOptionId !== price.mainOptionId) return false;
+      const otherIds = new Set(
+        other.conditions.map((condition) => condition.id),
+      );
+      if (![...otherIds].every((id) => selectedOptionIds.includes(id)))
+        return false;
+      if (![...ids].every((id) => otherIds.has(id))) return false;
+      // Equal conditions retain the existing last-row precedence.
+      return (
+        otherIds.size > ids.size ||
+        (otherIds.size === ids.size && otherIndex > index)
+      );
+    });
+  });
 
 const sumPrices = ({
   prices,
@@ -75,7 +73,7 @@ export const calculateOrderPrice = ({
   );
   const compositeParameterNames = new Set(
     parameters
-      .filter((parameter) => parameter.type === 'COMPOSITE_LIST')
+      .filter((parameter) => parameter.type === "COMPOSITE_LIST")
       .map((parameter) => parameter.name),
   );
 

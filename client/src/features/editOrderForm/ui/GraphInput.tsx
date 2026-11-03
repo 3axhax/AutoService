@@ -1,5 +1,5 @@
 import { SignatureInput } from "./SignatureInput";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Modal } from "@shared/ui/Modal.tsx";
 
 interface GraphInputProps {
@@ -17,18 +17,12 @@ export const GraphInput = ({
 }: GraphInputProps) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const [signatureImg, setSignatureImg] = useState<string>("");
+  const [signatureImg, setSignatureImg] = useState<string | null>(null);
 
-  const modalBody = useMemo(
-    () => (
-      <SignatureInput
-        updateSignature={(signature) => {
-          setSignatureImg(signature);
-        }}
-      />
-    ),
-    [],
-  );
+  const closeSignature = () => {
+    setModalOpen(false);
+    setSignatureImg(null);
+  };
 
   return (
     <>
@@ -40,7 +34,10 @@ export const GraphInput = ({
         <button
           type={"button"}
           className={"btn btn-purple w-full"}
-          onClick={() => setModalOpen(true)}
+          onClick={() => {
+            setSignatureImg(null);
+            setModalOpen(true);
+          }}
         >
           {label}
         </button>
@@ -48,15 +45,15 @@ export const GraphInput = ({
       {modalOpen ? (
         <Modal
           open={modalOpen}
-          setOpen={() => setModalOpen(false)}
+          setOpen={closeSignature}
           title={label}
-          body={modalBody}
+          body={<SignatureInput updateSignature={setSignatureImg} />}
           className={"test"}
           buttons={[
             {
               label: "Применить",
               onClick: () => {
-                onChange(signatureImg);
+                if (signatureImg !== null) onChange(signatureImg);
               },
             },
           ]}

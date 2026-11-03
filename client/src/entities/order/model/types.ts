@@ -39,6 +39,8 @@ export interface FilterItem {
 
 export interface OrderState {
   pending: boolean;
+  loading: boolean;
+  readError: string;
   error: string;
   ordersValue: Record<number, OrderValue>;
   ordersList: Record<number, OrderItem>;

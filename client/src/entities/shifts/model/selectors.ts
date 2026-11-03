@@ -10,7 +10,7 @@ export const SelectShiftListSortByCreated = createSelector(
 );
 
 export const SelectWorkerActiveShift = (state: RootState) =>
-  Object.values(state.shifts.shiftsList).find((shift) => shift.active);
+  state.shifts.activeShift;
 
 export const SelectShiftPaginationCurrentPage = (state: RootState) =>
   state.shifts.pagination.currentPage;

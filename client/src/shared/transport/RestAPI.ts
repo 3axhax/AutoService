@@ -1,5 +1,5 @@
 import axios, { type AxiosResponse, type ResponseType } from "axios";
-import { USER_LS_KEY } from "@entities/user/model/constants.ts";
+import { getStoredUser, matchesStoredSession } from "./session";
 
 type method = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -16,17 +16,29 @@ class RestAPI {
   data: SendingData | FormData = {};
   token: string = "";
   responseType: ResponseType = "json";
+  timeout?: number;
 
-  constructor() {}
+  constructor(private readonly sessionToken?: string) {}
+
+  forSession(token: string) {
+    return new RestAPI(token);
+  }
+
+  withTimeout(milliseconds: number) {
+    this.timeout = milliseconds;
+    return this;
+  }
 
   _checkToken = () => {
-    const userLS = localStorage.getItem(USER_LS_KEY);
-    if (userLS) {
-      this.token =
-        userLS && JSON.parse(userLS) ? JSON.parse(userLS).token : null;
-    } else {
-      this.token = "";
+    if (
+      this.sessionToken !== undefined &&
+      !matchesStoredSession(this.sessionToken)
+    ) {
+      throw new Error(
+        "Сессия изменилась в другой вкладке. Повторите действие после обновления страницы.",
+      );
     }
+    this.token = this.sessionToken ?? getStoredUser()?.token ?? "";
   };
 
   _setTarget = (url: string = "") => {
@@ -69,11 +81,14 @@ class RestAPI {
       data: object;
       responseType: ResponseType;
       headers?: object;
+      timeout?: number;
     } = {
-      url: this.baseUrl.replace(/\/$/, "") + "/" + this.target.replace(/^\//, ""),
+      url:
+        this.baseUrl.replace(/\/$/, "") + "/" + this.target.replace(/^\//, ""),
       method: this.method,
       data: this.data,
       responseType: this.responseType,
+      timeout: this.timeout,
     };
     if (this.token) {
       data.headers = {
@@ -89,6 +104,7 @@ class RestAPI {
     responseType?: ResponseType,
   ): Promise<AxiosResponse> => {
     this.method = "GET";
+    this.data = {};
     if (Object.keys(data).length > 0) {
       const queryString = this._buildGetQueryString(data).toString();
       url += `?${queryString}`;

@@ -9,6 +9,7 @@ import {
 } from "@entities/shifts";
 
 const initialState: ShiftsState = {
+  activeShift: null,
   pending: false,
   error: "",
   shiftsList: {},
@@ -64,12 +65,9 @@ export const shiftsSlice = createSlice({
         getActiveShift.fulfilled,
         (
           state: WritableDraft<ShiftsState>,
-          action: PayloadAction<ShiftItem>,
+          action: PayloadAction<ShiftItem | null>,
         ) => {
-          state.pending = false;
-          if (action.payload) {
-            state.shiftsList[action.payload.id] = action.payload;
-          }
+          state.activeShift = action.payload ?? null;
         },
       )
       .addCase(
@@ -82,7 +80,6 @@ export const shiftsSlice = createSlice({
             rows: ShiftItem[] | null;
           }>,
         ) => {
-          state.pending = false;
           if (
             action.payload &&
             action.payload.currentPage === state.pagination.currentPage
@@ -102,7 +99,7 @@ export const shiftsSlice = createSlice({
         ) => {
           state.pending = false;
           if (action.payload) {
-            state.shiftsList[action.payload.id] = action.payload;
+            state.activeShift = action.payload;
           }
         },
       )

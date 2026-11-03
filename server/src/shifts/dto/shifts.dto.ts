@@ -20,16 +20,16 @@ export class GetShiftListDto {
   recordPerPage: number;
 
   @Transform(({ value }: TransformFnParams) => {
-    if (!value) return undefined;
-    return parseDateFromFormat(value as string);
+    if (value === undefined || value === null || value === '') return undefined;
+    return parseDateFromFormat(value) ?? new Date(NaN);
   })
   @IsDate()
   @IsOptional()
   closedAtStart?: Date;
 
   @Transform(({ value }: TransformFnParams) => {
-    if (!value) return undefined;
-    return parseDateFromFormat(value as string, true);
+    if (value === undefined || value === null || value === '') return undefined;
+    return parseDateFromFormat(value, true) ?? new Date(NaN);
   })
   @IsDate()
   @IsOptional()

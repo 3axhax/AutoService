@@ -1,3 +1,4 @@
+import type { RootState } from "@shared/store";
 import {
   createAsyncThunk,
   createSlice,
@@ -6,30 +7,25 @@ import {
 import Request from "@shared/transport/RestAPI.ts";
 import { HandlerAxiosError } from "@shared/transport/RequestHandlersError.ts";
 import type { WritableDraft } from "immer";
-import { RootState } from "@shared/store";
 import { ErrorActionType } from "@shared/types";
 import { PriceState, PriceItem } from "./types";
 
 export const getPriceList = createAsyncThunk(
   "price/getList",
-  async (_, { getState, dispatch }) => {
+  async (_, { getState }) => {
     const state = getState() as RootState;
-    if (!state.price.pending) {
-      dispatch(setPending(true));
-      try {
-        const response = await Request.get("/price");
-        return response.data;
-      } catch (e) {
-        HandlerAxiosError(e);
-      } finally {
-        dispatch(setPending(false));
-      }
+    try {
+      const response = await Request.forSession(state.user.token).get("/price");
+      return response.data;
+    } catch (e) {
+      HandlerAxiosError(e);
     }
   },
 );
 
 const initialState: PriceState = {
   pending: false,
+  loaded: false,
   error: "",
   priceList: [],
 };
@@ -58,6 +54,8 @@ export const priceSlice = createSlice({
           action: PayloadAction<PriceItem[]>,
         ) => {
           state.pending = false;
+          state.loaded = true;
+          state.error = "";
           if (action.payload) {
             state.priceList = action.payload;
           }
@@ -67,6 +65,7 @@ export const priceSlice = createSlice({
         (action) =>
           action.type.endsWith("/rejected") && action.type.startsWith("price"),
         (state: WritableDraft<PriceState>, action: ErrorActionType) => {
+          state.pending = false;
           state.error = action.error.message ? action.error.message : "";
         },
       )
@@ -74,6 +73,7 @@ export const priceSlice = createSlice({
         (action) =>
           action.type.endsWith("/pending") && action.type.startsWith("price"),
         (state: WritableDraft<PriceState>) => {
+          state.pending = true;
           state.error = "";
         },
       );

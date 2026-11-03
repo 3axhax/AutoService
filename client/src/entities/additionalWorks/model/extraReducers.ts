@@ -6,27 +6,25 @@ import { setPending } from "./slice";
 
 export const getAdditionalWorksFromActiveShift = createAsyncThunk(
   "additionalWorks/fromActiveShift",
-  async (_, { getState, dispatch }) => {
+  async (_, { getState }) => {
     const state = getState() as RootState;
-    if (!state.additionalWorks.pending) {
-      dispatch(setPending(true));
-      try {
-        const response = await Request.get("/additionalWorks/fromActiveShift");
-        return response.data;
-      } catch (e) {
-        HandlerAxiosError(e);
-      } finally {
-        dispatch(setPending(false));
-      }
+    try {
+      const response = await Request.forSession(state.user.token).get(
+        "/additionalWorks/fromActiveShift",
+      );
+      return response.data;
+    } catch (e) {
+      HandlerAxiosError(e);
     }
   },
 );
 
 export const addAdditionalWork = createAsyncThunk(
   "additionalWorks/add",
-  async (additionalWorkId: number, { getState, dispatch }) => {
+  async (additionalWorkId: number, { getState, dispatch, requestId }) => {
     const state = getState() as RootState;
     if (
+      !state.shifts.pending &&
       !state.additionalWorks.pending &&
       state.additionalWorks.additionalWorksValue[additionalWorkId]
     ) {
@@ -37,7 +35,7 @@ export const addAdditionalWork = createAsyncThunk(
           active: _active,
           ...usefulValues
         } = state.additionalWorks.additionalWorksValue[additionalWorkId];
-        const response = await Request.post(
+        const response = await Request.forSession(state.user.token).post(
           "/additionalWorks/add",
           usefulValues,
         );
@@ -45,25 +43,31 @@ export const addAdditionalWork = createAsyncThunk(
       } catch (e) {
         HandlerAxiosError(e);
       } finally {
-        dispatch(setPending(false));
+        dispatch({ ...setPending(false), meta: { requestId } });
       }
     }
+    throw new Error(
+      "Дождитесь завершения текущей операции со сменой или записью.",
+    );
   },
 );
 
 export const editAdditionalWork = createAsyncThunk(
   "additionalWorks/edit",
-  async (additionalWorkId: number, { getState, dispatch }) => {
+  async (additionalWorkId: number, { getState, dispatch, requestId }) => {
     const state = getState() as RootState;
     if (
+      !state.shifts.pending &&
       !state.additionalWorks.pending &&
+      !state.additionalWorks.loading &&
+      !state.additionalWorks.readError &&
       state.additionalWorks.additionalWorksValue[additionalWorkId]
     ) {
       dispatch(setPending(true));
       try {
         const { active: _active, ...usefulValues } =
           state.additionalWorks.additionalWorksValue[additionalWorkId];
-        const response = await Request.post(
+        const response = await Request.forSession(state.user.token).post(
           "/additionalWorks/edit",
           usefulValues,
         );
@@ -71,48 +75,55 @@ export const editAdditionalWork = createAsyncThunk(
       } catch (e) {
         HandlerAxiosError(e);
       } finally {
-        dispatch(setPending(false));
+        dispatch({ ...setPending(false), meta: { requestId } });
       }
     }
+    throw new Error(
+      "Дождитесь завершения текущей операции со сменой или записью.",
+    );
   },
 );
 
 export const deleteAdditionalWork = createAsyncThunk(
   "additionalWorks/delete",
-  async (additionalWorkId: number, { getState, dispatch }) => {
+  async (additionalWorkId: number, { getState, dispatch, requestId }) => {
     const state = getState() as RootState;
-    if (!state.additionalWorks.pending) {
+    if (!state.shifts.pending && !state.additionalWorks.pending) {
       dispatch(setPending(true));
       try {
-        const response = await Request.post("/additionalWorks/delete", {
-          id: additionalWorkId,
-        });
+        const response = await Request.forSession(state.user.token).post(
+          "/additionalWorks/delete",
+          {
+            id: additionalWorkId,
+          },
+        );
         return response.data;
       } catch (e) {
         HandlerAxiosError(e);
       } finally {
-        dispatch(setPending(false));
+        dispatch({ ...setPending(false), meta: { requestId } });
       }
     }
+    throw new Error(
+      "Дождитесь завершения текущей операции со сменой или записью.",
+    );
   },
 );
 
 export const getAdditionalWorksByShiftId = createAsyncThunk(
   "additionalWorks/getByShiftId",
-  async (shiftId: number, { getState, dispatch }) => {
+  async (shiftId: number, { getState }) => {
     const state = getState() as RootState;
-    if (!state.additionalWorks.pending) {
-      dispatch(setPending(true));
-      try {
-        const response = await Request.get("/additionalWorks/getByShiftId", {
+    try {
+      const response = await Request.forSession(state.user.token).get(
+        "/additionalWorks/getByShiftId",
+        {
           shiftId,
-        });
-        return response.data;
-      } catch (e) {
-        HandlerAxiosError(e);
-      } finally {
-        dispatch(setPending(false));
-      }
+        },
+      );
+      return response.data;
+    } catch (e) {
+      HandlerAxiosError(e);
     }
   },
 );

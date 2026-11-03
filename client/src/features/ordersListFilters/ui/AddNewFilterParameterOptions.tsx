@@ -50,7 +50,7 @@ export const AddNewFilterParameterOptions = ({
               { label: "Нет", value: 0 },
             ]}
             value={value ? 1 : 0}
-            onChange={setValue}
+            onChange={(selected) => setValue(selected ? 1 : null)}
             className={"flex-col"}
             type={"col"}
           />

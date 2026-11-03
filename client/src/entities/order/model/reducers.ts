@@ -4,6 +4,19 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { formatOrderValueFromOrderItemList } from "./slice.ts";
 
 export const reducers = {
+  beginEditOrder: (
+    state: WritableDraft<OrderState>,
+    action: PayloadAction<number>,
+  ) => {
+    if (state.loading || state.readError) return;
+    state.error = "";
+    const order = state.ordersList[action.payload];
+    if (order)
+      state.ordersValue[action.payload] = {
+        ...formatOrderValueFromOrderItemList(order),
+        id: order.id,
+      };
+  },
   resetError: (state: WritableDraft<OrderState>) => {
     state.error = "";
   },
@@ -25,6 +38,7 @@ export const reducers = {
         | CompositeOperation[];
     }>,
   ) => {
+    if (state.pending) return;
     if (
       !state.ordersValue[action.payload.orderId] &&
       state.ordersList[action.payload.orderId]
@@ -48,6 +62,7 @@ export const reducers = {
     const id =
       Object.values(state.ordersValue).length > 0
         ? Math.min(
+            0,
             ...Object.keys(state.ordersValue).map((key) => parseInt(key)),
           ) - 1
         : -1;

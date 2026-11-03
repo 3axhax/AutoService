@@ -7,6 +7,7 @@ export interface PriceItem {
 
 export interface PriceState {
   pending: boolean;
+  loaded: boolean;
   error: string;
   priceList: PriceItem[];
 }

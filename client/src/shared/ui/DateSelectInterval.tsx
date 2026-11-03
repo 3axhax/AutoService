@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { ru } from "date-fns/locale/ru";
 import { XMarkIcon } from "@heroicons/react/16/solid";
@@ -30,6 +30,13 @@ export const DateSelectInterval = ({
   );
   const [endDate, setEndDate] = useState<Date | null>(endDateProps ?? null);
 
+  const startTime = startDateProps?.getTime();
+  const endTime = endDateProps?.getTime();
+  useEffect(() => {
+    setStartDate(startTime === undefined ? null : new Date(startTime));
+    setEndDate(endTime === undefined ? null : new Date(endTime));
+  }, [startTime, endTime]);
+
   const onChange = (dates: [Date | null, Date | null]) => {
     const [start, end] = dates;
     setStartDate(start);
@@ -40,7 +47,7 @@ export const DateSelectInterval = ({
   };
 
   const clearDate = () => {
-    if (onChangeProps && startDate && endDate) {
+    if (onChangeProps) {
       onChangeProps([null, null]);
     }
     setStartDate(null);

@@ -14,6 +14,7 @@ export interface ShiftsFilters {
 }
 
 export interface ShiftsState {
+  activeShift: ShiftItem | null;
   pending: boolean;
   error: string;
   shiftsList: Record<number, ShiftItem>;

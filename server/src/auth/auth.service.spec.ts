@@ -15,7 +15,11 @@ const dto = {
 
 describe('AuthService registration', () => {
   const setup = () => {
+    const transaction = {};
     const users = {
+      withRegistrationTransaction: jest.fn((email, callback) =>
+        callback(transaction),
+      ),
       getUserByEmail: jest.fn().mockResolvedValue(null),
       createUser: jest.fn().mockResolvedValue({
         id: 8,
@@ -30,6 +34,7 @@ describe('AuthService registration', () => {
       createSession: jest.fn().mockResolvedValue({ token: 'test-session' }),
     };
     return {
+      transaction,
       users,
       companies,
       sessions,
@@ -47,16 +52,19 @@ describe('AuthService registration', () => {
   afterEach(() => jest.restoreAllMocks());
 
   it('creates the administrator inside the newly registered company without logging input', async () => {
-    const { service, users, companies, sessions } = setup();
+    const { service, users, companies, sessions, transaction } = setup();
     await expect(service.register(dto)).resolves.toEqual({
       id: 8,
       name: dto.name,
       roles: ['ADMIN'],
       token: 'test-session',
     });
-    expect(companies.createCompany).toHaveBeenCalledWith({
-      fullName: dto.companyName,
-    });
+    expect(companies.createCompany).toHaveBeenCalledWith(
+      {
+        fullName: dto.companyName,
+      },
+      transaction,
+    );
     expect(users.createUser).toHaveBeenCalledWith(
       expect.objectContaining({
         companyId: 77,
@@ -64,8 +72,9 @@ describe('AuthService registration', () => {
         password: 'test-hash',
       }),
       UserRoleEnum.ADMIN,
+      transaction,
     );
-    expect(sessions.createSession).toHaveBeenCalledWith(8);
+    expect(sessions.createSession).toHaveBeenCalledWith(8, transaction);
     expect(console.log).not.toHaveBeenCalled();
     expect(console.error).not.toHaveBeenCalled();
   });

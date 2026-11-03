@@ -23,21 +23,18 @@ export class AdditionalWorksService {
     user: User | undefined;
     param: AddNewAdditionalWorkDto;
   }): Promise<AdditionalWorks | null> {
-    if (param && user) {
-      const shift =
-        await this.shiftsService.getOrCreateActiveShiftByUserCompany({
-          userId: user.id,
+    if (!param || !user) return null;
+    return this.shiftsService.withActiveShift(user, (shift, transaction) =>
+      this.additionalWorksRepository.create(
+        {
           companyId: user.companyId,
-        });
-
-      return await this.additionalWorksRepository.create({
-        companyId: user.companyId,
-        description: param.description,
-        shiftId: shift.id,
-        totalValue: param.totalValue,
-      });
-    }
-    return null;
+          description: param.description,
+          shiftId: shift.id,
+          totalValue: param.totalValue,
+        },
+        { transaction },
+      ),
+    );
   }
 
   async edit({
@@ -47,15 +44,23 @@ export class AdditionalWorksService {
     user: User | undefined;
     param: EditAdditionalWorkDto;
   }): Promise<AdditionalWorks | null> {
-    const shift = await this.shiftsService.getActiveShiftByUser({ user });
-    const existingWork = await this.additionalWorksRepository.findOne({
-      where: { id: param.id, companyId: user?.companyId, shiftId: shift?.id },
-    });
-    if (existingWork) {
-      await existingWork?.update(param);
-      return existingWork;
-    }
-    return null;
+    if (!user) return null;
+    return this.shiftsService.withActiveShift(
+      user,
+      async (shift, transaction) => {
+        const existing = await this.additionalWorksRepository.findOne({
+          where: { id: param.id, companyId: user.companyId, shiftId: shift.id },
+          transaction,
+          lock: transaction.LOCK.UPDATE,
+        });
+        if (!existing) return null;
+        await existing.update(
+          { description: param.description, totalValue: param.totalValue },
+          { transaction },
+        );
+        return existing;
+      },
+    );
   }
 
   async fromActiveShift({
@@ -82,11 +87,17 @@ export class AdditionalWorksService {
     user: User | undefined;
     id: number;
   }): Promise<boolean> {
-    const shift = await this.shiftsService.getActiveShiftByUser({ user });
-    const deletedCount = await this.additionalWorksRepository.destroy({
-      where: { id, companyId: user?.companyId, shiftId: shift?.id },
-    });
-    return deletedCount > 0;
+    if (!user) return false;
+    return this.shiftsService.withActiveShift(
+      user,
+      async (shift, transaction) => {
+        const deleted = await this.additionalWorksRepository.destroy({
+          where: { id, companyId: user.companyId, shiftId: shift.id },
+          transaction,
+        });
+        return deleted > 0;
+      },
+    );
   }
 
   async getByShiftId({
@@ -97,7 +108,7 @@ export class AdditionalWorksService {
     param: { shiftId: number };
   }): Promise<AdditionalWorks[] | null> {
     if (user) {
-      const shift = user.isOnlyWorker
+      const shift = !user.isAdmin
         ? await this.shiftsService.getShiftByUserAndId({
             user,
             shiftId: param.shiftId,

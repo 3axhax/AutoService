@@ -22,6 +22,8 @@ const getDateStartMonth = () => {
 
 const initialState: OrderState = {
   pending: false,
+  loading: false,
+  readError: "",
   error: "",
   ordersValue: {},
   ordersList: {},
@@ -53,9 +55,12 @@ export const orderSlice = createSlice({
         addOrder.fulfilled,
         (
           state: WritableDraft<OrderState>,
-          action: PayloadAction<OrderValue & { internalId: number }>,
+          action: PayloadAction<OrderItem & { internalId: number }>,
         ) => {
+          if (!action.payload) return;
           state.pending = false;
+          const { internalId: _internalId, ...order } = action.payload;
+          state.ordersList[order.id] = order;
           if (
             action.payload.internalId &&
             state.ordersValue[action.payload.internalId]
@@ -70,7 +75,6 @@ export const orderSlice = createSlice({
           state: WritableDraft<OrderState>,
           action: PayloadAction<OrderItem[]>,
         ) => {
-          state.pending = false;
           if (action.payload) {
             state.ordersList = mapOrdersResponseList(action.payload);
           }
@@ -82,7 +86,6 @@ export const orderSlice = createSlice({
           state: WritableDraft<OrderState>,
           action: PayloadAction<OrderItem[]>,
         ) => {
-          state.pending = false;
           if (action.payload) {
             state.ordersList = mapOrdersResponseList(action.payload);
           }
@@ -98,7 +101,6 @@ export const orderSlice = createSlice({
             rows: OrderItem[] | null;
           }>,
         ) => {
-          state.pending = false;
           if (
             action.payload &&
             action.payload.currentPage ===
@@ -113,14 +115,45 @@ export const orderSlice = createSlice({
       )
       .addMatcher(
         (action) =>
-          action.type.endsWith("/rejected") && action.type.startsWith("orders"),
+          [
+            "orders/fromActiveShift",
+            "orders/getByShiftId",
+            "orders/getForAdmin",
+          ].some((type) => action.type === `${type}/pending`),
+        (state) => {
+          state.loading = true;
+        },
+      )
+      .addMatcher(
+        (action) =>
+          [
+            "orders/fromActiveShift",
+            "orders/getByShiftId",
+            "orders/getForAdmin",
+          ].some(
+            (type) =>
+              action.type === `${type}/fulfilled` ||
+              action.type === `${type}/rejected`,
+          ),
+        (state, action) => {
+          state.loading = false;
+          state.readError = action.type.endsWith("/rejected")
+            ? "Не удалось обновить список. Повторите загрузку перед редактированием."
+            : "";
+        },
+      )
+      .addMatcher(
+        (action) =>
+          action.type.endsWith("/rejected") && action.type.startsWith("orders") &&
+          !/^orders\/(fromActiveShift|getByShiftId|getForAdmin)\//.test(action.type),
         (state: WritableDraft<OrderState>, action: ErrorActionType) => {
           state.error = action.error.message ? action.error.message : "";
         },
       )
       .addMatcher(
         (action) =>
-          action.type.endsWith("/pending") && action.type.startsWith("orders"),
+          action.type.endsWith("/pending") && action.type.startsWith("orders") &&
+          !/^orders\/(fromActiveShift|getByShiftId|getForAdmin)\//.test(action.type),
         (state: WritableDraft<OrderState>) => {
           state.error = "";
         },
@@ -132,6 +165,7 @@ export const {
   resetError,
   setPending,
   setOrdersValue,
+  beginEditOrder,
   addNewActiveOrder,
   deleteActiveOrder,
   clearOrdersList,

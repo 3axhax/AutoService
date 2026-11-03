@@ -1,26 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
-import { useNavigate } from "react-router-dom";
 import {
   loginUser,
   resetError,
   selectErrorUser,
-  selectIsUserAuthorized,
   selectPendingUser,
 } from "@entities/user";
-import { useInfoModalData } from "@app/providers/infoModalProvider";
 import { InputWithLabel } from "@shared/ui/InputWithLabel";
 
 export const LoginForm = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const pending = useAppSelector(selectPendingUser);
   const error = useAppSelector(selectErrorUser);
-  const isUserAuthorized = useAppSelector(selectIsUserAuthorized);
-  const { closeModal } = useInfoModalData();
 
   const handlerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,13 +24,6 @@ export const LoginForm = () => {
   useEffect(() => {
     dispatch(resetError());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (isUserAuthorized) {
-      navigate("/");
-      closeModal();
-    }
-  }, [navigate, isUserAuthorized, closeModal]);
 
   return (
     <form className="space-y-2 text-gray-900" onSubmit={handlerSubmit}>

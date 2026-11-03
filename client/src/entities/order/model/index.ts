@@ -1,6 +1,7 @@
 export {
   orderSlice,
   setOrdersValue,
+  beginEditOrder,
   addNewActiveOrder,
   deleteActiveOrder,
   clearOrdersList,

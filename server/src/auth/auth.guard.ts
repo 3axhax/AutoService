@@ -1,4 +1,11 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { REQUIRE_SESSION } from './roles-auth.decorator';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/users.model';
 
@@ -13,7 +20,10 @@ interface AuthRequest {
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private reflector: Reflector,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: AuthRequest = context.switchToHttp().getRequest();
@@ -26,6 +36,14 @@ export class AuthGuard implements CanActivate {
       }
     }
 
+    if (
+      this.reflector.getAllAndOverride<boolean>(REQUIRE_SESSION, [
+        context.getHandler(),
+        context.getClass(),
+      ]) &&
+      !request.user
+    )
+      throw new UnauthorizedException('User unauthorized');
     return true;
   }
 

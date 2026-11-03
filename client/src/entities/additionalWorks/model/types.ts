@@ -12,6 +12,8 @@ export interface AdditionalWorkItem extends AdditionalWorkValue {
 
 export interface AdditionalWorksState {
   pending: boolean;
+  loading: boolean;
+  readError: string;
   error: string;
   additionalWorksValue: Record<number, AdditionalWorkValue>;
   additionalWorksList: Record<number, AdditionalWorkItem>;

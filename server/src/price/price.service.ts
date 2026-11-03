@@ -1,3 +1,4 @@
+import { normalizeOrderInput } from './normalize-order-input';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Price } from './price.model';
@@ -6,6 +7,7 @@ import { User } from '../users/users.model';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
 import { OrderParametersService } from '../orderParameters/orderParameters.service';
 import { calculateOrderPrice } from '@autoservice/pricing';
+import { validateOrderDependencies } from './validate-order-dependencies';
 import { ParametersType } from '../orderParameters/orderParametersType.enum';
 
 @Injectable()
@@ -41,25 +43,53 @@ export class PriceService {
     user: User;
     param: Record<string, unknown>;
   }): Promise<{ totalValue: number; totalValueWithDiscount: number }> {
+    const { totalValue, totalValueWithDiscount } = await this.prepareOrder({
+      user,
+      param,
+    });
+    return { totalValue, totalValueWithDiscount };
+  }
+
+  async prepareOrder({
+    user,
+    param,
+    allowId = true,
+  }: {
+    user: User;
+    param: Record<string, unknown>;
+    allowId?: boolean;
+  }) {
     const companyPrice = await this.getAll({ user });
     const parametersList = await this.orderParametersService.getAll({ user });
     const plainPrice =
       companyPrice?.map((price) => price.get({ plain: true })) ?? [];
 
-    this.validateCompositeParameters({
+    const values = normalizeOrderInput(
       param,
+      parametersList.parameters ?? [],
+      allowId,
+    );
+    validateOrderDependencies(
+      values,
+      parametersList.parameters ?? [],
+      parametersList.options,
+    );
+
+    this.validateCompositeParameters({
+      param: values,
       priceList: plainPrice,
       parameters: parametersList.parameters,
     });
 
-    return calculateOrderPrice({
-      orderValues: param,
+    const totals = calculateOrderPrice({
+      orderValues: values,
       priceList: plainPrice,
       parameters:
         parametersList.parameters?.map((parameter) =>
           parameter.get({ plain: true }),
         ) ?? [],
     });
+    return { ...totals, values, parameters: parametersList.parameters ?? [] };
   }
 
   private validateCompositeParameters({
@@ -74,17 +104,29 @@ export class PriceService {
     >['parameters'];
   }) {
     const baseIds = new Set<number>();
-    Object.values(param).forEach((value) => {
+    (parameters ?? []).forEach((parameter) => {
       if (
-        (typeof value === 'string' || typeof value === 'number') &&
-        Number.isFinite(Number(value))
-      ) {
-        baseIds.add(Number(value));
-      } else if (value && typeof value === 'object' && !Array.isArray(value)) {
-        Object.keys(value).forEach((optionId) => {
-          if (Number.isFinite(Number(optionId))) baseIds.add(Number(optionId));
-        });
-      }
+        ![ParametersType.SELECT, ParametersType.SELECT_LIST].includes(
+          parameter.type,
+        )
+      )
+        return;
+      const value = param[parameter.name];
+      if (Array.isArray(value) || typeof value === 'boolean') return;
+      const ids =
+        value && typeof value === 'object'
+          ? Object.entries(value)
+              .filter(
+                ([, count]) =>
+                  Number.isFinite(Number(count)) && Number(count) > 0,
+              )
+              .map(([id]) => Number(id))
+          : value
+            ? [Number(value)]
+            : [];
+      ids
+        .filter((id) => parameter.options.some((option) => option.id === id))
+        .forEach((id) => baseIds.add(id));
     });
 
     (parameters ?? [])

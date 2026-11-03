@@ -1,3 +1,4 @@
+import type { Transaction } from 'sequelize';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { UsersSessions } from './usersSessions.model';
@@ -10,9 +11,17 @@ export class UsersSessionsService {
     private userSessionRepository: typeof UsersSessions,
   ) {}
 
-  async createSession(userId: number) {
+  async createSession(userId: number, transaction?: Transaction) {
     const { token } = this.generateToken();
-    return await this.userSessionRepository.create({ userId, token });
+    return await this.userSessionRepository.create(
+      { userId, token },
+      { transaction },
+    );
+  }
+
+  async revokeSession(token: string) {
+    await this.userSessionRepository.destroy({ where: { token } });
+    return { success: true };
   }
 
   async checkUser(dto: { token: string }) {

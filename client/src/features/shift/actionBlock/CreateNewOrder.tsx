@@ -1,9 +1,10 @@
-import { useAppDispatch } from "@shared/store/hooks.ts";
+import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { addNewActiveOrder } from "@entities/order";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 export const CreateNewOrder = () => {
   const dispatch = useAppDispatch();
+  const disabled = useAppSelector((state) => state.shifts.pending);
 
   const clickHandler = () => {
     dispatch(addNewActiveOrder());
@@ -11,6 +12,7 @@ export const CreateNewOrder = () => {
 
   return (
     <button
+      disabled={disabled}
       className={
         "btn btn-blue-light inline-flex w-3/7 lg:w-fit tracking-tight sm:tracking-normal"
       }

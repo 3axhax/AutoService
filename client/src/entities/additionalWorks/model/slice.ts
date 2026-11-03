@@ -1,10 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { WritableDraft } from "immer";
-import {
-  AdditionalWorkItem,
-  AdditionalWorksState,
-  AdditionalWorkValue,
-} from "./types";
+import { AdditionalWorkItem, AdditionalWorksState } from "./types";
 import { ErrorActionType } from "@shared/types";
 import {
   addAdditionalWork,
@@ -14,6 +10,8 @@ import {
 
 const initialState: AdditionalWorksState = {
   pending: false,
+  loading: false,
+  readError: "",
   error: "",
   additionalWorksValue: {},
   additionalWorksList: {},
@@ -23,6 +21,15 @@ export const additionalWorksSlice = createSlice({
   name: "additionalWorks",
   initialState,
   reducers: {
+    beginEditAdditionalWork: (
+      state: WritableDraft<AdditionalWorksState>,
+      action: PayloadAction<number>,
+    ) => {
+      if (state.loading || state.readError) return;
+      state.error = "";
+      const work = state.additionalWorksList[action.payload];
+      if (work) state.additionalWorksValue[action.payload] = { ...work };
+    },
     resetError: (state: WritableDraft<AdditionalWorksState>) => {
       state.error = "";
     },
@@ -40,6 +47,7 @@ export const additionalWorksSlice = createSlice({
         value: string | number;
       }>,
     ) => {
+      if (state.pending) return;
       if (action.payload.name) {
         if (
           !state.additionalWorksValue[action.payload.additionalWorkId] &&
@@ -63,6 +71,7 @@ export const additionalWorksSlice = createSlice({
       const id =
         Object.values(state.additionalWorksValue).length > 0
           ? Math.min(
+              0,
               ...Object.keys(state.additionalWorksValue).map((key) =>
                 parseInt(key),
               ),
@@ -93,9 +102,12 @@ export const additionalWorksSlice = createSlice({
         addAdditionalWork.fulfilled,
         (
           state: WritableDraft<AdditionalWorksState>,
-          action: PayloadAction<AdditionalWorkValue & { internalId: number }>,
+          action: PayloadAction<AdditionalWorkItem & { internalId: number }>,
         ) => {
+          if (!action.payload) return;
           state.pending = false;
+          const { internalId: _internalId, ...work } = action.payload;
+          state.additionalWorksList[work.id] = work;
           if (
             action.payload.internalId &&
             state.additionalWorksValue[action.payload.internalId]
@@ -111,7 +123,6 @@ export const additionalWorksSlice = createSlice({
           state: WritableDraft<AdditionalWorksState>,
           action: PayloadAction<AdditionalWorkItem[]>,
         ) => {
-          state.pending = false;
           if (action.payload) {
             state.additionalWorksList = mapAdditionalWorksResponseList(
               action.payload,
@@ -125,7 +136,6 @@ export const additionalWorksSlice = createSlice({
           state: WritableDraft<AdditionalWorksState>,
           action: PayloadAction<AdditionalWorkItem[]>,
         ) => {
-          state.pending = false;
           if (action.payload) {
             state.additionalWorksList = mapAdditionalWorksResponseList(
               action.payload,
@@ -135,8 +145,36 @@ export const additionalWorksSlice = createSlice({
       )
       .addMatcher(
         (action) =>
+          [
+            "additionalWorks/fromActiveShift",
+            "additionalWorks/getByShiftId",
+          ].some((type) => action.type === `${type}/pending`),
+        (state) => {
+          state.loading = true;
+        },
+      )
+      .addMatcher(
+        (action) =>
+          [
+            "additionalWorks/fromActiveShift",
+            "additionalWorks/getByShiftId",
+          ].some(
+            (type) =>
+              action.type === `${type}/fulfilled` ||
+              action.type === `${type}/rejected`,
+          ),
+        (state, action) => {
+          state.loading = false;
+          state.readError = action.type.endsWith("/rejected")
+            ? "Не удалось обновить список. Повторите загрузку перед редактированием."
+            : "";
+        },
+      )
+      .addMatcher(
+        (action) =>
           action.type.endsWith("/rejected") &&
-          action.type.startsWith("additionalWorks"),
+          action.type.startsWith("additionalWorks") &&
+          !/^additionalWorks\/(fromActiveShift|getByShiftId|getForAdmin)\//.test(action.type),
         (
           state: WritableDraft<AdditionalWorksState>,
           action: ErrorActionType,
@@ -147,7 +185,8 @@ export const additionalWorksSlice = createSlice({
       .addMatcher(
         (action) =>
           action.type.endsWith("/pending") &&
-          action.type.startsWith("additionalWorks"),
+          action.type.startsWith("additionalWorks") &&
+          !/^additionalWorks\/(fromActiveShift|getByShiftId|getForAdmin)\//.test(action.type),
         (state: WritableDraft<AdditionalWorksState>) => {
           state.error = "";
         },
@@ -159,6 +198,7 @@ export const {
   resetError,
   setPending,
   setAdditionalWorksValue,
+  beginEditAdditionalWork,
   addNewActiveAdditionalWork,
   deleteActiveAdditionalWork,
   clearAdditionalWorksList,

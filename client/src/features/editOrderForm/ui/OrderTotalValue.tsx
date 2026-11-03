@@ -11,6 +11,10 @@ export const OrderTotalValue = ({
   const { totalValue, totalValueWithDiscount } = useAppSelector((state) =>
     orderTotalValue(state, orderId),
   );
+  const pricesUnavailable = useAppSelector(
+    (state) => state.price.pending || !state.price.loaded || !!state.price.error,
+  );
+  if (pricesUnavailable) return <p className={className}>Расчёт суммы недоступен до загрузки цен.</p>;
   return (
     <div
       className={`text-base/5 flex items-baseline rounded-lg px-3 py-1.5 lg:py-1 border-1 border-stone-400 bg-beige ${className ? ` ${className}` : ""}`}

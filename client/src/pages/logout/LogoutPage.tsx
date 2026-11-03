@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import useDocumentTitle from "@shared/hooks/useDocumentTitle.tsx";
 import { useAppDispatch } from "@shared/store/hooks.ts";
-import { logoutUser } from "@entities/user";
+import { logoutCurrentSession } from "@entities/user";
 import { useNavigate } from "react-router-dom";
-import { clearShiftsList } from "@entities/shifts";
 
 export const LogoutPage = () => {
   useDocumentTitle("Выйти");
@@ -11,9 +10,13 @@ export const LogoutPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(logoutUser());
-    dispatch(clearShiftsList());
-    navigate("/");
+    let mounted = true;
+    dispatch(logoutCurrentSession()).then((result) => {
+      if (mounted && result.meta.requestStatus === "fulfilled") navigate("/");
+    });
+    return () => {
+      mounted = false;
+    };
   }, [dispatch, navigate]);
 
   return (

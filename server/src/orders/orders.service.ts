@@ -1,4 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { formatCompositeExport } from './format-composite-export';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../users/users.model';
 import { Orders } from './orders.model';
@@ -46,51 +53,50 @@ export class OrdersService {
     user: User | undefined;
     param: Record<string, unknown>;
   }): Promise<Orders | null> {
-    if (param && user) {
-      const shift =
-        await this.shiftsService.getOrCreateActiveShiftByUserCompany({
-          userId: user.id,
+    if (!param || !user) return null;
+    const prepared = await this.priceService.prepareOrder({
+      user,
+      param,
+      allowId: false,
+    });
+    const { totalValue, totalValueWithDiscount } = prepared;
+    const parametersOptions = this._formatParamToOptions(
+      prepared.values,
+      prepared.parameters,
+    );
+    return this.shiftsService.withActiveShift(
+      user,
+      async (shift, transaction) => {
+        const order = this.ordersRepository.build({
           companyId: user.companyId,
+          shiftId: shift.id,
+          totalValue,
+          totalValueWithDiscount,
+          userId: user.id,
         });
-
-      const { totalValue, totalValueWithDiscount } =
-        await this.priceService.calculateTotalValue({
-          user,
-          param,
+        order.setOptions(parametersOptions);
+        await order.save({ transaction });
+        return this.ordersRepository.findOne({
+          where: { id: order.id },
+          transaction,
+          include: [
+            {
+              model: OrdersOptionValues,
+              include: [
+                {
+                  model: OrderParameters,
+                  attributes: ['name', 'translationRu', 'type'],
+                },
+                {
+                  model: OrderParametersOptions,
+                  attributes: ['translationRu'],
+                },
+              ],
+            },
+          ],
         });
-
-      const order = this.ordersRepository.build({
-        companyId: user.companyId,
-        shiftId: shift.id,
-        totalValue,
-        totalValueWithDiscount,
-        userId: user.id,
-      });
-
-      const parametersOptions = await this._formatParamToOptions(param);
-
-      order.setOptions(parametersOptions);
-      await order.save();
-      return await this.ordersRepository.findOne({
-        where: { id: order.id },
-        include: [
-          {
-            model: OrdersOptionValues,
-            include: [
-              {
-                model: OrderParameters,
-                attributes: ['name', 'translationRu', 'type'],
-              },
-              {
-                model: OrderParametersOptions,
-                attributes: ['translationRu'],
-              },
-            ],
-          },
-        ],
-      });
-    }
-    return null;
+      },
+    );
   }
 
   async edit({
@@ -100,33 +106,45 @@ export class OrdersService {
     user: User | undefined;
     param: Record<string, unknown>;
   }): Promise<Orders | null> {
-    if (user) {
-      const where = { companyId: user?.companyId, id: Number(param.id) };
-      if (user.isOnlyWorker) {
-        const shift = await this.shiftsService.getActiveShiftByUser({ user });
-        where['shiftId'] = shift?.id;
-        where['userId'] = user.id;
-      }
-      const existOrder = await this.ordersRepository.findOne({ where });
-      if (existOrder) {
-        const { totalValue, totalValueWithDiscount } =
-          await this.priceService.calculateTotalValue({
-            user,
-            param,
-          });
-        await existOrder.deleteOptions();
-        const parametersOptions = await this._formatParamToOptions(param);
-        existOrder.setOptions(parametersOptions);
-        await existOrder.saveOptions();
-        await existOrder.update({
-          totalValue,
-          totalValueWithDiscount,
+    if (!user) return null;
+    if (!param || param.id === undefined)
+      throw new BadRequestException('Не указан id заказа');
+    const prepared = await this.priceService.prepareOrder({
+      user,
+      param,
+      allowId: true,
+    });
+    const where = { companyId: user.companyId, id: Number(prepared.values.id) };
+    const target = await this.ordersRepository.findOne({
+      where,
+      attributes: ['id', 'shiftId'],
+    });
+    if (!target) return null;
+    return this.shiftsService.withLockedShift(
+      { companyId: user.companyId, shiftId: target.shiftId },
+      async (shift, transaction) => {
+        this.checkShiftWriteAccess(user, shift);
+        if (!user.isAdmin) where['userId'] = user.id;
+        where['shiftId'] = shift.id;
+        const existing = await this.ordersRepository.findOne({
+          where,
+          transaction,
+          lock: transaction.LOCK.UPDATE,
         });
-        await existOrder.save();
-        return existOrder;
-      }
-    }
-    return null;
+        if (!existing) return null;
+        const { totalValue, totalValueWithDiscount } = prepared;
+        const totals = { totalValue, totalValueWithDiscount };
+        const options = this._formatParamToOptions(
+          prepared.values,
+          prepared.parameters,
+        );
+        await existing.deleteOptions(transaction);
+        existing.setOptions(options);
+        await existing.saveOptions(transaction);
+        await existing.update(totals, { transaction });
+        return existing;
+      },
+    );
   }
 
   async fromActiveShift({
@@ -171,62 +189,114 @@ export class OrdersService {
     id,
   }: {
     user: User | undefined;
-    id: number;
+    id: number | number[];
   }): Promise<boolean> {
-    if (user) {
-      if (user.isOnlyWorker) {
-        const shift = await this.shiftsService.getActiveShiftByUser({ user });
-        const deletedCount = await this.ordersRepository.destroy({
-          where: {
-            id,
-            companyId: user?.companyId,
-            shiftId: shift?.id,
-            userId: user.id,
-          },
+    if (!user) return false;
+    if (Array.isArray(id)) return this.deleteMany(user, id);
+    const where = { id, companyId: user.companyId };
+    const target = await this.ordersRepository.findOne({
+      where,
+      attributes: ['id', 'shiftId'],
+    });
+    if (!target) return false;
+    return this.shiftsService.withLockedShift(
+      { companyId: user.companyId, shiftId: target.shiftId },
+      async (shift, transaction) => {
+        this.checkShiftWriteAccess(user, shift);
+        where['shiftId'] = shift.id;
+        if (!user.isAdmin) where['userId'] = user.id;
+        const deleted = await this.ordersRepository.destroy({
+          where,
+          transaction,
+          individualHooks: true,
         });
-        return deletedCount > 0;
-      }
-      if (user.isAdmin) {
-        const deletedCount = await this.ordersRepository.destroy({
-          where: { id, companyId: user?.companyId },
-        });
-        return deletedCount > 0;
-      }
-    }
-    return false;
+        return deleted > 0;
+      },
+    );
   }
 
-  async _formatParamToOptions(
+  private checkShiftWriteAccess(user: User, shift: Shifts) {
+    if (!user.isAdmin && shift.userId !== user.id)
+      throw new ForbiddenException('Чужая смена');
+    if (!user.isAdmin && !shift.active)
+      throw new ConflictException('Смена уже закрыта');
+  }
+
+  private async deleteMany(user: User, ids: number[]): Promise<boolean> {
+    const uniqueIds = [...new Set(ids)].sort((a, b) => a - b);
+    if (!uniqueIds.length) throw new BadRequestException('Не указаны заказы');
+    const where = { id: uniqueIds, companyId: user.companyId };
+    const targets = await this.ordersRepository.findAll({
+      where,
+      attributes: ['id', 'shiftId'],
+    });
+    if (targets.length !== uniqueIds.length)
+      throw new NotFoundException('Один или несколько заказов не найдены');
+    const shiftIds = [...new Set(targets.map((order) => order.shiftId))];
+    return this.shiftsService.withLockedShifts(
+      { companyId: user.companyId, shiftIds },
+      async (shifts, transaction) => {
+        for (const shift of shifts) this.checkShiftWriteAccess(user, shift);
+        const lockedWhere = {
+          ...where,
+          shiftId: shiftIds,
+          ...(!user.isAdmin ? { userId: user.id } : {}),
+        };
+        const orders = await this.ordersRepository.findAll({
+          where: lockedWhere,
+          attributes: ['id'],
+          transaction,
+          order: [['id', 'ASC']],
+          lock: transaction.LOCK.UPDATE,
+        });
+        if (orders.length !== uniqueIds.length)
+          throw new ConflictException(
+            'Список заказов изменился или недоступен. Повторите запрос.',
+          );
+        const deleted = await this.ordersRepository.destroy({
+          where: lockedWhere,
+          transaction,
+          individualHooks: true,
+        });
+        if (deleted !== uniqueIds.length)
+          throw new ConflictException('Не удалось удалить все заказы');
+        return true;
+      },
+    );
+  }
+
+  _formatParamToOptions(
     param: Record<string, unknown>,
-  ): Promise<Omit<OrdersOptionValuesCreationAttrs, 'orderId'>[]> {
+    availableParameters: OrderParameters[],
+  ): Omit<OrdersOptionValuesCreationAttrs, 'orderId'>[] {
     const parametersOptions = [] as Omit<
       OrdersOptionValuesCreationAttrs,
       'orderId'
     >[];
 
-    for (const k in param) {
-      const parameters =
-        await this.orderParametersService.getParameterByName(k);
+    for (const parameters of availableParameters) {
+      const k = parameters.name;
       if (parameters) {
         if (param[k]) {
           if (
             parameters.type === ParametersType.COMPOSITE_LIST &&
             Array.isArray(param[k])
           ) {
-            param[k].forEach((operation, index) => {
+            param[k].forEach((operation) => {
               if (!isObject(operation)) return;
               const compositeOperation = operation as Record<string, unknown>;
-              const compositeOperationId =
-                typeof compositeOperation.id === 'string' &&
-                compositeOperation.id.length > 0
-                  ? compositeOperation.id.slice(0, 64)
-                  : `${parameters.name}-${index + 1}`;
+              if (typeof compositeOperation.id !== 'string')
+                throw new BadRequestException(
+                  'Не указан идентификатор операции',
+                );
+              const compositeOperationId = compositeOperation.id;
               const count = Number(compositeOperation.count ?? 1);
               if (!Array.isArray(compositeOperation.optionIds)) return;
               compositeOperation.optionIds.forEach((optionId) => {
                 parametersOptions.push({
                   parameterId: parameters.id,
                   value: String(optionId),
+                  optionId: Number(optionId),
                   count,
                   compositeOperationId,
                 });
@@ -239,6 +309,10 @@ export class OrdersService {
               parametersOptions.push({
                 parameterId: parameters.id,
                 value: n,
+                optionId:
+                  parameters.type === ParametersType.SELECT_LIST
+                    ? Number(n)
+                    : undefined,
                 count: Number((param[k] as Record<string, unknown>)[n]),
               });
             }
@@ -254,6 +328,10 @@ export class OrdersService {
             parametersOptions.push({
               parameterId: parameters.id,
               value: String(scalarValue),
+              optionId:
+                parameters.type === ParametersType.SELECT
+                  ? Number(scalarValue)
+                  : undefined,
             });
           }
         }
@@ -270,7 +348,7 @@ export class OrdersService {
     param: { shiftId: number };
   }): Promise<Orders[] | null> {
     if (user) {
-      const shift = user.isOnlyWorker
+      const shift = !user.isAdmin
         ? await this.shiftsService.getShiftByUserAndId({
             user,
             shiftId: param.shiftId,
@@ -373,112 +451,122 @@ export class OrdersService {
   }) {
     if (user) {
       const parametersList = await this.orderParametersService.getAll({ user });
-      if (parametersList?.parameters && parametersList.parameters.length > 0) {
-        const header: ExcelTableHeaderData[] = parametersList.parameters.reduce(
-          (acc, parameter) => {
-            return [
-              ...acc,
-              {
-                name: parameter.name,
-                label: parameter.translationRu,
-              },
-            ];
-          },
-          [
-            { name: 'id', label: '№', width: 5 },
-            { name: 'createdAt', label: 'Дата создания' },
-            { name: 'user', label: 'Работник' },
-          ],
-        );
-        header.push({ name: 'totalValue', label: 'Сумма, ₽' });
-        header.push({
-          name: 'totalValueWithDiscount',
-          label: 'Сумма со скидкой, ₽',
-        });
-        const data: ExcelTableData = {
-          header,
-          rows: [],
-        };
-        const ordersList =
-          param.filters.filter(
-            (filter) => !this.filterException.includes(filter.filterName),
-          ).length > 0
-            ? (
-                await this._getOrdersListWithFilters({
-                  user,
-                  param,
-                  withLimits: false,
-                })
-              ).rows
-            : await this._getOrdersList({ user, param, withLimits: false });
-        if (ordersList && ordersList.length > 0) {
-          ordersList.forEach((order) => {
-            const orderPlain = order.get({ plain: true });
-            const row: ExcelTableCellData[] = [
-              { name: 'id', value: orderPlain.id },
-              {
-                name: 'createdAt',
-                value: this._formatDate(orderPlain.createdAt),
-              },
-              { name: 'totalValue', value: orderPlain.totalValue },
-              {
-                name: 'totalValueWithDiscount',
-                value: orderPlain.totalValueWithDiscount,
-              },
-              {
-                name: 'user',
-                value: orderPlain.shift.user.name,
-              },
-            ];
+      const parameters = parametersList?.parameters ?? [];
+      const header: ExcelTableHeaderData[] = parameters.reduce(
+        (acc, parameter) => {
+          return [
+            ...acc,
+            {
+              name: parameter.name,
+              label: parameter.translationRu,
+            },
+          ];
+        },
+        [
+          { name: 'id', label: '№', width: 5 },
+          { name: 'createdAt', label: 'Дата создания' },
+          { name: 'user', label: 'Работник' },
+        ],
+      );
+      header.push({ name: 'totalValue', label: 'Сумма, ₽' });
+      header.push({
+        name: 'totalValueWithDiscount',
+        label: 'Сумма со скидкой, ₽',
+      });
+      const data: ExcelTableData = {
+        header,
+        rows: [],
+      };
+      const ordersList =
+        param.filters.filter(
+          (filter) => !this.filterException.includes(filter.filterName),
+        ).length > 0
+          ? (
+              await this._getOrdersListWithFilters({
+                user,
+                param,
+                withLimits: false,
+              })
+            ).rows
+          : await this._getOrdersList({ user, param, withLimits: false });
+      if (ordersList && ordersList.length > 0) {
+        ordersList.forEach((order) => {
+          const orderPlain = order.get({ plain: true });
+          const row: ExcelTableCellData[] = [
+            { name: 'id', value: orderPlain.id },
+            {
+              name: 'createdAt',
+              value: this._formatDate(orderPlain.createdAt),
+            },
+            { name: 'totalValue', value: orderPlain.totalValue },
+            {
+              name: 'totalValueWithDiscount',
+              value: orderPlain.totalValueWithDiscount,
+            },
+            {
+              name: 'user',
+              value: orderPlain.shift.user.name,
+            },
+          ];
 
-            if (orderPlain.optionValues && orderPlain.optionValues.length > 0) {
-              orderPlain.optionValues.forEach((option) => {
-                if (option.parameter) {
-                  if (option.parameter.type === ParametersType.INPUT) {
+          if (orderPlain.optionValues && orderPlain.optionValues.length > 0) {
+            orderPlain.optionValues.forEach((option) => {
+              if (option.parameter) {
+                if (option.parameter.type === ParametersType.INPUT) {
+                  row.push({
+                    name: option.parameter.name,
+                    value: option.value,
+                  });
+                }
+                if (option.parameter.type === ParametersType.SELECT) {
+                  row.push({
+                    name: option.parameter.name,
+                    value: option.option?.translationRu ?? '',
+                  });
+                }
+                if (option.parameter.type === ParametersType.SELECT_LIST) {
+                  if (!row.find((r) => r.name === option.parameter.name)) {
+                    const listValue = orderPlain.optionValues
+                      .filter((o) => o.parameter.name === option.parameter.name)
+                      .map(
+                        (value) =>
+                          `${value.option?.translationRu} x ${value.count}`,
+                      )
+                      .join('\n');
                     row.push({
                       name: option.parameter.name,
-                      value: option.value,
-                    });
-                  }
-                  if (option.parameter.type === ParametersType.SELECT) {
-                    row.push({
-                      name: option.parameter.name,
-                      value: option.option?.translationRu ?? '',
-                    });
-                  }
-                  if (option.parameter.type === ParametersType.SELECT_LIST) {
-                    if (!row.find((r) => r.name === option.parameter.name)) {
-                      const listValue = orderPlain.optionValues
-                        .filter(
-                          (o) => o.parameter.name === option.parameter.name,
-                        )
-                        .map(
-                          (value) =>
-                            `${value.option?.translationRu} x ${value.count}`,
-                        )
-                        .join('\n');
-                      row.push({
-                        name: option.parameter.name,
-                        value: listValue,
-                      });
-                    }
-                  }
-                  if (option.parameter.type === ParametersType.GRAPH_INPUT) {
-                    row.push({
-                      name: option.parameter.name,
-                      value: option.value,
-                      type: ExcelCellType.IMG,
+                      value: listValue,
                     });
                   }
                 }
-              });
-            }
+                if (
+                  option.parameter.type === ParametersType.COMPOSITE_LIST &&
+                  !row.some((cell) => cell.name === option.parameter.name)
+                ) {
+                  row.push({
+                    name: option.parameter.name,
+                    value: formatCompositeExport(
+                      orderPlain.optionValues.filter(
+                        (value) => value.parameterId === option.parameterId,
+                      ),
+                    ),
+                  });
+                }
+                if (option.parameter.type === ParametersType.GRAPH_INPUT) {
+                  row.push({
+                    name: option.parameter.name,
+                    value: option.value,
+                    type: ExcelCellType.IMG,
+                  });
+                }
+              }
+            });
+          }
 
-            data.rows.push(row);
-          });
-        }
-        await this.downloadExcelService.downloadData({ res, data });
+          data.rows.push(row);
+        });
       }
+      await this.downloadExcelService.downloadData({ res, data });
     }
     return null;
   }
@@ -684,7 +772,7 @@ export class OrdersService {
             },
             {
               createdAt: {
-                [Op.lte]: parseDateFromFormat(
+                [Op.lt]: parseDateFromFormat(
                   createdAtEnd.filterValue?.toString(),
                   true,
                 ),

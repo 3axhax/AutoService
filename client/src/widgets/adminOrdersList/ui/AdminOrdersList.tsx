@@ -1,3 +1,5 @@
+import { ListReadStatus } from "@shared/store/ListReadStatus";
+import { useListView } from "@shared/store/useListView";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { useEffect } from "react";
 import {
@@ -14,6 +16,7 @@ import { OrdersListActionButton } from "@features/ordersListActionButton";
 
 export const AdminOrdersList = () => {
   const dispatch = useAppDispatch();
+  useListView("orders", "admin");
   const ordersList = useAppSelector(workerActiveShiftClosedOrdersListSelect);
   useEffect(() => {
     dispatch(getOrdersListForAdmin());
@@ -65,15 +68,10 @@ export const AdminOrdersList = () => {
       },
       {
         name: "action",
-        data: (
-          <OrdersListActionButton
-            orderId={row.id}
-            onReload={() => dispatch(getOrdersListForAdmin())}
-          />
-        ),
+        data: <OrdersListActionButton orderId={row.id} />,
       },
     ]);
   }
 
-  return <Table tableData={tableData} className={"overflow-hidden w-full"} />;
+  return <><ListReadStatus resource="orders" /><Table tableData={tableData} className={"overflow-hidden w-full"} /></>;
 };

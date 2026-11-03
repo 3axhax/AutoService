@@ -1,7 +1,9 @@
+import { getBaseOptionIds } from "@entities/orderParameters/model/selectedOptions";
 import type { CompositeOperation } from "@entities/order";
 import { setOrdersValue } from "@entities/order";
 import {
   type ParametersItem,
+  selectOrderParametersList,
   selectOrderParametersOrdersValue,
 } from "@entities/orderParameters";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
@@ -25,7 +27,9 @@ export const CompositeParameterList = ({
   orderId: number;
 }) => {
   const dispatch = useAppDispatch();
-  const priceList = useAppSelector((state) => state.price.priceList);
+  const { priceList, pending, loaded, error } = useAppSelector((state) => state.price);
+  const writing = useAppSelector((state) => state.order.pending || state.shifts.pending);
+  const pricesUnavailable = pending || !loaded || !!error || writing;
   const orderValues = useAppSelector((state) =>
     selectOrderParametersOrdersValue(state, orderId),
   );
@@ -37,19 +41,8 @@ export const CompositeParameterList = ({
   );
   const [draftOperation, setDraftOperation] =
     useState<CompositeOperation | null>(null);
-  const baseOptionIds = Object.entries(orderValues).flatMap(([name, value]) => {
-    if (name === parameter.name || Array.isArray(value)) return [];
-    if (
-      (typeof value === "string" || typeof value === "number") &&
-      Number.isFinite(Number(value))
-    ) {
-      return [Number(value)];
-    }
-    if (value && typeof value === "object") {
-      return Object.keys(value).map(Number).filter(Number.isFinite);
-    }
-    return [];
-  });
+  const parameters = useAppSelector(selectOrderParametersList);
+  const baseOptionIds = getBaseOptionIds(orderValues, parameters);
 
   const groups = parameter.options
     .reduce<OptionGroup[]>((result, option) => {
@@ -71,8 +64,10 @@ export const CompositeParameterList = ({
     }, [])
     .sort((left, right) => left.order - right.order);
 
-  const setOperations = (value: CompositeOperation[]) =>
-    dispatch(setOrdersValue({ orderId, name: parameter.name, value }));
+  const setOperations = (value: CompositeOperation[]) => {
+    if (!pricesUnavailable)
+      dispatch(setOrdersValue({ orderId, name: parameter.name, value }));
+  };
 
   const hasPrice = (optionId: number, selectedOptionIds: number[]) =>
     priceList.some(
@@ -115,6 +110,7 @@ export const CompositeParameterList = ({
   };
 
   const openAddModal = () => {
+    if (pricesUnavailable) return;
     const optionIds = buildOptionIds({});
     if (optionIds.length !== groups.length) return;
     setEditingOperationId(null);
@@ -123,6 +119,7 @@ export const CompositeParameterList = ({
   };
 
   const openEditModal = (operation: CompositeOperation) => {
+    if (pricesUnavailable) return;
     setEditingOperationId(operation.id);
     setDraftOperation({ ...operation, optionIds: [...operation.optionIds] });
     setModalOpen(true);
@@ -135,7 +132,7 @@ export const CompositeParameterList = ({
   };
 
   const applyDraft = () => {
-    if (!draftOperation || draftOperation.optionIds.length !== groups.length) {
+    if (pricesUnavailable || !draftOperation || draftOperation.optionIds.length !== groups.length) {
       return;
     }
     if (editingOperationId) {
@@ -176,6 +173,7 @@ export const CompositeParameterList = ({
               </span>
               <div className="flex items-center gap-2">
                 <button
+                  disabled={pricesUnavailable}
                   type="button"
                   aria-label={`Редактировать ${parameter.translationRu.toLowerCase()} ${operationIndex + 1}`}
                   className="text-gray-600 hover:text-purple-600 dark:text-gray-300 cursor-pointer"
@@ -184,6 +182,7 @@ export const CompositeParameterList = ({
                   <PencilSquareIcon className="h-5 w-5" />
                 </button>
                 <button
+                  disabled={pricesUnavailable}
                   type="button"
                   aria-label={`Удалить ${parameter.translationRu.toLowerCase()} ${operationIndex + 1}`}
                   className="text-red-600 cursor-pointer"
@@ -216,6 +215,7 @@ export const CompositeParameterList = ({
       <button
         type="button"
         className="btn btn-orange mt-auto"
+        disabled={pricesUnavailable}
         onClick={openAddModal}
       >
         Добавить

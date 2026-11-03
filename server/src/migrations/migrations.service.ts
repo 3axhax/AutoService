@@ -1,3 +1,4 @@
+import { applyEmailUniqueness } from './migrations.email-unique';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { MigrationsOrders } from './migrations.orders';
@@ -41,6 +42,7 @@ export class MigrationService implements OnModuleInit {
         }
       }),
     );
+    await applyEmailUniqueness(this.sequelize);
     await this.migrationsPriceTests.addCompositeOperationIdColumn();
     await this.migrationsPriceTests.addCompanyThreePriceTestCoverage();
     await this.migrationsPriceTests.makeTireRepairConfigurableParameter();

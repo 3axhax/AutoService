@@ -1,3 +1,4 @@
+import { User } from '../users/users.model';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CompaniesParametersOptions } from './companiesParametersOptions.model';
@@ -9,8 +10,15 @@ export class CompaniesParametersOptionsService {
     private companiesParametersOptionsRepository: typeof CompaniesParametersOptions,
   ) {}
 
-  async getAll(): Promise<CompaniesParametersOptions[] | null> {
-    return this.companiesParametersOptionsRepository.findAll();
+  async getAll({
+    user,
+  }: {
+    user: User | undefined;
+  }): Promise<CompaniesParametersOptions[] | null> {
+    if (!user) return null;
+    return this.companiesParametersOptionsRepository.findAll({
+      where: { companyId: user.companyId },
+    });
   }
 
   async getOptionsByCompany(

@@ -1,9 +1,10 @@
-import { useAppDispatch } from "@shared/store/hooks.ts";
+import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { addNewActiveAdditionalWork } from "@entities/additionalWorks";
 import { ExtraIcon } from "@shared/ui/Icons/Extra.tsx";
 
 export const CreateNewAdditionalWork = () => {
   const dispatch = useAppDispatch();
+  const disabled = useAppSelector((state) => state.shifts.pending);
 
   const clickHandler = () => {
     dispatch(addNewActiveAdditionalWork());
@@ -11,6 +12,7 @@ export const CreateNewAdditionalWork = () => {
 
   return (
     <button
+      disabled={disabled}
       className={"btn btn-orange btn-blue-dark w-3/7 lg:w-fit"}
       onClick={clickHandler}
     >

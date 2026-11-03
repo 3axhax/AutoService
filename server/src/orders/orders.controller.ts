@@ -13,7 +13,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { User } from '../decorators/user.decorator';
 import { User as UserModel } from '../users/users.model';
 import { Orders } from './orders.model';
-import { GetOrdersListDto } from './dto/orders.dto';
+import { DeleteOrdersDto, GetOrdersListDto } from './dto/orders.dto';
 import express from 'express';
 import { UserRoleEnum } from '../roles/roles.types';
 
@@ -55,7 +55,7 @@ export class OrdersController {
   @UseGuards(RolesGuard)
   deleteOrder(
     @User() user: UserModel | undefined,
-    @Body() param: { id: number },
+    @Body() param: DeleteOrdersDto,
   ): Promise<boolean> {
     return this.orderService.delete({ user, id: param.id });
   }

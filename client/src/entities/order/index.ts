@@ -1,6 +1,7 @@
 export {
   orderSlice,
   setOrdersValue,
+  beginEditOrder,
   addOrder,
   getOrdersFromActiveShift,
   orderErrorSelect,

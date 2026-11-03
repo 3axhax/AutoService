@@ -32,13 +32,13 @@ export const ShiftsListItem = ({
       className={
         "cursor-pointer bg-white dark:bg-gray-950 border-1 rounded-lg border-stone-700/80 transition-shadow ease-in-out duration-200 shadow-lg px-2 py-2 group hover:shadow-blue-950/55"
       }
-      onClick={() => {
-        if (onClick) onClick();
-      }}
     >
-      <span
+      <button
+        type="button"
+        aria-expanded={!!activeItem}
+        onClick={onClick}
         className={
-          "flex flex-col lg:flex-row items-start lg:items-center text-gray-700 dark:text-white"
+          "flex w-full text-left flex-col lg:flex-row items-start lg:items-center text-gray-700 dark:text-white"
         }
       >
         <span>
@@ -59,7 +59,7 @@ export const ShiftsListItem = ({
         <ChevronDownIcon
           className={`absolute lg:relative right-4 inline-flex h-5 w-5 ml-auto mr-2 text-gray-600 dark:text-white/80 transition-transform group-hover:text-blue-950 dark:group-hover:text-white duration-200 ${activeItem ? "rotate-180" : ""}`}
         />
-      </span>
+      </button>
       {activeItem && <ShiftListItemDetail id={item.id} />}
     </li>
   );

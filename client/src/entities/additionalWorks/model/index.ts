@@ -1,6 +1,7 @@
 export {
   additionalWorksSlice,
   setAdditionalWorksValue,
+  beginEditAdditionalWork,
   addNewActiveAdditionalWork,
   deleteActiveAdditionalWork,
   clearAdditionalWorksList,

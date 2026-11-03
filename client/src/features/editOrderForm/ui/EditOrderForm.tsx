@@ -1,10 +1,12 @@
-import { FormEvent, useRef } from "react";
+import { PriceLoadStatus } from "@features/priceLoadStatus/PriceLoadStatus";
+import { FormEvent, useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { OrderTotalValue } from "./OrderTotalValue";
 import { formatedOrderParametersList } from "@entities/orderParameters";
 import {
   addOrder,
   deleteActiveOrder,
+  beginEditOrder,
   editOrder,
   orderErrorSelect,
 } from "@entities/order";
@@ -33,6 +35,28 @@ export const EditOrderForm = ({
   carouselMaxItems = 5,
 }: EditOrderFormProps) => {
   const dispatch = useAppDispatch();
+  const mounted = useRef(false);
+  const writing = useAppSelector(
+    (state) => state.order.pending || state.shifts.pending,
+  );
+  const pending = useAppSelector(
+    (state) =>
+      state.order.pending ||
+      state.shifts.pending ||
+      state.price.pending ||
+      !state.price.loaded ||
+      !!state.price.error ||
+      !!(edit && (state.order.loading || state.order.readError)),
+  );
+
+  useEffect(() => {
+    mounted.current = true;
+    if (edit) dispatch(beginEditOrder(orderId));
+    return () => {
+      mounted.current = false;
+      if (edit) dispatch(deleteActiveOrder(orderId));
+    };
+  }, [dispatch, edit, orderId]);
   const parametersList = useAppSelector((state) =>
     formatedOrderParametersList(state, orderId),
   );
@@ -61,8 +85,13 @@ export const EditOrderForm = ({
 
   const handlerOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(edit ? editOrder(orderId) : addOrder(orderId)).then(() => {
-      if (onSuccess) {
+    dispatch(edit ? editOrder(orderId) : addOrder(orderId)).then((result) => {
+      if (
+        mounted.current &&
+        result.meta.requestStatus === "fulfilled" &&
+        result.payload &&
+        onSuccess
+      ) {
         onSuccess();
       }
     });
@@ -135,74 +164,78 @@ export const EditOrderForm = ({
       onSubmit={handlerOnSubmit}
       className={"w-full container mx-auto px-4 lg:px-8"}
     >
-      <div className={"relative pt-9 pb-3 w-full"}>
-        <Carousel
-          ref={carouselRef}
-          responsive={responsive}
-          showDots={true}
-          removeArrowOnDeviceType={["tablet", "mobile"]}
-          containerClass={""}
-          sliderClass={"slider"}
-          dotListClass={"dot-list top-0 h-7"}
-          renderDotsOutside={true}
-          arrows={false}
-          renderButtonGroupOutside={true}
-          customDot={<CustomDot />}
-          customButtonGroup={<ButtonGroup />}
-        >
-          {parametersList &&
-            parametersList.map((parameter) => (
-              <div
-                key={parameter.id}
-                className={
-                  "bg-white dark:bg-gray-950/75 shadow-gray-800/10 dark:shadow-white shadow-xs border-gray-800/20 dark:border-white/20 border-1 px-4 lg:mx-2 py-4 rounded-lg h-full"
-                }
-              >
-                <SwitchParameterType
-                  parameter={parameter}
-                  orderId={orderId}
-                  carousel={carouselRef.current ?? undefined}
-                />
-              </div>
-            ))}
-        </Carousel>
-      </div>
-      {orderError && (
-        <div
-          className={"bg-red-200 border-1 rounded-md px-4 py-2 col-span-full"}
-        >
-          {orderError}
-        </div>
-      )}
-      <div className="flex items-center justify-stretch gap-5 lg:gap-3 flex-wrap">
-        <button
-          className={"btn btn-orange flex-grow w-1/2 ml-auto"}
-          type={"submit"}
-        >
-          {!edit ? (
-            <CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
-          ) : (
-            <PencilSquareIcon className="w-5 h-5 inline-flex mr-1" />
-          )}
-          {!edit ? "Завершить" : "Изменить"}
-        </button>
-        {!edit ? (
-          <button
-            type={"button"}
-            className={
-              "flex-grow flex-shrink-0 lg:flex-grow-0 lg:flex-shrink lg:basis-auto btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 dark:hover:shadow-gray-950/20 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
-            }
-            onClick={() => dispatch(deleteActiveOrder(orderId))}
+      <fieldset disabled={writing} className="min-w-0">
+        <div className={"relative pt-9 pb-3 w-full"}>
+          <Carousel
+            ref={carouselRef}
+            responsive={responsive}
+            showDots={true}
+            removeArrowOnDeviceType={["tablet", "mobile"]}
+            containerClass={""}
+            sliderClass={"slider"}
+            dotListClass={"dot-list top-0 h-7"}
+            renderDotsOutside={true}
+            arrows={false}
+            renderButtonGroupOutside={true}
+            customDot={<CustomDot />}
+            customButtonGroup={<ButtonGroup />}
           >
-            <TrashIcon className="w-5 h-5 inline-flex mr-1" />
-            Удалить
+            {parametersList &&
+              parametersList.map((parameter) => (
+                <div
+                  key={parameter.id}
+                  className={
+                    "bg-white dark:bg-gray-950/75 shadow-gray-800/10 dark:shadow-white shadow-xs border-gray-800/20 dark:border-white/20 border-1 px-4 lg:mx-2 py-4 rounded-lg h-full"
+                  }
+                >
+                  <SwitchParameterType
+                    parameter={parameter}
+                    orderId={orderId}
+                    carousel={carouselRef.current ?? undefined}
+                  />
+                </div>
+              ))}
+          </Carousel>
+        </div>
+        <PriceLoadStatus />
+        {orderError && (
+          <div
+            className={"bg-red-200 border-1 rounded-md px-4 py-2 col-span-full"}
+          >
+            {orderError}
+          </div>
+        )}
+        <div className="flex items-center justify-stretch gap-5 lg:gap-3 flex-wrap">
+          <button
+            className={"btn btn-orange flex-grow w-1/2 ml-auto"}
+            type={"submit"}
+            disabled={pending}
+          >
+            {!edit ? (
+              <CheckCircleIcon className="w-5 h-5 inline-flex mr-1" />
+            ) : (
+              <PencilSquareIcon className="w-5 h-5 inline-flex mr-1" />
+            )}
+            {!edit ? "Завершить" : "Изменить"}
           </button>
-        ) : null}
-        <OrderTotalValue
-          orderId={orderId}
-          className={"w-fit ml-auto lg:ml-0"}
-        />
-      </div>
+          {!edit ? (
+            <button
+              type={"button"}
+              className={
+                "flex-grow flex-shrink-0 lg:flex-grow-0 lg:flex-shrink lg:basis-auto btn btn-beige cursor-pointer text-red-600 hover:text-red-800 shadow-gray-800/40 dark:hover:shadow-gray-950/20 hover:shadow-gray-500 outline-1 outline-stone-800/20 hover:outline-stone-800/40"
+              }
+              onClick={() => dispatch(deleteActiveOrder(orderId))}
+            >
+              <TrashIcon className="w-5 h-5 inline-flex mr-1" />
+              Удалить
+            </button>
+          ) : null}
+          <OrderTotalValue
+            orderId={orderId}
+            className={"w-fit ml-auto lg:ml-0"}
+          />
+        </div>
+      </fieldset>
     </form>
   );
 };

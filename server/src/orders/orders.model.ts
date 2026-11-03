@@ -1,3 +1,4 @@
+import type { Transaction } from 'sequelize';
 import {
   AfterCreate,
   BeforeDestroy,
@@ -15,7 +16,6 @@ import {
   OrdersOptionValues,
   OrdersOptionValuesCreationAttrs,
 } from './ordersOptionValues.model';
-import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
 import { User } from '../users/users.model';
 
 export interface OrdersCreationAttrs {
@@ -79,49 +79,46 @@ export class Orders extends Model<Orders, OrdersCreationAttrs> {
   @BelongsTo(() => User)
   declare user: User;
 
-  declare _optionsData?: Omit<
-    OrdersOptionValuesCreationAttrs,
-    'orderId' | 'optionId'
-  >[];
+  declare _optionsData?: Omit<OrdersOptionValuesCreationAttrs, 'orderId'>[];
 
-  setOptions(
-    options: Omit<OrdersOptionValuesCreationAttrs, 'orderId' | 'optionId'>[],
-  ) {
+  setOptions(options: Omit<OrdersOptionValuesCreationAttrs, 'orderId'>[]) {
     this._optionsData = options;
   }
 
-  async deleteOptions() {
-    await OrdersOptionValues.destroy({ where: { orderId: this.id } });
+  async deleteOptions(transaction?: Transaction) {
+    await OrdersOptionValues.destroy({
+      where: { orderId: this.id },
+      transaction,
+    });
   }
 
-  async saveOptions() {
+  async saveOptions(transaction?: Transaction) {
     if (this._optionsData && this._optionsData.length > 0) {
-      const optionValuesPromises = this._optionsData.map(async (option) => {
-        const parametersOptions = !isNaN(+option.value)
-          ? await OrderParametersOptions.findOne({
-              where: { id: +option.value },
-            })
-          : null;
-        return {
-          ...option,
-          optionId: parametersOptions ? parametersOptions.id : undefined,
-          orderId: this.id,
-        };
-      });
+      const optionValues = this._optionsData.map((option) => ({
+        ...option,
+        orderId: this.id,
+      }));
 
-      const optionValues = await Promise.all(optionValuesPromises);
-
-      await OrdersOptionValues.bulkCreate(optionValues);
+      await OrdersOptionValues.bulkCreate(optionValues, { transaction });
     }
   }
 
   @AfterCreate
-  static async createOptionValues(instance: Orders) {
-    await instance.saveOptions();
+  static async createOptionValues(
+    instance: Orders,
+    options: { transaction?: Transaction } = {},
+  ) {
+    await instance.saveOptions(options.transaction);
   }
 
   @BeforeDestroy
-  static async destroyOptionValues(instance: Orders) {
-    await OrdersOptionValues.destroy({ where: { orderId: instance.id } });
+  static async destroyOptionValues(
+    instance: Orders,
+    options: { transaction?: Transaction } = {},
+  ) {
+    await OrdersOptionValues.destroy({
+      where: { orderId: instance.id },
+      transaction: options.transaction,
+    });
   }
 }

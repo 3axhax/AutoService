@@ -22,8 +22,8 @@ export const Navigation = () => {
   if (isUserAdmin) {
     navItems.push({
       key: "facility",
-      path: "/facility",
-      label: "Объекты",
+      path: "/",
+      label: "Заказы",
       iconLink: <HomeModernIcon className="inline-flex h-5 w-5 mr-1" />,
     });
   }

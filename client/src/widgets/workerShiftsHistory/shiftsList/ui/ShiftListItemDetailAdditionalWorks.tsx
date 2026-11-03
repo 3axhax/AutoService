@@ -1,3 +1,5 @@
+import { ListReadStatus } from "@shared/store/ListReadStatus";
+import { useListView } from "@shared/store/useListView";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { useEffect } from "react";
 import { Table, TableData, TableDataRow } from "@shared/ui";
@@ -6,6 +8,7 @@ import { additionalWorksListByShiftIdSelect } from "@entities/additionalWorks/mo
 
 export const ShiftListItemDetailAdditionalWorks = ({ id }: { id: number }) => {
   const dispatch = useAppDispatch();
+  useListView("additionalWorks", "shift", id);
 
   const additionalWorksList = useAppSelector((state) =>
     additionalWorksListByShiftIdSelect(state, id),
@@ -44,6 +47,8 @@ export const ShiftListItemDetailAdditionalWorks = ({ id }: { id: number }) => {
   }
 
   return (
+    <>
+    <ListReadStatus resource="additionalWorks" />
     <div>
       <h3
         className={
@@ -54,5 +59,6 @@ export const ShiftListItemDetailAdditionalWorks = ({ id }: { id: number }) => {
       </h3>
       <Table tableData={tableData} className={"w-full max-w-full"} />
     </div>
+    </>
   );
 };

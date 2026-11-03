@@ -107,7 +107,7 @@ export class User extends Model<User, UserCreationAttrs> {
       return (
         roles &&
         Array.isArray(roles) &&
-        roles.length === 1 &&
+        !roles.some((role: Role) => role.value === UserRoleEnum.ADMIN) &&
         roles.some((role: Role) => role.value === UserRoleEnum.WORKER)
       );
     },

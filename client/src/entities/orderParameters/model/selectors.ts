@@ -1,3 +1,4 @@
+import { getBaseOptionIds } from "./selectedOptions";
 import { RootState } from "@shared/store";
 import { createSelector } from "@reduxjs/toolkit";
 import { FilterItem, OrderValue } from "@entities/order/model/types.ts";
@@ -27,7 +28,7 @@ export const selectOrderParametersOrdersValue = createSelector(
     if (Object.keys(orderValue).length > 0) {
       return orderValue;
     }
-    if (Object.keys(listItem.optionValues).length > 0) {
+    if (listItem.optionValues?.length > 0) {
       return formatOrderValueFromOrderItemList(listItem);
     }
     return EMPTY_OBJECT;
@@ -70,7 +71,7 @@ export const formatedOrderParametersList = createSelector(
     optionOptionDependence,
     ordersValue,
   ) => {
-    const values = Object.values(ordersValue).map((value) => +value);
+    const values = getBaseOptionIds(ordersValue, parametersList);
     const parameterDependenceIds = Object.keys(parameterOptionDependence).map(
       (id) => parseInt(id),
     );
@@ -89,18 +90,14 @@ export const formatedOrderParametersList = createSelector(
         return true;
       })
       .map((parameter) => {
-        const parameterDependenceId = optionDependenceIds.find((optionId) =>
-          Object.keys(optionOptionDependence[optionId])
-            .map((id) => parseInt(id))
-            .includes(parameter.id),
-        );
-        if (parameterDependenceId) {
+        if (optionDependenceIds.length) {
           return {
             ...parameter,
             options: parameter.options.filter((option) =>
-              optionOptionDependence[parameterDependenceId][
-                parameter.id
-              ].includes(option.id),
+              optionDependenceIds.every((parentId) => {
+                const allowed = optionOptionDependence[parentId][parameter.id];
+                return !allowed || allowed.includes(option.id);
+              }),
             ),
           };
         }
@@ -131,7 +128,14 @@ export const selectOrderParametersListForFilter = createSelector(
           translationRu: user.name,
         })),
       },
-      ...parametersList,
+      ...parametersList.filter((parameter) =>
+        [
+          ParametersType.INPUT,
+          ParametersType.SELECT,
+          ParametersType.SELECT_LIST,
+          ParametersType.GRAPH_INPUT,
+        ].includes(parameter.type),
+      ),
     ];
   },
 );

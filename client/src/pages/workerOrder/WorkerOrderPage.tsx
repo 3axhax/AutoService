@@ -1,3 +1,4 @@
+import { PriceLoadStatus } from "@features/priceLoadStatus/PriceLoadStatus";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { useEffect } from "react";
 import {
@@ -19,6 +20,7 @@ export const WorkerOrderPage = () => {
 
   return (
     <>
+      <PriceLoadStatus />
       {error !== "" ? (
         <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>
       ) : null}

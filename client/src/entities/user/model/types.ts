@@ -22,5 +22,8 @@ export interface userType {
 
 export interface userSliceInitialType extends userType {
   pending: boolean;
+  logoutPending: boolean;
+  logoutWarning: string;
+  authRedirectPending: boolean;
   error: string;
 }

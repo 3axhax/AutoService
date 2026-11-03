@@ -1,3 +1,5 @@
+import type { Transaction } from 'sequelize';
+import { User } from '../users/users.model';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Companies, CompaniesCreationAttrs } from './companies.model';
@@ -9,11 +11,19 @@ export class CompaniesService {
     private companiesRepository: typeof Companies,
   ) {}
 
-  async getAll(): Promise<Companies[] | null> {
-    return this.companiesRepository.findAll();
+  async getAll({
+    user,
+  }: {
+    user: User | undefined;
+  }): Promise<Companies[] | null> {
+    if (!user) return null;
+    return this.companiesRepository.findAll({ where: { id: user.companyId } });
   }
 
-  async createCompany(company: CompaniesCreationAttrs): Promise<Companies> {
-    return this.companiesRepository.create(company);
+  async createCompany(
+    company: CompaniesCreationAttrs,
+    transaction?: Transaction,
+  ): Promise<Companies> {
+    return this.companiesRepository.create(company, { transaction });
   }
 }

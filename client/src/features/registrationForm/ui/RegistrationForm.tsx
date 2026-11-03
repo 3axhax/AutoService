@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
-import { useNavigate } from "react-router-dom";
 import {
   registerUser,
   resetError,
   selectErrorUser,
-  selectIsUserAuthorized,
   selectPendingUser,
 } from "@entities/user";
-import { useInfoModalData } from "@app/providers/infoModalProvider";
 import { InputWithLabel } from "@shared/ui/InputWithLabel";
 
 export const RegistrationForm = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [companyName, setCompanyName] = useState<string>("");
@@ -24,8 +20,6 @@ export const RegistrationForm = () => {
 
   const pending = useAppSelector(selectPendingUser);
   const error = useAppSelector(selectErrorUser);
-  const isUserAuthorized = useAppSelector(selectIsUserAuthorized);
-  const { closeModal } = useInfoModalData();
 
   const [validateError, setValidateError] = useState<string>("");
 
@@ -54,13 +48,6 @@ export const RegistrationForm = () => {
   useEffect(() => {
     dispatch(resetError());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (isUserAuthorized) {
-      navigate("/");
-      closeModal();
-    }
-  }, [navigate, isUserAuthorized, closeModal]);
 
   useEffect(() => {
     setValidateError("");

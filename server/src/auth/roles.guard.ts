@@ -67,14 +67,14 @@ export class RolesGuard implements CanActivate {
         this.unauthorizedError();
         return false;
       }
+      const plainUserDB = userDB.get({ plain: true });
       if (
-        requiredRoles.includes(UserRoleEnum.ADMIN) &&
+        plainUserDB.roles.some((role) => role.value === UserRoleEnum.ADMIN) &&
         !scipConfirmed &&
         !userDB.confirmed
       ) {
         return false;
       }
-      const plainUserDB = userDB.get({ plain: true });
       req.user = plainUserDB;
       return plainUserDB.roles.some((role) =>
         requiredRoles.includes(role.value),

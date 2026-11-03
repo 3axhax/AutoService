@@ -1,3 +1,6 @@
+import { OperationErrors } from "@features/operationErrors/OperationErrors";
+import { ListReadStatus } from "@shared/store/ListReadStatus";
+import { useListView } from "@shared/store/useListView";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { getActiveShift, SelectWorkerActiveShift } from "@entities/shifts";
@@ -13,6 +16,8 @@ export const WorkerShift = () => {
   const isActiveShift = useAppSelector(SelectWorkerActiveShift);
 
   const dispatch = useAppDispatch();
+  useListView("orders", "active");
+  useListView("additionalWorks", "active");
 
   useEffect(() => {
     dispatch(getActiveShift());
@@ -31,6 +36,9 @@ export const WorkerShift = () => {
           <ActionBlock />
         </div>
       </div>
+      <OperationErrors />
+      <ListReadStatus resource="orders" />
+      <ListReadStatus resource="additionalWorks" />
       {isActiveShift ? (
         <>
           <OrderActiveList />

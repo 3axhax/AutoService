@@ -1,10 +1,7 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useInfoModalData } from "@app/providers/infoModalProvider";
-import {
-  deleteAdditionalWork,
-  getAdditionalWorksFromActiveShift,
-} from "@entities/additionalWorks";
-import { useAppDispatch } from "@shared/store/hooks.ts";
+import { deleteAdditionalWork } from "@entities/additionalWorks";
+import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { EditAdditionalWorkForm } from "@features/editAdditionalWorkForm";
 
 export const AdditionalWorksListActionButton = ({
@@ -13,17 +10,19 @@ export const AdditionalWorksListActionButton = ({
   workId: number;
 }) => {
   const dispatch = useAppDispatch();
+  const disabled = useAppSelector(
+    (state) =>
+      state.additionalWorks.pending ||
+      state.additionalWorks.loading || !!state.additionalWorks.readError ||
+      state.shifts.pending,
+  );
 
   const { openModal, closeModal } = useInfoModalData();
 
   const handlerDelete = () => {
     openModal({
       onAccess: () => {
-        dispatch(deleteAdditionalWork(workId)).then((res) => {
-          if (res.payload) {
-            dispatch(getAdditionalWorksFromActiveShift());
-          }
-        });
+        dispatch(deleteAdditionalWork(workId));
       },
       title: `Уверены, что хотите удалить дополнительные работы?`,
     });
@@ -36,11 +35,7 @@ export const AdditionalWorksListActionButton = ({
         <EditAdditionalWorkForm
           additionalWorkId={workId}
           edit={true}
-          onSuccess={() =>
-            dispatch(getAdditionalWorksFromActiveShift()).then(() =>
-              closeModal(),
-            )
-          }
+          onSuccess={closeModal}
         />
       ),
     });
@@ -50,6 +45,7 @@ export const AdditionalWorksListActionButton = ({
       <button
         type={"button"}
         onClick={handlerEdit}
+        disabled={disabled}
         className={
           "w-8 h-8 inline-flex justify-center items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 transition-colors cursor-pointer"
         }
@@ -60,6 +56,7 @@ export const AdditionalWorksListActionButton = ({
       <button
         type={"button"}
         onClick={handlerDelete}
+        disabled={disabled}
         className={
           "w-8 h-8 inline-flex justify-center items-center text-red-600 shadow-red-600/75 hover:text-red-800 transition-colors cursor-pointer"
         }

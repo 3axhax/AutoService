@@ -1,29 +1,27 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useInfoModalData } from "@app/providers/infoModalProvider";
-import { useAppDispatch } from "@shared/store/hooks.ts";
+import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { EditOrderForm } from "@features/editOrderForm";
 import { deleteOrder } from "@entities/order";
 
 interface OrdersListActionButtonProps {
   orderId: number;
-  onReload?: () => void;
 }
 export const OrdersListActionButton = ({
   orderId,
-  onReload,
 }: OrdersListActionButtonProps) => {
   const dispatch = useAppDispatch();
+  const disabled = useAppSelector(
+    (state) =>
+      state.order.pending || state.order.loading || !!state.order.readError || state.shifts.pending,
+  );
 
   const { openModal, closeModal } = useInfoModalData();
 
   const handlerDelete = () => {
     openModal({
       onAccess: () => {
-        dispatch(deleteOrder(orderId)).then((res) => {
-          if (res.payload && onReload) {
-            onReload();
-          }
-        });
+        dispatch(deleteOrder(orderId));
       },
       title: `Уверены, что хотите удалить заказ?`,
     });
@@ -36,12 +34,7 @@ export const OrdersListActionButton = ({
         <EditOrderForm
           orderId={orderId}
           edit={true}
-          onSuccess={async () => {
-            if (onReload) {
-              await onReload();
-              closeModal();
-            }
-          }}
+          onSuccess={closeModal}
           carouselMaxItems={3}
         />
       ),
@@ -53,6 +46,7 @@ export const OrdersListActionButton = ({
       <button
         type={"button"}
         onClick={handlerEdit}
+        disabled={disabled}
         className={
           "w-8 h-8 inline-flex justify-center items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-600 transition-colors cursor-pointer"
         }
@@ -63,6 +57,7 @@ export const OrdersListActionButton = ({
       <button
         type={"button"}
         onClick={handlerDelete}
+        disabled={disabled}
         className={
           "w-8 h-8 inline-flex justify-center items-center text-red-600 shadow-red-600/75 hover:text-red-800 transition-colors cursor-pointer"
         }

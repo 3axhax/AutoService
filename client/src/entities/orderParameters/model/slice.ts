@@ -1,3 +1,4 @@
+import type { RootState } from "@shared/store";
 import {
   createAsyncThunk,
   createSlice,
@@ -6,25 +7,21 @@ import {
 import Request from "@shared/transport/RestAPI.ts";
 import { HandlerAxiosError } from "@shared/transport/RequestHandlersError.ts";
 import type { WritableDraft } from "immer";
-import { RootState } from "@shared/store";
 import { ErrorActionType } from "@shared/types";
 import { OrderParametersResponse, OrderParametersState } from "./types.ts";
 import { parseJSONSafely } from "@shared/utils";
 
 export const getOrderParametersList = createAsyncThunk(
   "orderParameters/getList",
-  async (_, { getState, dispatch }) => {
+  async (_, { getState }) => {
     const state = getState() as RootState;
-    if (!state.orderParameters.pending) {
-      dispatch(setPending(true));
-      try {
-        const response = await Request.get("/orderParameters");
-        return response.data;
-      } catch (e) {
-        HandlerAxiosError(e);
-      } finally {
-        dispatch(setPending(false));
-      }
+    try {
+      const response = await Request.forSession(state.user.token).get(
+        "/orderParameters",
+      );
+      return response.data;
+    } catch (e) {
+      HandlerAxiosError(e);
     }
   },
 );

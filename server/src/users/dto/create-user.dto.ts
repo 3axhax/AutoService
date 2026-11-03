@@ -1,3 +1,5 @@
+import { Transform } from 'class-transformer';
+import { normalizeEmail } from '../normalize-email';
 import {
   IsEmail,
   IsString,
@@ -37,6 +39,9 @@ export class CreateUserDto {
 
   @IsString({ message: 'Must be a string' })
   @IsEmail({}, { message: 'Некорректный E-mail' })
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? normalizeEmail(value) : value,
+  )
   readonly email: string;
 
   @IsString({ message: 'Must be a string' })

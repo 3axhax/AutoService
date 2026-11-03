@@ -1,3 +1,5 @@
+import { OperationErrors } from "@features/operationErrors/OperationErrors";
+import { PriceLoadStatus } from "@features/priceLoadStatus/PriceLoadStatus";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import {
   getOrderParametersList,
@@ -25,6 +27,8 @@ export const OrdersPage = () => {
 
   return (
     <>
+      <OperationErrors only={["order"]} />
+      <PriceLoadStatus />
       <div className="container px-4 lg:px-8">
         {error !== "" ? (
           <div className={"bg-red-300 mb-2 p-2 rounded-lg"}>{error}</div>

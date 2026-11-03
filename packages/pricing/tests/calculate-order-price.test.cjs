@@ -132,3 +132,26 @@ test('calculates a composite operation from the full client order state', () => 
     totalValueWithDiscount: 1250,
   });
 });
+
+for (const composite of [false, true]) {
+  test(`specific tariffs are independent of all row permutations, composite=${composite}`, () => {
+    const rows = [
+      { mainOptionId: 10, value: 400, conditions: [{ id: 10 }], discountImpact: true },
+      { mainOptionId: 10, value: 550, conditions: [{ id: 10 }, { id: 1 }], discountImpact: true },
+      { mainOptionId: 10, value: 700, conditions: [{ id: 10 }, { id: 1 }, { id: 2 }], discountImpact: true },
+    ];
+    const permutations = xs => xs.length ? xs.flatMap((x, i) => permutations(xs.filter((_, j) => i !== j)).map(rest => [x, ...rest])) : [[]];
+    for (const priceList of permutations(rows)) {
+      const result = calculateOrderPrice({
+        orderValues: { vehicleType: '1', extra: '2', discount: '20', works: composite ? [{ optionIds: [10], count: 2 }] : { 10: 2 } },
+        parameters: [
+          { name: 'vehicleType', type: 'SELECT', options: [{ id: 1, translationRu: 'A' }] },
+          { name: 'extra', type: 'SELECT', options: [{ id: 2, translationRu: 'B' }] },
+          { name: 'discount', type: 'SELECT', options: [{ id: 20, translationRu: '10%' }] },
+          { name: 'works', type: composite ? 'COMPOSITE_LIST' : 'SELECT_LIST', options: [{ id: 10, translationRu: 'Work' }] },
+        ], priceList,
+      });
+      assert.deepEqual(result, { totalValue: 1400, totalValueWithDiscount: 1260 });
+    }
+  });
+}
