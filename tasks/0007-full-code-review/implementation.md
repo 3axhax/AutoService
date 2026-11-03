@@ -344,3 +344,8 @@ SR8-2: отправка Excel выполняется и при parameters=[]. В
 ## 2026-11-03 — повторная попытка доставки
 
 Доступ к GitHub восстановился: выполнен fetch, main обновлена fast-forward до 903ebee, рабочая и основная ветки отправлены в origin. Реализация 0c5f10f теперь присутствует в origin/main. SSH всё ещё не устанавливается до авторизации (Can't assign requested address / TCP errno 49), поэтому production checkout и контейнеры пока не обновлены. Не путать успешный Git push с выполненным rollout. Подробности в status.md.
+
+
+## 2026-11-03 — production preflight и образы готовы
+
+Повторная доставка восстановила SSH, обновила чистый production checkout до 750b5dc через Git и собрала оба production образа последовательным ограниченным builder. Builder остановлен; прежние приложения, PostgreSQL и Analysis не перезапускались, health/API отвечают 200. Создана и полностью прочитана резервная копия архива, сохранены rollback images. В production нет unique email index и его marker, дублей 0. Чтобы не запустить DDL без отдельного согласования по tasks/README.md, новый backend пока не стартовал. План к рассмотрению: production-email-migration.md. Следующий шаг — явное подтверждение схемной миграции и завершение rollout/проверок.
