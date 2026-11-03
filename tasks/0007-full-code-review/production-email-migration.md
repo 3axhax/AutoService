@@ -26,3 +26,12 @@
 ## Итог подготовки
 
 Обе production images успешно собраны из 750b5dc: backend 5ed07324d995, frontend 1e2f089874b8; теги review-750b5dc и latest. Ограниченный builder остановлен. Дальнейший шаг — только после явного согласования production-миграции. Файл является планом к рассмотрению, а не отметкой применения DDL.
+
+
+## Применено после согласования
+
+2026-11-03 пользователь явно разрешил обновление рабочей БД. Перед применением повторены read-only проверки: дублей 0, индекса нет. Создан новый pg_dump -Fc (100369 bytes), каталог и весь архив проверены pg_restore; путь и SHA256 сохранены на сервере в approved-backup-path/approved-backup-sha256. Восстановление дампа не выполнялось.
+
+Через production Compose пересозданы только server_auto_service и client_auto_service из готовых review-750b5dc images. Штатная startup migration создала users_email_normalized_unique; indisunique=true, indisvalid=true, marker add_users_normalized_email_unique ровно один. Перед/после сняты counts/SQL fingerprints 15 таблиц. Изменилась только migrations (+1 строка); пользователи, операционные и справочные строки совпали. После auth smoke все таблицы совпадают с post-migration снимком: временные тестовые сессии отозваны.
+
+Оба приложения healthy и совпадают с подготовленными image IDs, builder exited. PostgreSQL/Analysis container IDs/images/start times не менялись. Внешние /, /health, /api/ — HTTP200; анонимные защищённые запросы —403. Для двух учётных записей из testData/dev.json: login201, защищённое чтение200/201, некорректный delete400 без записи, logout200, отозванный bearer403. Секреты/ответы с пользовательскими данными не выводились. Rollout завершён, backup и rollback images сохранены. Документация доставляется последующим Git pull без пересборки приложений.

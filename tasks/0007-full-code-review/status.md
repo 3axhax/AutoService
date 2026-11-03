@@ -265,3 +265,10 @@ SSH по-прежнему недоступен: повторные соедин�
 SSH восстановился. Чистый /var/AutoService/main обновлён через Git с eef02d4 до 750b5dc. Дублей нормализованного email 0; уникального индекса и migration marker нет. Создан серверный pg_dump -Fc (100369 bytes), каталог и весь архив проверены pg_restore без восстановления БД. Сохранены прежние образы и baseline контейнеров.
 
 Обе production images последовательно собраны ограниченным builder (512 MiB, 0.5 CPU), builder остановлен: backend 5ed07324d995, frontend 1e2f089874b8, review-750b5dc. Production приложения/DB/Analysis не перезапускались и остаются прежними, health/API HTTP200. Рабочие данные не менялись. Для запуска нового backend требуется явное согласование новой production schema migration по tasks/README.md:63–65; готовый план production-email-migration.md. Предыдущее разрешение миграции было локальным. Пересоздание приложений до согласования не выполняется.
+
+
+## 2026-11-03 — принят; production-доставка завершена
+
+Получено явное разрешение пользователя обновить рабочую БД. Повторный read-only аудит и свежая проверенная backup выполнены. Production Compose пересоздал только backend/frontend из ранее собранных review-750b5dc images. Оба healthy; индекс нормализованного email unique/valid, marker один. Counts/fingerprints всех 15 таблиц проверены: изменилась только migrations (+1), все пользовательские/операционные/справочные строки сохранились.
+
+Внешние frontend/health/API HTTP200. Обе тестовые учётные записи успешно вошли и прочитали защищённые данные; malformed delete400; logout200 и последующий bearer403. Сессии smoke отозваны, все post-migration table fingerprints после теста совпали. Секреты не выводились. PostgreSQL и Analysis контейнеры не перезапускались и не меняли образы. Builder остановлен, backup/rollback images сохранены. Код серверного Git checkout соответствует origin/main; финальные изменения далее только документируют rollout. Посторонняя tasks/0005 не включена.

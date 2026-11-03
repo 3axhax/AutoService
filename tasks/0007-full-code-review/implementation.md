@@ -349,3 +349,12 @@ SR8-2: отправка Excel выполняется и при parameters=[]. В
 ## 2026-11-03 — production preflight и образы готовы
 
 Повторная доставка восстановила SSH, обновила чистый production checkout до 750b5dc через Git и собрала оба production образа последовательным ограниченным builder. Builder остановлен; прежние приложения, PostgreSQL и Analysis не перезапускались, health/API отвечают 200. Создана и полностью прочитана резервная копия архива, сохранены rollback images. В production нет unique email index и его marker, дублей 0. Чтобы не запустить DDL без отдельного согласования по tasks/README.md, новый backend пока не стартовал. План к рассмотрению: production-email-migration.md. Следующий шаг — явное подтверждение схемной миграции и завершение rollout/проверок.
+
+
+## 2026-11-03 — подтверждённый production rollout
+
+Пользователь отдельно разрешил изменение production БД. Выполнены новый аудит и свежая backup: pg_dump -Fc, каталог и полное чтение pg_restore без ошибок. Через production Compose up --no-build --no-deps --wait пересозданы только приложения AutoService, использованы готовые backend 5ed07324d995/frontend 1e2f089874b8 из Git checkout 750b5dc. Последующие изменения main касаются только документации. Штатная миграция создала valid unique index нормализованного email и одну отметку migrations.
+
+До/после сравнение counts/fingerprints 15 таблиц подтвердило отсутствие изменений пользовательских/справочных/операционных строк: только migrations +1. PostgreSQL и Analysis контейнеры имеют прежние IDs/images/start times. Оба новых приложения healthy, image IDs совпадают с подготовленными, builder остановлен. Внешние /, /health и /api/ возвращают200. Авторизованный smoke двух тестовых аккаунтов: login201, protected read200/201, invalid delete400, logout200, revoked bearer403. Созданные smoke-сессии удалены logout; post-migration и post-smoke fingerprints всех таблиц совпали. Реальные заказы/смены для проверки не создавались/не удалялись, полный пользовательский browser E2E не выполнялся.
+
+Backup и rollback images сохранены на сервере; план и точные безопасные pointers описаны в production-email-migration.md. Production env/volumes и Analysis не изменялись, исходники доставлялись только через Git. Приёмка и поставка задачи завершены. Откат приложения возможен на сохранённые образы; удаление нового индекса/marker либо восстановление БД автоматически не выполняется, требует отдельного согласования.
