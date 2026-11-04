@@ -1,0 +1,11 @@
+# Очистка production истории компании 3
+
+Дата: 2026-11-02. Прямой запрос пользователя: удалить все смены и заказы компании company_id=3 в рабочей БД. Реальное имя Sequelize-поля — companyId.
+
+Read-only аудит: 4 orders, 1 shifts (active=0), 20 ordersOptionValues, 0 additionalWorks связанных со сменами компании. Межфирменных ссылок orders/shift и additionalWorks/shift нет. Фактические FK: ordersOptionValues.orderId → orders.id CASCADE; orders.shiftId → shifts.id CASCADE. Модели: server/src/orders/orders.model.ts, orders/ordersOptionValues.model.ts, shifts/shifts.model.ts и additionalWorks/additionalWorks.model.ts.
+
+План: в production PostgreSQL AutoService открыть транзакцию REPEATABLE READ, кратко заблокировать запись во все public tables (SHARE ROW EXCLUSIVE, lock_timeout 5s), экспортировать snapshot. Создать полный защищённый custom dump на сервере с этим snapshot и проверить pg_restore --list. До удаления сохранить агрегаты и отпечатки всех строк, не входящих в область удаления. Повторно проверить отсутствие межфирменных связей. Удалить только значения параметров заказов компании3, связанные со сменами дополнительные работы (ожидается0), сами заказы и смены companyId=3. Проверить удалённые counts, отсутствие целевых записей и полное совпадение отпечатков остальных данных. Только затем COMMIT; при любом несоответствии ROLLBACK.
+
+Пользователь явно разрешил удаление этого набора данных. Целевые данные не выводить; backup/digest/log находятся в защищённом игнорируемом server tmp с правами0600. Дамп не передаётся в Git или другие сервисы. API/схема/код приложения/пользователи/цены не меняются. Sequences не сбрасывать, TRUNCATE не использовать, startup migrations не запускать. Контейнеры и Analysis не перезапускать. Краткая блокировка записи AutoService снимается при commit/rollback.
+
+Приёмка: orders/shifts company3=0, удалены только связанные optionValues/works, остальные данные совпадают по counts/digests, production API/Analysis доступны, проверенный backup сохранён. Полный restore в работающую БД не выполнять без отдельного запроса: rollback после commit — выборочное восстановление удалённых строк из backup на отдельной копии с последующим согласованием. До commit штатный ROLLBACK.
