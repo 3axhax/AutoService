@@ -18,6 +18,7 @@ interface ModalProps {
   buttons?: {
     onClick?: () => void;
     label: string;
+    disabled?: boolean;
     type?: InfoModalType;
   }[];
 }
@@ -83,6 +84,7 @@ export const Modal = ({
                     <button
                       key={button.label}
                       type="button"
+                      disabled={button.disabled}
                       onClick={() => {
                         setOpen(false);
                         if (button.onClick) {

@@ -1,3 +1,6 @@
+import { migrateCompanyThreeRepair } from './migrations.company-three-repair';
+import { migrateCompanyThreePayment } from './migrations.company-three-payment';
+import { migrateCompanyThreeTruckPrices } from './migrations.company-three-truck';
 import { applyEmailUniqueness } from './migrations.email-unique';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
@@ -46,5 +49,8 @@ export class MigrationService implements OnModuleInit {
     await this.migrationsPriceTests.addCompositeOperationIdColumn();
     await this.migrationsPriceTests.addCompanyThreePriceTestCoverage();
     await this.migrationsPriceTests.makeTireRepairConfigurableParameter();
+    await migrateCompanyThreeTruckPrices(this.sequelize);
+    await migrateCompanyThreePayment(this.sequelize);
+    await migrateCompanyThreeRepair(this.sequelize);
   }
 }

@@ -61,6 +61,24 @@ export function validateOrderDependencies(
         ),
       )
       .map((option) => option.id);
+    if (parameter.type === 'COMPOSITE_LIST' && Array.isArray(value)) {
+      for (const operation of value) {
+        const ids = Array.isArray(operation?.optionIds)
+          ? operation.optionIds.map(Number)
+          : [];
+        for (const parent of ids) {
+          const allowedChildren = dependent[parent]?.[parameter.id];
+          if (
+            allowedChildren &&
+            !ids.some((id) => allowedChildren.includes(id))
+          ) {
+            throw new BadRequestException(
+              `Недопустимое сочетание: ${parameter.name}`,
+            );
+          }
+        }
+      }
+    }
     if (idsFor(parameter).some((id) => !allowed.includes(id))) {
       throw new BadRequestException(`Недопустимая опция: ${parameter.name}`);
     }

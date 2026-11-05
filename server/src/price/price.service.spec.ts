@@ -35,15 +35,13 @@ describe('PriceService repair operations', () => {
       const service = new PriceService(
         {} as never,
         {
-          getAll: jest
-            .fn()
-            .mockResolvedValue({
-              parameters: [parameter, category].map((p) => ({
-                ...p,
-                get: () => p,
-              })),
-              options: {},
-            }),
+          getAll: jest.fn().mockResolvedValue({
+            parameters: [parameter, category].map((p) => ({
+              ...p,
+              get: () => p,
+            })),
+            options: {},
+          }),
         } as never,
       );
       jest
@@ -117,6 +115,54 @@ describe('PriceService repair operations', () => {
         param: {
           tire_repair: [{ optionIds: [185, 180], count: 1 }],
         },
+      }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+  });
+});
+
+describe('configured repair compatibility', () => {
+  it('rejects a mismatched pair even when both options have prices', async () => {
+    const parameter = {
+      id: 15,
+      name: 'tire_repair',
+      type: 'COMPOSITE_LIST',
+      options: [
+        { id: 225, optionGroup: 'work' },
+        { id: 212, optionGroup: 'material' },
+        { id: 215, optionGroup: 'material' },
+      ],
+    };
+    const service = new PriceService(
+      null as never,
+      {
+        getAll: jest.fn().mockResolvedValue({
+          parameters: [{ ...parameter, get: () => parameter }],
+          options: {
+            parameterOptionDependence: '{}',
+            optionOptionDependence: '{"225":{"15":[212]}}',
+          },
+        }),
+      } as never,
+    );
+    jest
+      .spyOn(service, 'getAll')
+      .mockResolvedValue(
+        [
+          makePrice(225, 450, [225]),
+          makePrice(212, 1000, [212]),
+          makePrice(215, 500, [215]),
+        ].map((plain) => ({ get: () => plain })) as never,
+      );
+    await expect(
+      service.calculateTotalValue({
+        user: {} as never,
+        param: { tire_repair: [{ optionIds: [225, 212], count: 1 }] },
+      }),
+    ).resolves.toEqual({ totalValue: 1450, totalValueWithDiscount: 1450 });
+    await expect(
+      service.calculateTotalValue({
+        user: {} as never,
+        param: { tire_repair: [{ optionIds: [225, 215], count: 1 }] },
       }),
     ).rejects.toBeInstanceOf(BadRequestException);
   });

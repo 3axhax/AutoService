@@ -7,6 +7,8 @@ interface SelectOrRadioProps {
   options: RadioOption[] | SelectUIOption[];
   value: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
+  placeholder?: string;
 }
 
 export const SelectOrRadio = ({
@@ -15,6 +17,8 @@ export const SelectOrRadio = ({
   options,
   value,
   onChange,
+  disabled = false,
+  placeholder,
 }: SelectOrRadioProps) => {
   return (
     <>
@@ -22,7 +26,7 @@ export const SelectOrRadio = ({
         <RadioGroup
           label={label}
           name={name}
-          options={options}
+          options={options.map((option) => ({ ...option, disabled: disabled || option.disabled }))}
           value={value}
           onChange={onChange}
           className={"flex-col"}
@@ -36,6 +40,8 @@ export const SelectOrRadio = ({
           options={options}
           value={value}
           onChange={onChange}
+          disabled={disabled}
+          placeholder={placeholder}
         />
       )}
     </>

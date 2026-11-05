@@ -462,3 +462,8 @@
 .font-sans {
   font-family: "Sofia Sans", sans-serif;
 }
+
+/* Horizontal carousel gestures must not block vertical page scrolling. */
+.order-carousel {
+  touch-action: pan-y;
+}

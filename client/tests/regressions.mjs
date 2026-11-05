@@ -266,6 +266,18 @@ await check(
     assert.deepEqual(result.operations, []);
   },
 );
+await check("truck selection clears passenger diameter", () => {
+  const settings = {
+    parametersList: [
+      { id: 5, name: "car_type", type: "SELECT", options: [{ id: 12 }, { id: 13 }] },
+      { id: 7, name: "wheel_diameter", type: "SELECT", options: [{ id: 14 }] },
+    ],
+    parameterOptionDependence: { 7: [13] },
+    optionOptionDependence: {},
+  };
+  assert.equal(normalizeOrderValues({ car_type: 12, wheel_diameter: 14 }, settings, []).wheel_diameter, undefined);
+  assert.equal(normalizeOrderValues({ car_type: 13, wheel_diameter: 14 }, settings, []).wheel_diameter, 14);
+});
 await check(
   "additional work cancel, failure and logout isolate its buffer",
   async () => {

@@ -13,6 +13,7 @@ interface SelectUIProps<T = string> {
   value: T;
   onChange: (value: T) => void;
   required?: boolean;
+  disabled?: boolean;
   placeholder?: string;
   className?: string;
 }
@@ -24,6 +25,7 @@ export const SelectUI = <T extends string | number = string>({
   value,
   onChange,
   required = false,
+  disabled = false,
   placeholder = "Выберите вариант",
   className = "",
   ...other
@@ -60,6 +62,7 @@ export const SelectUI = <T extends string | number = string>({
         inputId={name}
         placeholder={placeholder}
         aria-required={required}
+        isDisabled={disabled}
         classNames={{
           control: (state) =>
             `mt-2 !min-h-10 !border !rounded-lg !bg-white !shadow-sm transition-all duration-200 outline-none text-left ${

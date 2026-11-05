@@ -8,7 +8,7 @@ import {
 } from "@entities/orderParameters";
 import { useAppDispatch, useAppSelector } from "@shared/store/hooks.ts";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { SelectUI } from "@shared/ui";
+import { SelectOrRadio } from "@shared/ui/SelectOrRadio";
 import { Modal } from "@shared/ui/Modal.tsx";
 import { useState } from "react";
 
@@ -42,6 +42,7 @@ export const CompositeParameterList = ({
   const [draftOperation, setDraftOperation] =
     useState<CompositeOperation | null>(null);
   const parameters = useAppSelector(selectOrderParametersList);
+  const dependencies = useAppSelector((state) => state.orderParameters.optionOptionDependence);
   const baseOptionIds = getBaseOptionIds(orderValues, parameters);
 
   const groups = parameter.options
@@ -63,6 +64,10 @@ export const CompositeParameterList = ({
       ];
     }, [])
     .sort((left, right) => left.order - right.order);
+
+  const usesMappedOptions = groups.some((group) =>
+    group.options.some((option) => dependencies[option.id]?.[parameter.id]),
+  );
 
   const setOperations = (value: CompositeOperation[]) => {
     if (!pricesUnavailable)
@@ -111,8 +116,8 @@ export const CompositeParameterList = ({
 
   const openAddModal = () => {
     if (pricesUnavailable) return;
-    const optionIds = buildOptionIds({});
-    if (optionIds.length !== groups.length) return;
+    const optionIds = usesMappedOptions ? [] : buildOptionIds({});
+    if (!usesMappedOptions && optionIds.length !== groups.length) return;
     setEditingOperationId(null);
     setDraftOperation({ id: "", optionIds, count: 1 });
     setModalOpen(true);
@@ -248,29 +253,51 @@ export const CompositeParameterList = ({
                       ),
                 );
                 return (
-                  <SelectUI<number>
+                  <SelectOrRadio
                     key={group.key}
-                    className="text-left"
                     label={group.label}
                     name={`${parameter.name}-draft-${group.key}`}
                     placeholder={`Выберите: ${group.label.toLowerCase()}`}
-                    value={selectedOptionId ?? 0}
+                    value={selectedOptionId?.toString() ?? ""}
+                    disabled={usesMappedOptions && groupIndex > 0 && priorOptionIds.length < groupIndex}
                     options={group.options
-                      .filter((option) =>
-                        hasPrice(option.id, [...priorOptionIds, option.id]),
-                      )
+                      .filter((option) => {
+                        if (!usesMappedOptions) return hasPrice(option.id, [...priorOptionIds, option.id]);
+                        if (groupIndex === 0) {
+                          const allowed = dependencies[option.id]?.[parameter.id] ?? [];
+                          return groups.slice(1).every((nextGroup) => nextGroup.options.some((child) =>
+                            allowed.includes(child.id) &&
+                            hasPrice(option.id, [option.id, child.id]) &&
+                            hasPrice(child.id, [option.id, child.id]),
+                          ));
+                        }
+                        const parent = priorOptionIds[0];
+                        const allowed = dependencies[parent]?.[parameter.id] ?? [];
+                        const selected = [...priorOptionIds, option.id];
+                        return allowed.includes(option.id) && selected.every((id) => hasPrice(id, selected));
+                      })
                       .map((option) => ({
-                        value: option.id,
+                        value: option.id.toString(),
                         label: option.translationRu,
                       }))}
-                    onChange={(optionId) => {
-                      const optionIds = buildOptionIds({
-                        current: draftOperation.optionIds,
-                        changedGroupIndex: groupIndex,
-                        changedOptionId: optionId,
-                      });
-                      if (optionIds.length === groups.length) {
+                    onChange={(value) => {
+                      const optionId = Number(value);
+                      if (usesMappedOptions) {
+                        const optionIds = groupIndex === 0
+                          ? [optionId, ...draftOperation.optionIds.filter((id) =>
+                              (dependencies[optionId]?.[parameter.id] ?? []).includes(id),
+                            )]
+                          : [...priorOptionIds, optionId];
                         setDraftOperation({ ...draftOperation, optionIds });
+                      } else {
+                        const optionIds = buildOptionIds({
+                          current: draftOperation.optionIds,
+                          changedGroupIndex: groupIndex,
+                          changedOptionId: optionId,
+                        });
+                        if (optionIds.length === groups.length) {
+                          setDraftOperation({ ...draftOperation, optionIds });
+                        }
                       }
                     }}
                   />
@@ -297,7 +324,7 @@ export const CompositeParameterList = ({
               </label>
             </div>
           }
-          buttons={[{ label: "Применить", onClick: applyDraft }]}
+          buttons={[{ label: "Применить", onClick: applyDraft, disabled: draftOperation.optionIds.length !== groups.length }]}
         />
       ) : null}
     </div>

@@ -169,9 +169,11 @@ export const EditOrderForm = ({
           <Carousel
             ref={carouselRef}
             responsive={responsive}
+            swipeable={true}
+            minimumTouchDrag={40}
             showDots={true}
             removeArrowOnDeviceType={["tablet", "mobile"]}
-            containerClass={""}
+            containerClass={"order-carousel"}
             sliderClass={"slider"}
             dotListClass={"dot-list top-0 h-7"}
             renderDotsOutside={true}

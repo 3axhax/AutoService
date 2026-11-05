@@ -574,7 +574,7 @@ export const orderParametersOptionsInitialData: OrderParametersOptionsCreationAt
   {
     id: 115,
     parametersId: 6,
-    translationRu: "ПАЗ, ГАЗ, ЗИЛ, МКСМ с кольцами и без колец"
+    translationRu: "R15–R17,5 ПАЗ, ГАЗ, ЗИЛ, МКСМ с кольцами и без колец"
   },
   {
     id: 116,
