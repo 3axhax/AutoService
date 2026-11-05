@@ -1095,5 +1095,15 @@ export const orderParametersOptionsInitialData: OrderParametersOptionsCreationAt
     id: 224,
     parametersId: 9,
     translationRu: "Ножка Г18"
+  },
+  {
+    id: 230,
+    parametersId: 12,
+    translationRu: "15%"
+  },
+  {
+    id: 231,
+    parametersId: 12,
+    translationRu: "20%"
   }
 ];

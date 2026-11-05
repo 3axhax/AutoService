@@ -155,3 +155,29 @@ for (const composite of [false, true]) {
     }
   });
 }
+
+test('company discount options preserve full price and discount only eligible work', () => {
+  const discountOptions = [
+    { id: 30, translationRu: '0%' },
+    { id: 31, translationRu: '10%' },
+    { id: 230, translationRu: '15%' },
+    { id: 231, translationRu: '20%' },
+  ];
+  const currentParameters = [
+    { name: 'works', options: [{ id: 10 }, { id: 11 }] },
+    { name: 'discount', options: discountOptions },
+  ];
+  const priceList = [
+    { mainOptionId: 10, value: 1000, conditions: [{ id: 10 }], discountImpact: true },
+    { mainOptionId: 11, value: 100, conditions: [{ id: 11 }], discountImpact: false },
+  ];
+  for (const [discount, expected] of [[undefined, 1100], ['30', 1100], ['31', 1000], ['230', 950], ['231', 900]]) {
+    const result = calculateOrderPrice({
+      orderValues: { works: { 10: 1, 11: 1 }, ...(discount ? { discount } : {}) },
+      parameters: currentParameters,
+      priceList,
+    });
+    assert.equal(result.totalValue, 1100);
+    assert.equal(result.totalValueWithDiscount, expected);
+  }
+});
