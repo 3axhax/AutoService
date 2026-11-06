@@ -37,7 +37,7 @@ export const SwitchParameterType = ({
   }) => {
     if (
       carousel &&
-      [ParametersType.SELECT, ParametersType.INPUT].includes(parameter.type) &&
+      parameter.type === ParametersType.SELECT &&
       !values[parameter.name]
     ) {
       carousel.next(1);
