@@ -19,8 +19,8 @@ const initialState: ShiftsState = {
     totalRecord: 0,
   },
   filters: {
-    closedAtStart: null,
-    closedAtEnd: null,
+    closedAtStart: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toLocaleDateString("ru-RU"),
+    closedAtEnd: new Date().toLocaleDateString("ru-RU"),
   },
 };
 

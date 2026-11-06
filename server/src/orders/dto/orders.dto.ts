@@ -5,12 +5,14 @@ import {
   IsObject,
   IsString,
   Min,
+  Max,
   ValidateBy,
   ValidateIf,
   ValidateNested,
   ValidationArguments,
 } from 'class-validator';
 import { Transform, TransformFnParams, Type } from 'class-transformer';
+import { GetShiftListDto } from '../../shifts/dto/shifts.dto';
 import { parseDateFromFormat } from '../../utils/parseDateFromFormat';
 
 const numberValue = ({ value }: TransformFnParams): unknown =>
@@ -97,4 +99,13 @@ export class GetOrdersListDto {
   @ValidateNested({ each: true })
   @Type(() => OrderFilterItem)
   filters: OrderFilterItem[] = [];
+}
+
+export class DownloadWorkerOrdersDto extends GetShiftListDto {
+  @Transform(numberValue)
+  @ValidateIf((_, value: unknown) => value !== undefined)
+  @IsInt()
+  @Min(1)
+  @Max(2147483647)
+  shiftId?: number;
 }

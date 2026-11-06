@@ -1,4 +1,7 @@
 import { ShiftItem } from "@entities/shifts";
+import { useAppDispatch } from "@shared/store/hooks";
+import { downloadWorkerOrders } from "@entities/order/model/extraReducers";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { ShiftListItemDetail } from "@widgets/workerShiftsHistory/shiftsList/ui/ShiftListItemDetail.tsx";
 import { MenuIcon } from "@shared/ui/Icons/MenuIcon.tsx";
@@ -15,6 +18,7 @@ export const ShiftsListItem = ({
   onClick,
   activeItem,
 }: ShiftsListItemProps) => {
+  const dispatch = useAppDispatch();
   const createdAt = new Date(item.createdAt).toLocaleString("ru-RU");
   const closedAt = item.closedAt ? (
     new Date(item.closedAt).toLocaleString("ru-RU")
@@ -30,15 +34,18 @@ export const ShiftsListItem = ({
   return (
     <li
       className={
-        "cursor-pointer bg-white dark:bg-gray-950 border-1 rounded-lg border-stone-700/80 transition-shadow ease-in-out duration-200 shadow-lg px-2 py-2 group hover:shadow-blue-950/55"
+        "relative cursor-pointer bg-white dark:bg-gray-950 border-1 rounded-lg border-stone-700/80 transition-shadow ease-in-out duration-200 shadow-lg px-2 py-2 group hover:shadow-blue-950/55"
       }
     >
+      <button type="button" aria-label="Скачать Excel смены" className="absolute right-12 top-2 z-10 cursor-pointer text-blue-500 hover:text-blue-700 p-2" onClick={() => dispatch(downloadWorkerOrders(item.id))}>
+        <ArrowDownTrayIcon className="w-5 h-5" />
+      </button>
       <button
         type="button"
         aria-expanded={!!activeItem}
         onClick={onClick}
         className={
-          "flex w-full text-left flex-col lg:flex-row items-start lg:items-center text-gray-700 dark:text-white"
+          "flex w-full pr-20 text-left flex-col lg:flex-row items-start lg:items-center text-gray-700 dark:text-white"
         }
       >
         <span>

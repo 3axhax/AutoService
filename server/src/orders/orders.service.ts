@@ -19,7 +19,8 @@ import { OrderParameters } from '../orderParameters/orderParameters.model';
 import { ShiftsService } from '../shifts/shifts.service';
 import { PriceService } from '../price/price.service';
 import { OrderParametersOptions } from '../orderParametersOptions/orderParametersOptions.model';
-import { GetOrdersListDto } from './dto/orders.dto';
+import { DownloadWorkerOrdersDto, GetOrdersListDto } from './dto/orders.dto';
+import { AdditionalWorks } from '../additionalWorks/additionalWorks.model';
 import { Shifts } from '../shifts/shifts.model';
 import { Op, Order, WhereOptions } from 'sequelize';
 import { Response } from 'express';
@@ -449,7 +450,50 @@ export class OrdersService {
     res: Response;
     param: GetOrdersListDto;
   }) {
+    if (!user) return null;
+    const ordersList =
+        param.filters.filter(
+          (filter) => !this.filterException.includes(filter.filterName),
+        ).length > 0
+          ? (
+              await this._getOrdersListWithFilters({
+                user,
+                param,
+                withLimits: false,
+              })
+            ).rows
+          : await this._getOrdersList({ user, param, withLimits: false });
+    return this.writeOrdersExcel(user, res, ordersList);
+  }
+
+  async downloadWorkerList({ user, res, param }: { user: User | undefined; res: Response; param: DownloadWorkerOrdersDto }) {
+    if (!user) return null;
+    let shiftIds: number[];
+    if (param.shiftId !== undefined) {
+      const shift = await this.shiftsService.getShiftByUserAndId({ user, shiftId: param.shiftId });
+      if (!shift) throw new NotFoundException('Смена не найдена');
+      shiftIds = [shift.id];
+    } else {
+      shiftIds = await this.shiftsService.getExportShiftIds(user, param);
+    }
+    const orders = shiftIds.length ? await this._getOrdersList({ user, withLimits: false, shiftIds }) : [];
+    const additionalWorks = shiftIds.length ? await AdditionalWorks.findAll({
+      where: { companyId: user.companyId, shiftId: { [Op.in]: shiftIds } }, order: [['createdAt', 'DESC']],
+    }) : [];
+    const additionalData: ExcelTableData = {
+      header: [{ name: 'id', label: '№' }, { name: 'shiftId', label: '№ смены' }, { name: 'createdAt', label: 'Дата создания' }, { name: 'description', label: 'Дополнительная работа' }, { name: 'totalValue', label: 'Сумма, ₽' }],
+      rows: additionalWorks.map((work) => [
+        { name: 'id', value: work.id }, { name: 'shiftId', value: work.shiftId },
+        { name: 'createdAt', value: this._formatDate(work.getDataValue('createdAt')) },
+        { name: 'description', value: work.description || '' }, { name: 'totalValue', value: work.totalValue },
+      ]),
+    };
+    return this.writeOrdersExcel(user, res, orders, additionalData);
+  }
+
+  private async writeOrdersExcel(user: User, res: Response, ordersList: Orders[], additionalData?: ExcelTableData) {
     if (user) {
+
       const parametersList = await this.orderParametersService.getAll({ user });
       const parameters = parametersList?.parameters ?? [];
       const header: ExcelTableHeaderData[] = parameters.reduce(
@@ -477,18 +521,6 @@ export class OrdersService {
         header,
         rows: [],
       };
-      const ordersList =
-        param.filters.filter(
-          (filter) => !this.filterException.includes(filter.filterName),
-        ).length > 0
-          ? (
-              await this._getOrdersListWithFilters({
-                user,
-                param,
-                withLimits: false,
-              })
-            ).rows
-          : await this._getOrdersList({ user, param, withLimits: false });
       if (ordersList && ordersList.length > 0) {
         ordersList.forEach((order) => {
           const orderPlain = order.get({ plain: true });
@@ -566,7 +598,7 @@ export class OrdersService {
           data.rows.push(row);
         });
       }
-      await this.downloadExcelService.downloadData({ res, data });
+      await this.downloadExcelService.downloadData({ res, data, ...(additionalData ? { additionalData } : {}) });
     }
     return null;
   }
@@ -575,14 +607,17 @@ export class OrdersService {
     user,
     param,
     withLimits,
+    shiftIds,
   }: {
     user: User;
     param?: GetOrdersListDto;
     withLimits: boolean;
+    shiftIds?: number[];
   }): Promise<Orders[]> {
     const whereCondition: WhereOptions<Orders> = {
       [Op.and]: [
         { companyId: user.companyId },
+        ...(shiftIds ? [{ shiftId: { [Op.in]: shiftIds } }] : []),
         this._formatCreatedAtCondition(param),
       ],
     };

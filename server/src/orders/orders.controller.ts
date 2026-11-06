@@ -13,7 +13,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { User } from '../decorators/user.decorator';
 import { User as UserModel } from '../users/users.model';
 import { Orders } from './orders.model';
-import { DeleteOrdersDto, GetOrdersListDto } from './dto/orders.dto';
+import { DeleteOrdersDto, GetOrdersListDto, DownloadWorkerOrdersDto } from './dto/orders.dto';
 import express from 'express';
 import { UserRoleEnum } from '../roles/roles.types';
 
@@ -82,6 +82,13 @@ export class OrdersController {
     rows: Orders[] | null;
   }> {
     return this.orderService.getForAdmin({ user, param });
+  }
+
+  @Post('downloadWorkerList')
+  @Roles(UserRoleEnum.WORKER)
+  @UseGuards(RolesGuard)
+  async downloadWorkerList(@User() user: UserModel | undefined, @Res() res: express.Response, @Body() param: DownloadWorkerOrdersDto) {
+    return this.orderService.downloadWorkerList({ user, res, param });
   }
 
   @Post('downloadList')

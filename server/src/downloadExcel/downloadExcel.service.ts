@@ -7,8 +7,8 @@ import { ExcelCellType, ExcelTableData } from './downloadExcel.types';
 export class DownloadExcelService {
   constructor() {}
 
-  async downloadData({ res, data }: { res: Response; data: ExcelTableData }) {
-    const buffer = await this.generateExcel(data);
+  async downloadData({ res, data, additionalData }: { res: Response; data: ExcelTableData; additionalData?: ExcelTableData }) {
+    const buffer = await this.generateExcel(data, additionalData);
 
     res.setHeader(
       'Content-Type',
@@ -19,9 +19,15 @@ export class DownloadExcelService {
     res.send(buffer);
   }
 
-  async generateExcel(data: ExcelTableData) {
+  async generateExcel(data: ExcelTableData, additionalData?: ExcelTableData) {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Sheet 1');
+    this.addSheet(workbook, 'Заказы', data);
+    if (additionalData) this.addSheet(workbook, 'Дополнительные работы', additionalData);
+    return await workbook.xlsx.writeBuffer();
+  }
+
+  private addSheet(workbook: ExcelJS.Workbook, name: string, data: ExcelTableData) {
+    const worksheet = workbook.addWorksheet(name);
 
     worksheet.columns = data.header.reduce(
       (acc, head) => [
@@ -46,6 +52,7 @@ export class DownloadExcelService {
       const excelRow = worksheet.addRow(rowData);
       excelRow.alignment = {
         vertical: 'middle',
+        wrapText: true,
       };
       row.forEach((item) => {
         if (item.type === ExcelCellType.IMG) {
@@ -70,6 +77,7 @@ export class DownloadExcelService {
     worksheet.getColumn(1).alignment = {
       horizontal: 'center',
       vertical: 'middle',
+      wrapText: true,
     };
 
     worksheet.getRow(1).eachCell((cell) => {
@@ -82,7 +90,6 @@ export class DownloadExcelService {
       cell.alignment = { vertical: 'middle', horizontal: 'center' };
     });
 
-    return await workbook.xlsx.writeBuffer();
   }
 
   private base64ToBuffer(base64String: string): ExcelJS.Buffer {

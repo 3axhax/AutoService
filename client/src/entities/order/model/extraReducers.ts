@@ -1,3 +1,4 @@
+import { shiftExportFilename } from "./shiftExportFilename";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@shared/store";
 import Request from "@shared/transport/RestAPI.ts";
@@ -181,5 +182,21 @@ export const downloadOrdersList = createAsyncThunk(
         dispatch({ ...setPending(false), meta: { requestId } });
       }
     }
+  },
+);
+
+export const downloadWorkerOrders = createAsyncThunk(
+  "orders/downloadWorkerList",
+  async (shiftId: number | undefined, { getState, requestId, extra }) => {
+    const state = getState() as RootState;
+    try {
+      const response = await Request.forSession(state.user.token).post(
+        "/orders/downloadWorkerList",
+        shiftId === undefined ? { ...state.shifts.filters } : { shiftId },
+        "blob",
+      );
+      if (!(extra as RequestLifecycle).isRequestActive(requestId)) return;
+      downloadExcel(response.data, shiftExportFilename(state.user.name, state.shifts.filters, shiftId === undefined ? undefined : state.shifts.shiftsList[shiftId]));
+    } catch (e) { HandlerAxiosError(e); }
   },
 );

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { shiftExportFilename } from "../src/entities/order/model/shiftExportFilename.ts";
 import axios from "axios";
 import { createAppStore } from "../src/shared/store/index.ts";
 import {
@@ -1411,3 +1412,11 @@ await check("an already revoked bearer completes logout without a false network 
   assert.equal(store.getState().user.token,"");
 });
 console.log(`${count} regression scenarios passed`);
+
+await check("shift export filenames use selected dates and shift status", async () => {
+  assert.equal(shiftExportFilename("Иван", { closedAtStart: "01.11.2026", closedAtEnd: "06.11.2026" }), "Shifts_Иван_2026_11_01-2026_11_06.xlsx");
+  assert.equal(shiftExportFilename("Иван", { closedAtStart: "06.11.2026", closedAtEnd: "06.11.2026" }), "Shifts_Иван_2026_11_06.xlsx");
+  assert.equal(shiftExportFilename("Иван", {}), "Shifts_Иван_все.xlsx");
+  assert.equal(shiftExportFilename("И/ван", {}, { createdAt: "2026-11-03T12:00:00", closedAt: "2026-11-05T12:00:00" }), "Shifts_И_ван_2026_11_05.xlsx");
+  assert.equal(shiftExportFilename("Иван", {}, { createdAt: "2026-11-03T12:00:00", closedAt: null }), "Shifts_Иван_2026_11_03.xlsx");
+});

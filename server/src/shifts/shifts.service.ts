@@ -299,6 +299,14 @@ export class ShiftsService {
     };
   }
 
+  async getExportShiftIds(user: User, param: GetShiftListDto): Promise<number[]> {
+    const shifts = await this.shiftsRepository.findAll({
+      where: { companyId: user.companyId, userId: user.id, ...this._formatIntervalWhereProps(param) },
+      attributes: ['id'],
+    });
+    return shifts.map((shift) => shift.id);
+  }
+
   async getShiftByUserAndId({
     user,
     shiftId,

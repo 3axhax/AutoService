@@ -132,6 +132,7 @@ describe('orders list/export filter validation HTTP (isolated data)', () => {
       const workbook = new Workbook();
       await workbook.xlsx.load(response.body as never);
       const sheet = workbook.worksheets[0];
+      expect(sheet.name).toBe('Заказы');
       expect((sheet.getRow(1).values as unknown[]).slice(1)).toEqual([
         '№',
         'Дата создания',
@@ -140,7 +141,10 @@ describe('orders list/export filter validation HTTP (isolated data)', () => {
         'Сумма со скидкой, ₽',
       ]);
       expect(sheet.rowCount).toBe(emptyRows ? 1 : 2);
-      if (!emptyRows) expect(sheet.getCell('D2').value).toBe(125.75);
+      if (!emptyRows) {
+        expect(sheet.getCell('D2').value).toBe(125.75);
+        expect(sheet.getCell('D2').alignment.wrapText).toBe(true);
+      }
     },
   );
   it.each([
@@ -330,4 +334,8 @@ describe('orders list/export filter validation HTTP (isolated data)', () => {
       offset: 5,
     });
   });
+  it.each([{ shiftId: -1 }, { shiftId: 2147483648 }, { shiftId: '4x' }, { closedAtStart: '31.02.2026' }])('rejects invalid worker export input %j', async (body) => {
+    await request(app.getHttpServer() as Server).post('/orders/downloadWorkerList').send(body).expect(400);
+  });
+
 });
