@@ -1085,5 +1085,7 @@ export const priceInitialData: PriceCreationAttrs[] = [
     value: 100,
     discountImpact: true,
     mainOptionId: 178
-  }
+  },
+  { id: 303, companyId: 3, value: 100, discountImpact: true, mainOptionId: 181 },
+  { id: 304, companyId: 3, value: 100, discountImpact: true, mainOptionId: 182 },
 ];

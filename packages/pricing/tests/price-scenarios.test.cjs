@@ -334,3 +334,22 @@ test('repair conditions do not multiply material and work quantities', () => {
   });
   assert.equal(result.totalValue, 3 * (800 + 2500));
 });
+
+test('four shared materials are priced for passenger and truck with quantity and discount', () => {
+  const sharedPrices = [price(181, 100), price(182, 100), price(183, 450), price(184, 650)];
+  const sharedParameters = [
+    ...parameters,
+    { name: 'car_type', type: 'SELECT', options: [{ id: 12 }, { id: 13 }] },
+    { name: 'discount', type: 'SELECT', options: [{ id: 31, translationRu: '10%' }] },
+  ];
+  for (const carType of [12, 13]) {
+    for (const item of sharedPrices) {
+      const total = calculateOrderPrice({
+        orderValues: { car_type: String(carType), materials: { [item.mainOptionId]: 2 }, discount: '31' },
+        priceList: sharedPrices,
+        parameters: sharedParameters,
+      });
+      assert.deepEqual(total, { totalValue: item.value * 2, totalValueWithDiscount: item.value * 2 * 0.9 });
+    }
+  }
+});

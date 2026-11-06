@@ -1,4 +1,5 @@
 import { migrateCompanyThreeDiscounts } from './migrations.company-three-discounts';
+import { migrateCompanyThreeMaterialPrices } from './migrations.company-three-material-prices';
 import { migrateCompanyThreeRepair } from './migrations.company-three-repair';
 import { migrateCompanyThreePayment } from './migrations.company-three-payment';
 import { migrateCompanyThreeTruckPrices } from './migrations.company-three-truck';
@@ -54,5 +55,6 @@ export class MigrationService implements OnModuleInit {
     await migrateCompanyThreePayment(this.sequelize);
     await migrateCompanyThreeRepair(this.sequelize);
     await migrateCompanyThreeDiscounts(this.sequelize);
+    await migrateCompanyThreeMaterialPrices(this.sequelize);
   }
 }

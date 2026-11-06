@@ -1216,5 +1216,7 @@ export const priceParametersOptionConditionsInitialData: PriceParametersOptionCo
   {
     priceId: 158,
     optionId: 12
-  }
+  },
+  { priceId: 303, optionId: 181 },
+  { priceId: 304, optionId: 182 },
 ];
