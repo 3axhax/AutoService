@@ -68,7 +68,7 @@ export const Navigation = () => {
     <NavigationUI
       navItems={navItems}
       canCollapsed={isUserWorker}
-      canCollapsedOnMobile={!isUserAuthorized}
+      canCollapsedOnMobile
     />
   );
 };
